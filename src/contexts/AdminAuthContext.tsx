@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 
 interface AdminAuthContextType {
   isAuthenticated: boolean;
@@ -19,6 +19,47 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [sessionTimeout, setSessionTimeout] = useState<NodeJS.Timeout | null>(null);
   const [lastActivity, setLastActivity] = useState<number>(Date.now());
+
+  const logout = useCallback(() => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('adminAuth');
+    localStorage.removeItem('adminAuthTimestamp');
+    if (sessionTimeout) {
+      clearTimeout(sessionTimeout);
+      setSessionTimeout(null);
+    }
+    
+    // Log logout
+    console.log('Admin logout at:', new Date().toISOString());
+  }, [sessionTimeout]);
+
+  const clearSession = useCallback(() => {
+    localStorage.removeItem('adminAuth');
+    localStorage.removeItem('adminAuthTimestamp');
+    if (sessionTimeout) {
+      clearTimeout(sessionTimeout);
+      setSessionTimeout(null);
+    }
+  }, [sessionTimeout]);
+
+  const startSessionTimer = useCallback(() => {
+    if (sessionTimeout) {
+      clearTimeout(sessionTimeout);
+    }
+
+    const timeout = setTimeout(() => {
+      logout();
+    }, SESSION_DURATION);
+
+    setSessionTimeout(timeout);
+  }, [sessionTimeout, logout]);
+
+  const resetSessionTimer = useCallback(() => {
+    if (isAuthenticated) {
+      localStorage.setItem('adminAuthTimestamp', Date.now().toString());
+      startSessionTimer();
+    }
+  }, [isAuthenticated, startSessionTimer]);
 
   // Check for existing session on mount
   useEffect(() => {
@@ -44,7 +85,7 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     };
 
     checkExistingSession();
-  }, []);
+  }, [clearSession, startSessionTimer]);
 
   // Activity monitoring
   useEffect(() => {
@@ -66,7 +107,7 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
         document.removeEventListener(event, handleActivity, true);
       });
     };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, resetSessionTimer]);
 
   // Auto-logout check
   useEffect(() => {
@@ -80,35 +121,8 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     }, 60000); // Check every minute
 
     return () => clearInterval(checkSession);
-  }, [isAuthenticated, lastActivity]);
+  }, [isAuthenticated, lastActivity, logout]);
 
-  const startSessionTimer = () => {
-    if (sessionTimeout) {
-      clearTimeout(sessionTimeout);
-    }
-
-    const timeout = setTimeout(() => {
-      logout();
-    }, SESSION_DURATION);
-
-    setSessionTimeout(timeout);
-  };
-
-  const resetSessionTimer = () => {
-    if (isAuthenticated) {
-      localStorage.setItem('adminAuthTimestamp', Date.now().toString());
-      startSessionTimer();
-    }
-  };
-
-  const clearSession = () => {
-    localStorage.removeItem('adminAuth');
-    localStorage.removeItem('adminAuthTimestamp');
-    if (sessionTimeout) {
-      clearTimeout(sessionTimeout);
-      setSessionTimeout(null);
-    }
-  };
 
   const login = async (pin: string): Promise<boolean> => {
     try {
@@ -136,13 +150,6 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    clearSession();
-    
-    // Log logout
-    console.log('Admin logout at:', new Date().toISOString());
-  };
 
   const value: AdminAuthContextType = {
     isAuthenticated,
@@ -160,12 +167,5 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAdminAuth() {
-  const context = useContext(AdminAuthContext);
-  if (context === undefined) {
-    throw new Error('useAdminAuth must be used within an AdminAuthProvider');
-  }
-  return context;
-}
-
 export { AdminAuthContext };
+
