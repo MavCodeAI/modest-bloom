@@ -232,13 +232,56 @@ export const initialProducts: Product[] = [
     isWholesale: false,
     inStock: true,
     createdAt: "2024-01-04"
+  },
+  {
+    id: "p13",
+    name: "Sapphire Elegance Abaya",
+    price: 1550,
+    originalPrice: 1850,
+    category: "abayas",
+    description: "A breathtaking deep blue abaya with crystal embellishments along the neckline. Features flowing sleeves with delicate silver threadwork.",
+    image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&q=80",
+    sizes: ["50", "52", "54", "56", "58", "60"],
+    colors: ["Sapphire Blue", "Midnight Blue"],
+    tags: ["new_drop", "best_seller"],
+    isWholesale: true,
+    inStock: true,
+    createdAt: "2024-01-03"
+  },
+  {
+    id: "p14",
+    name: "Rose Gold Luxe Kaftan",
+    price: 2100,
+    category: "kaftans",
+    description: "An exquisite kaftan featuring rose gold embroidery and silk panels. Perfect for evening events and special celebrations.",
+    image: "https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=800&q=80",
+    sizes: ["50", "52", "54", "56", "58", "60"],
+    colors: ["Rose Gold", "Champagne"],
+    tags: ["abaya_of_week", "editor_pick"],
+    isWholesale: true,
+    inStock: true,
+    createdAt: "2024-01-02"
+  },
+  {
+    id: "p15",
+    name: "Arabian Nights Set",
+    price: 3200,
+    category: "sets",
+    description: "A magnificent three-piece ensemble inspired by Arabian tales. Includes embroidered abaya, silk inner dress, and matching hijab with gold accents.",
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
+    sizes: ["50", "52", "54", "56", "58", "60"],
+    colors: ["Royal Purple", "Black"],
+    tags: ["new_drop", "best_seller", "editor_pick"],
+    isWholesale: true,
+    inStock: true,
+    createdAt: "2024-01-01"
   }
 ];
 
 export const categories = [
-  { id: "abayas", name: "Abayas", count: 4 },
-  { id: "kaftans", name: "Kaftans", count: 3 },
-  { id: "sets", name: "Sets", count: 2 },
+  { id: "abayas", name: "Abayas", count: 5 },
+  { id: "kaftans", name: "Kaftans", count: 4 },
+  { id: "sets", name: "Sets", count: 3 },
   { id: "printed", name: "Printed", count: 3 },
 ];
 
