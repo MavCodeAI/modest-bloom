@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function HeroSection() {
@@ -45,6 +45,27 @@ export function HeroSection() {
               <Button className="btn-luxury-outline w-full sm:w-auto">
                 View New Arrivals
               </Button>
+            </Link>
+          </div>
+
+          {/* Wholesale Info Strip */}
+          <div className="mt-8 sm:mt-10 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+            <Link 
+              to="/wholesale" 
+              className="inline-flex items-center gap-3 bg-primary/10 backdrop-blur-sm border border-primary/20 rounded-full px-4 sm:px-6 py-2.5 sm:py-3 hover:bg-primary/20 transition-all group"
+            >
+              <span className="flex items-center justify-center w-8 h-8 bg-primary/20 rounded-full">
+                <Building2 className="h-4 w-4 text-primary" />
+              </span>
+              <div className="text-left">
+                <p className="text-xs sm:text-sm font-medium text-foreground">
+                  Wholesale Partnership Available
+                </p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground">
+                  MOQ 10 pieces • 200+ retail partners worldwide
+                </p>
+              </div>
+              <ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
         </div>
