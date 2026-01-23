@@ -56,6 +56,7 @@ import {
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { useStore } from '@/hooks/useStore';
+import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import { Product, Order } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -140,6 +141,7 @@ type ProductFormData = z.infer<typeof productSchema>;
 
 const Admin = () => {
   const { products, quotes, orders, dispatch } = useStore();
+  const { logout, resetSessionTimer, isAuthenticated } = useAdminAuth();
   const { toast } = useToast();
   
   const [activeTab, setActiveTab] = useState<'dashboard' | 'products' | 'quotes' | 'orders' | 'analytics' | 'settings'>('dashboard');
@@ -160,6 +162,42 @@ const Admin = () => {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [productVariants, setProductVariants] = useState<Array<{size: string, color: string, stock: number}>>([]);
+  const [sessionTimeLeft, setSessionTimeLeft] = useState(30 * 60); // 30 minutes in seconds
+
+  // Session timer countdown
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const timer = setInterval(() => {
+      setSessionTimeLeft(prev => {
+        if (prev <= 1) {
+          logout();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isAuthenticated, logout]);
+
+  // Reset session timer on user activity
+  const handleUserActivity = () => {
+    resetSessionTimer();
+    setSessionTimeLeft(30 * 60);
+  };
+
+  // Track admin activities
+  const logActivity = (action: string, details?: Record<string, unknown>) => {
+    const activity = {
+      action,
+      details,
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent
+    };
+    console.log('Admin Activity:', activity);
+    // In production, send this to a secure logging endpoint
+  };
 
   const {
     register,
@@ -197,6 +235,8 @@ const Admin = () => {
       careInstructions: '',
     });
     setIsDialogOpen(true);
+    handleUserActivity();
+    logActivity('product_create_dialog_open');
   };
 
   const openEditProduct = (product: Product) => {
@@ -222,6 +262,8 @@ const Admin = () => {
       careInstructions: product.careInstructions || '',
     });
     setIsDialogOpen(true);
+    handleUserActivity();
+    logActivity('product_edit_dialog_open', { productId: product.id });
   };
 
   const onSubmit = (data: ProductFormData) => {
@@ -524,6 +566,8 @@ const Admin = () => {
       onClick={() => {
         setActiveTab(tab);
         setIsMobileNavOpen(false);
+        handleUserActivity();
+        logActivity('tab_change', { tab });
       }}
       className={cn(
         "w-full text-left px-4 py-3 text-sm font-medium capitalize transition-colors flex items-center gap-3",
@@ -536,6 +580,17 @@ const Admin = () => {
       {label}
     </button>
   );
+
+  const formatTimeLeft = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const handleLogout = () => {
+    logActivity('admin_logout');
+    logout();
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -570,12 +625,33 @@ const Admin = () => {
               <span className="text-white hidden sm:inline"> Admin</span>
             </h1>
           </div>
-          <a 
-            href="/"
-            className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            View Store →
-          </a>
+          <div className="flex items-center gap-3">
+            {/* Session Timer */}
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-muted rounded-lg">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <span className={`text-sm font-mono ${sessionTimeLeft < 300 ? 'text-red-500' : 'text-muted-foreground'}`}>
+                {formatTimeLeft(sessionTimeLeft)}
+              </span>
+            </div>
+            
+            {/* Logout Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="gap-2 border-red-500/20 text-red-500 hover:bg-red-500/10"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Logout</span>
+            </Button>
+            
+            <a 
+              href="/"
+              className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              View Store →
+            </a>
+          </div>
         </div>
       </header>
 
