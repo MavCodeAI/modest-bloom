@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Product } from '@/lib/data';
+import { LazyImage } from '@/components/ui/LazyImage';
 import { cn } from '@/lib/utils';
 
 interface ProductCardProps {
@@ -19,11 +20,11 @@ export function ProductCard({ product, showPrice = true, className }: ProductCar
     >
       {/* Image Container */}
       <div className="relative aspect-editorial overflow-hidden rounded-lg bg-muted">
-        <img
+        <LazyImage
           src={product.image}
           alt={product.name}
           className="product-image w-full h-full object-cover transition-transform duration-700"
-          loading="lazy"
+          placeholder="/placeholder.svg"
         />
         
         {/* Overlay on hover - hidden on mobile for better touch UX */}

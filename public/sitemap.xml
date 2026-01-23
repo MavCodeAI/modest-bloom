@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Homepage -->
+  <url>
+    <loc>https://modestwayfashion.com/</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Shop Pages -->
+  <url>
+    <loc>https://modestwayfashion.com/shop</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/shop?category=abayas</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/shop?category=kaftans</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/shop?category=sets</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/shop?category=printed</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Product Pages -->
+  <url>
+    <loc>https://modestwayfashion.com/product/p1</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80</image:loc>
+      <image:title>Velvet Noir Abaya</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p2</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?w=800&q=80</image:loc>
+      <image:title>Champagne Dreams Kaftan</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p3</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80</image:loc>
+      <image:title>Midnight Bloom Set</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p4</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=800&q=80</image:loc>
+      <image:title>Desert Rose Printed Abaya</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p5</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80</image:loc>
+      <image:title>Classic Black Elegance</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p6</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?w=800&q=80</image:loc>
+      <image:title>Pearl Cascade Kaftan</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p7</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=800&q=80</image:loc>
+      <image:title>Geometric Luxe Printed</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p8</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80</image:loc>
+      <image:title>Royal Emerald Set</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p9</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80</image:loc>
+      <image:title>Minimalist Silk Abaya</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p10</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?w=800&q=80</image:loc>
+      <image:title>Floral Fantasy Kaftan</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p11</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80</image:loc>
+      <image:title>Lace Overlay Abaya</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p12</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=800&q=80</image:loc>
+      <image:title>Dubai Sunset Printed</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p13</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&q=80</image:loc>
+      <image:title>Sapphire Elegance Abaya</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p14</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=800&q=80</image:loc>
+      <image:title>Rose Gold Luxe Kaftan</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/product/p15</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80</image:loc>
+      <image:title>Arabian Nights Set</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Information Pages -->
+  <url>
+    <loc>https://modestwayfashion.com/about</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/contact</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/faq</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/size-guide</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/shipping</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/returns</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/wholesale</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/wholesale/catalog</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/wishlist</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/checkout</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  <url>
+    <loc>https://modestwayfashion.com/search</loc>
+    <lastmod>2024-01-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>

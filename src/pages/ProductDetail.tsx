@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Minus, Plus, Check, Truck, RotateCcw, Shield } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/layout/CartDrawer';
 import { useStore } from '@/hooks/useStore';
+import { useSEO } from '@/hooks/useSEO';
 import { Button } from '@/components/ui/button';
 import {
   Accordion,
@@ -28,6 +29,22 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+
+  // SEO optimization - must be called before any early returns
+  useSEO({
+    title: product ? `${product.name} - Modest Way Fashion UAE` : 'Product Not Found - Modest Way Fashion',
+    description: product?.description || 'Product not found. Browse our luxury abaya collection.',
+    keywords: product ? `${product.name}, ${product.category}, modest fashion UAE, Dubai abaya, luxury abaya, ${product.tags.join(', ')}` : 'product not found, modest fashion, abaya',
+    ogImage: product?.image,
+    type: product ? 'product' : 'website',
+    productData: product ? {
+      name: product.name,
+      price: product.price,
+      availability: product.inStock ? 'InStock' : 'OutOfStock',
+      image: product.image,
+      description: product.description
+    } : undefined
+  });
 
   if (!product) {
     return (
