@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAdminAuth } from '@/contexts/AdminAuthContext';
+import { useAdminAuth } from '@/contexts/useAdminAuth';
 import AdminAuth from './AdminAuth';
 
 interface ProtectedRouteProps {
