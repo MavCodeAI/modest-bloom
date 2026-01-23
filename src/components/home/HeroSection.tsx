@@ -35,9 +35,9 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start animate-slide-up" style={{ animationDelay: '0.3s' }}>
-            <Link to="/shop" className="w-full sm:w-auto">
+            <Link to="/wholesale" className="w-full sm:w-auto">
               <Button className="btn-luxury-primary group w-full sm:w-auto">
-                Shop Collection
+                Wholesale Partnership
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
