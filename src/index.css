@@ -1,0 +1,282 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Mulish:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Modest Way Fashion - "Midnight Bloom" Dark Luxury Design System */
+
+@layer base {
+  :root {
+    /* Webpage Image Color Palette */
+    --background: 220 35% 12%;
+    --foreground: 220 15% 95%;
+
+    --card: 220 30% 15%;
+    --card-foreground: 220 15% 95%;
+
+    --popover: 220 30% 15%;
+    --popover-foreground: 220 15% 95%;
+
+    /* Orange Accent - Primary */
+    --primary: 25 85% 55%;
+    --primary-foreground: 220 35% 12%;
+
+    --secondary: 220 25% 18%;
+    --secondary-foreground: 220 15% 85%;
+
+    --muted: 220 20% 22%;
+    --muted-foreground: 220 15% 65%;
+
+    --accent: 25 75% 50%;
+    --accent-foreground: 220 35% 12%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 20% 25%;
+    --input: 220 20% 25%;
+    --ring: 25 85% 55%;
+
+    --radius: 0.75rem;
+
+    /* Custom Color Tokens from Webpage */
+    --orange-primary: 25 85% 55%;
+    --orange-glow: 25 90% 65%;
+    --blue-deep: 220 35% 12%;
+    --blue-surface: 220 30% 15%;
+    --blue-elevated: 220 25% 18%;
+    --pink-rose: 350 65% 75%;
+    --beige-cream: 45 30% 85%;
+    --black-texture: 220 15% 10%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--blue-deep)) 0%, hsl(220 40% 15%) 100%);
+    --gradient-orange: linear-gradient(135deg, hsl(var(--orange-primary)) 0%, hsl(var(--orange-glow)) 100%);
+    --gradient-overlay: linear-gradient(to top, hsl(var(--blue-deep) / 0.95) 0%, transparent 60%);
+    --gradient-card: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(220 32% 10%) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.4);
+    --shadow-glow: 0 0 40px -10px hsl(var(--orange-primary) / 0.3);
+    --shadow-card: 0 8px 30px -8px hsl(0 0% 0% / 0.5);
+
+    /* Sidebar */
+    --sidebar-background: 220 30% 15%;
+    --sidebar-foreground: 220 15% 95%;
+    --sidebar-primary: 25 85% 55%;
+    --sidebar-primary-foreground: 220 35% 12%;
+    --sidebar-accent: 220 25% 18%;
+    --sidebar-accent-foreground: 220 15% 85%;
+    --sidebar-border: 220 20% 25%;
+    --sidebar-ring: 25 85% 55%;
+  }
+
+  .dark {
+    /* Same as root - this is a dark-first design */
+    --background: 220 35% 12%;
+    --foreground: 220 15% 95%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Mulish', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    @apply font-medium tracking-tight;
+  }
+}
+
+@layer components {
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-background/80 backdrop-blur-md border-b border-border/50;
+  }
+
+  .glass-card {
+    @apply bg-card/60 backdrop-blur-sm border border-border/30;
+  }
+
+  /* Luxury button styles */
+  .btn-luxury {
+    @apply inline-flex items-center justify-center px-8 py-4 text-sm font-semibold uppercase tracking-widest transition-all duration-300;
+  }
+
+  .btn-luxury-primary {
+    @apply btn-luxury bg-primary text-primary-foreground hover:bg-primary/90;
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn-luxury-outline {
+    @apply btn-luxury border-2 border-foreground/80 text-foreground hover:bg-foreground hover:text-background;
+  }
+
+  /* Product card hover effect */
+  .product-card {
+    @apply relative overflow-hidden rounded-lg transition-all duration-500;
+  }
+
+  .product-card:hover .product-image {
+    @apply scale-105;
+  }
+
+  .product-card:hover .product-overlay {
+    @apply opacity-100;
+  }
+
+  /* Editorial text styling */
+  .editorial-heading {
+    font-family: 'Playfair Display', serif;
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-tight;
+  }
+
+  .editorial-subheading {
+    font-family: 'Playfair Display', serif;
+    @apply text-xl sm:text-2xl md:text-3xl font-normal italic text-muted-foreground;
+  }
+
+  /* Section spacing */
+  .section-padding {
+    @apply py-12 sm:py-16 md:py-20 lg:py-24;
+  }
+
+  /* Container max-width with padding */
+  .luxury-container {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+
+  /* Responsive text utilities */
+  .text-responsive-sm {
+    @apply text-xs sm:text-sm;
+  }
+
+  .text-responsive-base {
+    @apply text-sm sm:text-base;
+  }
+
+  .text-responsive-lg {
+    @apply text-base sm:text-lg md:text-xl;
+  }
+
+  .text-responsive-xl {
+    @apply text-lg sm:text-xl md:text-2xl;
+  }
+
+  .text-responsive-2xl {
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl;
+  }
+
+  .text-responsive-3xl {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl;
+  }
+
+  .text-responsive-hero {
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl;
+  }
+
+  /* Shimmer animation for loading states */
+  .shimmer {
+    @apply relative overflow-hidden;
+  }
+
+  .shimmer::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full;
+    background: linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.05), transparent);
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Orange star rating */
+  .star-orange {
+    @apply text-[hsl(var(--orange-primary))];
+  }
+
+  /* Price styling */
+  .price-tag {
+    @apply text-primary font-semibold tracking-wide;
+  }
+
+  .price-original {
+    @apply text-muted-foreground line-through text-sm;
+  }
+
+  /* Badge styles */
+  .badge-new {
+    @apply bg-primary text-primary-foreground text-xs uppercase tracking-widest px-3 py-1;
+  }
+
+  .badge-sale {
+    @apply bg-destructive text-destructive-foreground text-xs uppercase tracking-widest px-3 py-1;
+  }
+}
+
+@layer utilities {
+  /* Custom animations */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { 
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from { 
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to { 
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Aspect ratio for editorial product images */
+  .aspect-editorial {
+    aspect-ratio: 4 / 5;
+  }
+
+  /* Text gradient */
+  .text-gradient-orange {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-orange);
+  }
+}
