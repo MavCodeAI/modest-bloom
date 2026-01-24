@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CreditCard, Lock, Truck, DollarSign } from 'lucide-react';
+import { ArrowLeft, CreditCard, Lock, DollarSign } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 const checkoutSchema = z.object({
   email: z.string().email('Valid email required'),
@@ -19,8 +21,9 @@ const checkoutSchema = z.object({
   phone: z.string().min(8, 'Valid phone number required'),
   address: z.string().min(5, 'Address required'),
   city: z.string().min(2, 'City required'),
-  country: z.string().min(2, 'Country required'),
+  emirate: z.string().min(2, 'Emirate required'),
   postalCode: z.string().optional(),
+  deliveryNotes: z.string().optional(),
   paymentMethod: z.enum(['cod', 'card'], {
     required_error: 'Please select a payment method',
   }),
@@ -28,10 +31,21 @@ const checkoutSchema = z.object({
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
+const UAE_EMIRATES = [
+  'Abu Dhabi',
+  'Dubai',
+  'Sharjah',
+  'Ajman',
+  'Umm Al Quwain',
+  'Ras Al Khaimah',
+  'Fujairah',
+];
+
 const Checkout = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { cart, cartTotal, dispatch } = useStore();
+  const { user } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'cod' | 'card'>('cod');
 
@@ -41,6 +55,9 @@ const Checkout = () => {
     formState: { errors },
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
+    defaultValues: {
+      paymentMethod: 'cod',
+    },
   });
 
   if (cart.length === 0) {
@@ -56,48 +73,105 @@ const Checkout = () => {
     );
   }
 
-  const onSubmit = async (data: CheckoutFormData) => {
-    setIsProcessing(true);
-    
-    // Simulate processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Create order
-    const order = {
-      id: `ORD-${Date.now()}`,
-      items: cart,
-      customer: {
-        name: `${data.firstName} ${data.lastName}`,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-        city: data.city,
-        country: data.country,
-      },
-      total: cartTotal + shipping + codFee,
-      subtotal: cartTotal,
-      shipping,
-      codFee,
-      paymentMethod: data.paymentMethod,
-      status: 'confirmed' as const,
-      createdAt: new Date().toISOString(),
-    };
-
-    dispatch({ type: 'ADD_ORDER', payload: order });
-    dispatch({ type: 'CLEAR_CART' });
-
-    toast({
-      title: 'Order Confirmed!',
-      description: `Your order ${order.id} has been placed successfully.`,
-    });
-
-    navigate('/order-confirmation', { state: { order } });
-    setIsProcessing(false);
-  };
-
   const shipping = cartTotal >= 500 ? 0 : 50;
   const codFee = selectedPaymentMethod === 'cod' ? 20 : 0;
   const total = cartTotal + shipping + codFee;
+
+  const onSubmit = async (data: CheckoutFormData) => {
+    setIsProcessing(true);
+    
+    try {
+      // Create order in Supabase
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          customer_name: `${data.firstName} ${data.lastName}`,
+          customer_email: data.email,
+          customer_phone: data.phone,
+          shipping_address: data.address,
+          city: data.city,
+          emirate: data.emirate,
+          postal_code: data.postalCode || null,
+          delivery_notes: data.deliveryNotes || null,
+          payment_method: data.paymentMethod,
+          subtotal: cartTotal,
+          shipping_cost: shipping,
+          cod_fee: codFee,
+          total: total,
+          status: 'pending',
+          user_id: user?.id || null,
+        })
+        .select()
+        .single();
+
+      if (orderError) {
+        console.error('Order creation error:', orderError);
+        throw new Error('Failed to create order');
+      }
+
+      // Create order items
+      const orderItems = cart.map((item) => ({
+        order_id: orderData.id,
+        product_id: item.product.id,
+        product_name: item.product.name,
+        product_image: item.product.image,
+        size: item.size,
+        quantity: item.quantity,
+        price: item.product.originalPrice ? item.product.price : item.product.price,
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) {
+        console.error('Order items error:', itemsError);
+        throw new Error('Failed to create order items');
+      }
+
+      // Clear cart after successful order
+      dispatch({ type: 'CLEAR_CART' });
+
+      toast({
+        title: 'Order Confirmed!',
+        description: `Your order ${orderData.order_number} has been placed successfully.`,
+      });
+
+      navigate('/order-confirmation', { 
+        state: { 
+          order: {
+            id: orderData.id,
+            orderNumber: orderData.order_number,
+            items: cart,
+            customer: {
+              name: `${data.firstName} ${data.lastName}`,
+              email: data.email,
+              phone: data.phone,
+              address: data.address,
+              city: data.city,
+              emirate: data.emirate,
+            },
+            total: total,
+            subtotal: cartTotal,
+            shipping,
+            codFee,
+            paymentMethod: data.paymentMethod,
+            status: 'pending',
+            createdAt: orderData.created_at,
+          }
+        } 
+      });
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to place order. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -184,7 +258,7 @@ const Checkout = () => {
                       id="address"
                       {...register('address')}
                       className="mt-1 h-11 sm:h-12"
-                      placeholder="Street address"
+                      placeholder="Street address, building, apartment"
                     />
                     {errors.address && (
                       <p className="text-destructive text-xs sm:text-sm mt-1">{errors.address.message}</p>
@@ -203,25 +277,40 @@ const Checkout = () => {
                       )}
                     </div>
                     <div>
-                      <Label htmlFor="postalCode" className="text-sm">Postal Code</Label>
-                      <Input
-                        id="postalCode"
-                        {...register('postalCode')}
-                        className="mt-1 h-11 sm:h-12"
-                      />
+                      <Label htmlFor="emirate" className="text-sm">Emirate</Label>
+                      <select
+                        id="emirate"
+                        {...register('emirate')}
+                        className="mt-1 h-11 sm:h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      >
+                        <option value="">Select Emirate</option>
+                        {UAE_EMIRATES.map((emirate) => (
+                          <option key={emirate} value={emirate}>
+                            {emirate}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.emirate && (
+                        <p className="text-destructive text-xs sm:text-sm mt-1">{errors.emirate.message}</p>
+                      )}
                     </div>
                   </div>
                   <div>
-                    <Label htmlFor="country" className="text-sm">Country</Label>
+                    <Label htmlFor="postalCode" className="text-sm">Postal Code (Optional)</Label>
                     <Input
-                      id="country"
-                      {...register('country')}
+                      id="postalCode"
+                      {...register('postalCode')}
                       className="mt-1 h-11 sm:h-12"
-                      placeholder="United Arab Emirates"
                     />
-                    {errors.country && (
-                      <p className="text-destructive text-xs sm:text-sm mt-1">{errors.country.message}</p>
-                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="deliveryNotes" className="text-sm">Delivery Notes (Optional)</Label>
+                    <Input
+                      id="deliveryNotes"
+                      {...register('deliveryNotes')}
+                      className="mt-1 h-11 sm:h-12"
+                      placeholder="Any special instructions for delivery"
+                    />
                   </div>
                 </div>
 
