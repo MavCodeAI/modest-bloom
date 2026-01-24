@@ -144,7 +144,7 @@ export function Navbar() {
             </Link>
 
             <Link
-              to="/admin"
+              to="/auth"
               className="p-2 text-foreground/80 hover:text-foreground transition-colors group"
               aria-label="Account"
             >
