@@ -214,7 +214,7 @@ export const initialProducts: Product[] = [
     image: "/images/product-hero-1.jpeg",
     sizes: ["50", "52", "54", "56", "58", "60"],
     colors: ["Black", "Nude"],
-    tags: ["new_drop"],
+    tags: ["new_drop", "abaya_of_week"],
     isWholesale: true,
     inStock: true,
     createdAt: "2024-01-05"
