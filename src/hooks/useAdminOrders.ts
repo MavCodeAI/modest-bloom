@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import type { TablesInsert, TablesUpdate } from '@/integrations/supabase/types';
+import type { TablesUpdate } from '@/integrations/supabase/types';
 
 export interface OrderFilters {
   status?: string;
@@ -122,14 +122,13 @@ export const useAdminOrder = (id: string) => {
         .from('orders')
         .select(`
           *,
-          items:order_items(*),
-          profiles:profiles!inner(full_name, email, phone)
+          items:order_items(*)
         `)
         .eq('id', id)
         .single();
 
       if (error) throw error;
-      return data as OrderWithItems & { profiles: { full_name: string | null; email: string | null; phone: string | null } | null };
+      return data as OrderWithItems;
     },
     enabled: !!id,
   });
