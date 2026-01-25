@@ -7,7 +7,7 @@ const promoTiles = [
     title: 'Printed Velvet',
     subtitle: 'Collection',
     description: 'Luxurious velvet abayas with exclusive prints',
-    image: 'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=800&q=80',
+    image: '/images/product-modern-1.jpeg',
     link: '/shop?category=printed',
   },
   {
@@ -15,7 +15,7 @@ const promoTiles = [
     title: 'Ramadan',
     subtitle: 'Essentials',
     description: 'Curated pieces for the holy month',
-    image: 'https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?w=800&q=80',
+    image: '/images/product-traditional-1.jpeg',
     link: '/shop?category=sets',
   },
 ];

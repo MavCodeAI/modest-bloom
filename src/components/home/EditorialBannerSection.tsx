@@ -34,7 +34,7 @@ export function EditorialBannerSection() {
             {/* Image */}
             <div className="relative aspect-[4/5] lg:aspect-auto order-1 lg:order-2">
               <img
-                src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80"
+                src="/images/product-elegant-1.jpeg"
                 alt="Silk Collection"
                 className="absolute inset-0 w-full h-full object-cover"
               />
