@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Product } from '@/lib/data';
-import { LazyImage } from '@/components/ui/LazyImage';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import { cn } from '@/lib/utils';
+import { memo } from 'react';
 
 interface ProductCardProps {
   product: Product;
@@ -9,7 +10,7 @@ interface ProductCardProps {
   className?: string;
 }
 
-export function ProductCard({ product, showPrice = true, className }: ProductCardProps) {
+export const ProductCard = memo(function ProductCard({ product, showPrice = true, className }: ProductCardProps) {
   const isOnSale = product.originalPrice && product.originalPrice > product.price;
   const isNew = product.tags.includes('new_drop');
 
@@ -20,7 +21,7 @@ export function ProductCard({ product, showPrice = true, className }: ProductCar
     >
       {/* Image Container */}
       <div className="relative aspect-editorial overflow-hidden rounded-lg bg-muted">
-        <LazyImage
+        <OptimizedImage
           src={product.image}
           alt={product.name}
           className="product-image w-full h-full object-cover transition-transform duration-700"
@@ -72,4 +73,4 @@ export function ProductCard({ product, showPrice = true, className }: ProductCar
       </div>
     </Link>
   );
-}
+});

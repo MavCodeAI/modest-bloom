@@ -43,6 +43,8 @@ export default defineConfig(({ mode }) => ({
           ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
           utils: ['clsx', 'tailwind-merge', 'date-fns'],
           icons: ['lucide-react', 'react-icons'],
+          query: ['@tanstack/react-query'],
+          forms: ['@hookform/resolvers', 'react-hook-form'],
         },
       },
     },
