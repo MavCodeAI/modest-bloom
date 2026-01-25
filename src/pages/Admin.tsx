@@ -195,7 +195,8 @@ const Admin = () => {
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent
     };
-    console.log('Admin Activity:', activity);
+    // Log activity securely
+    // TODO: Implement proper logging service
     // In production, send this to a secure logging endpoint
   };
 

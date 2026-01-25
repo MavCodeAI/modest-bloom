@@ -67,7 +67,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsAdmin(false);
       }
     } catch (err) {
-      console.error('Error checking admin role:', err);
+      // Log error securely in production
+      // TODO: Implement proper logging service
       setIsAdmin(false);
     }
   };

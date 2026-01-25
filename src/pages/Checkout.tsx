@@ -105,7 +105,8 @@ const Checkout = () => {
         .single();
 
       if (orderError) {
-        console.error('Order creation error:', orderError);
+        // Log error securely
+        // TODO: Implement proper logging service
         throw new Error('Failed to create order');
       }
 
@@ -125,7 +126,8 @@ const Checkout = () => {
         .insert(orderItems);
 
       if (itemsError) {
-        console.error('Order items error:', itemsError);
+        // Log error securely
+        // TODO: Implement proper logging service
         throw new Error('Failed to create order items');
       }
 
@@ -162,7 +164,8 @@ const Checkout = () => {
         } 
       });
     } catch (error) {
-      console.error('Checkout error:', error);
+      // Log error securely
+      // TODO: Implement proper logging service
       toast({
         title: 'Error',
         description: 'Failed to place order. Please try again.',

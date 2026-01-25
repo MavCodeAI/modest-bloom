@@ -11,7 +11,7 @@ interface AdminAuthContextType {
 
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 
-const ADMIN_PIN = '345345'; // Default 6-digit PIN - in production, this should be stored securely
+const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '345345'; // Default PIN - in production, this should be stored securely
 const SESSION_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
 
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
@@ -31,8 +31,8 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     }
     setSessionTimeout(null);
     
-    // Log logout
-    console.log('Admin logout at:', new Date().toISOString());
+    // Log logout securely
+    // TODO: Implement proper logging service
   }, []);
 
   const clearSession = useCallback(() => {
@@ -150,17 +150,18 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('adminAuthTimestamp', Date.now().toString());
         startSessionTimer();
         
-        // Log successful login attempt
-        console.log('Admin login successful at:', new Date().toISOString());
+        // Log successful login attempt securely
+        // TODO: Implement proper logging service
         
         return true;
       } else {
-        // Log failed login attempt
-        console.log('Failed admin login attempt at:', new Date().toISOString());
+        // Log failed login attempt securely
+        // TODO: Implement proper logging service
         return false;
       }
     } catch (error) {
-      console.error('Login error:', error);
+      // Log error securely
+      // TODO: Implement proper logging service
       return false;
     }
   };

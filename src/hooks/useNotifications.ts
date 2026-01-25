@@ -267,7 +267,8 @@ export const useOrderNotificationService = () => {
     // Here you could also implement email notification for guest orders
     if (customerEmail && !userId) {
       // Send email notification (implement email service)
-      console.log(`Email notification sent to ${customerEmail}: ${notification.title}`);
+      // TODO: Implement proper email service
+      // console.log(`Email notification sent to ${customerEmail}: ${notification.title}`);
     }
   };
 
