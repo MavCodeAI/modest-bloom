@@ -143,7 +143,7 @@ const Shop = () => {
 
   const handleSortChange = (value: string) => {
     setSortBy(value);
-    const [sortBy, sortOrder] = value.split('-') as [any, any];
+    const [sortBy, sortOrder] = value.split('-') as ['created_at' | 'price' | 'name', 'asc' | 'desc'];
     handleFilterChange({ sortBy, sortOrder });
   };
 

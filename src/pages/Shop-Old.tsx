@@ -122,26 +122,6 @@ const Shop = () => {
     v !== undefined && v !== null && v !== '' && 
     (!Array.isArray(v) || v.length > 0)
   ).length - 3; // Exclude sortBy, sortOrder, page, limit
-      p => p.price >= priceRange[0] && p.price <= priceRange[1]
-    );
-
-    // Sort
-    switch (sortBy) {
-      case 'price-asc':
-        result.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-desc':
-        result.sort((a, b) => b.price - a.price);
-        break;
-      case 'newest':
-      default:
-        result.sort((a, b) => 
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-    }
-
-    return result;
-  }, [products, selectedCategory, selectedTag, priceRange, sortBy]);
 
   const clearFilters = () => {
     setSelectedCategory(null);
