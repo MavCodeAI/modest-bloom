@@ -70,7 +70,7 @@ export function Navbar() {
             className="flex-shrink-0"
           >
             <img 
-              src="/images/logo.jpeg" 
+              src="/images/logo.png" 
               alt="Modest Way Fashion" 
               className="h-8 md:h-10 w-auto object-contain"
             />

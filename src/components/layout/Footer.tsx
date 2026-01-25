@@ -9,7 +9,7 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1 space-y-4 sm:space-y-6">
             <img 
-              src="/images/logo.jpeg" 
+              src="/images/logo.png" 
               alt="Modest Way Fashion" 
               className="h-12 w-auto object-contain"
             />
