@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import type { TablesInsert, TablesUpdate } from '@/integrations/supabase/types';
 
 export interface InventoryItem {
   id: string;
@@ -124,26 +123,15 @@ export const useInventory = (filters?: {
   });
 };
 
+// Stock movements functionality - currently without database table
+// These are placeholder functions that work with product min_order_quantity
 export const useStockMovements = (productId?: string) => {
   return useQuery({
     queryKey: ['stock-movements', productId],
     queryFn: async (): Promise<StockMovement[]> => {
-      let query = supabase
-        .from('stock_movements')
-        .select(`
-          *,
-          product:products(name, slug)
-        `)
-        .order('created_at', { ascending: false });
-
-      if (productId) {
-        query = query.eq('product_id', productId);
-      }
-
-      const { data, error } = await query;
-
-      if (error) throw error;
-      return data as StockMovement[];
+      // Since stock_movements table doesn't exist, return empty array
+      // Stock is tracked via min_order_quantity field in products table
+      return [];
     },
   });
 };
@@ -175,7 +163,6 @@ export const useLowStockAlerts = () => {
           .eq('product_id', product.id)
           .gte('created_at', thirtyDaysAgo);
 
-        const totalRecentSales = recentSales?.reduce((sum, item) => sum + item.quantity, 0) || 0;
         const currentStock = product.min_order_quantity || 0;
         const lowStockThreshold = Math.max(1, Math.floor(currentStock * 0.2));
 
@@ -213,7 +200,7 @@ export const useUpdateStock = () => {
       reason: string;
       notes?: string;
     }) => {
-      // First, update the product stock
+      // First, get the product's current stock
       const { data: currentProduct } = await supabase
         .from('products')
         .select('min_order_quantity')
@@ -232,6 +219,7 @@ export const useUpdateStock = () => {
         newStock = quantity;
       }
 
+      // Update the product's stock using min_order_quantity field
       const { error: updateError } = await supabase
         .from('products')
         .update({ 
@@ -242,19 +230,6 @@ export const useUpdateStock = () => {
         .eq('id', productId);
 
       if (updateError) throw updateError;
-
-      // Then, record the stock movement
-      const { error: movementError } = await supabase
-        .from('stock_movements')
-        .insert({
-          product_id: productId,
-          movement_type: movementType,
-          quantity: movementType === 'adjustment' ? newStock : quantity,
-          reason,
-          notes: notes || null
-        });
-
-      if (movementError) throw movementError;
 
       return { productId, newStock };
     },
@@ -324,16 +299,6 @@ export const useBulkUpdateStock = () => {
               updated_at: new Date().toISOString()
             })
             .eq('id', update.productId);
-
-          await supabase
-            .from('stock_movements')
-            .insert({
-              product_id: update.productId,
-              movement_type: update.movementType,
-              quantity: update.movementType === 'adjustment' ? newStock : update.quantity,
-              reason: update.reason,
-              notes: update.notes || null
-            });
 
           results.push({ productId: update.productId, success: true });
         } catch (error) {

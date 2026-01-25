@@ -5,13 +5,12 @@ import { useToast } from '@/hooks/use-toast';
 export interface AdminUser {
   id: string;
   user_id: string;
-  email: string;
+  email: string | null;
   full_name: string | null;
   phone: string | null;
   role: 'admin' | 'user';
   created_at: string;
   updated_at: string;
-  last_sign_in_at?: string;
   total_orders?: number;
   total_spent?: number;
   is_active: boolean;
@@ -31,53 +30,51 @@ export const useAdminUsers = (filters?: UserFilters, page: number = 1, limit: nu
   return useQuery({
     queryKey: ['admin-users', filters, page, limit],
     queryFn: async () => {
-      let query = supabase
+      // First get profiles
+      let profileQuery = supabase
         .from('profiles')
-        .select(`
-          *,
-          user_roles!inner(role),
-          auth.users!inner(email, last_sign_in_at)
-        `, { count: 'exact' })
+        .select('*', { count: 'exact' })
         .order('created_at', { ascending: false });
 
-      // Apply filters
-      if (filters?.role) {
-        query = query.eq('user_roles.role', filters.role);
-      }
-
       if (filters?.search) {
-        query = query.or(`
-          full_name.ilike.%${filters.search}%, 
-          email.ilike.%${filters.search}%, 
-          phone.ilike.%${filters.search}%
-        `);
+        profileQuery = profileQuery.or(`full_name.ilike.%${filters.search}%,email.ilike.%${filters.search}%,phone.ilike.%${filters.search}%`);
       }
 
       if (filters?.dateFrom) {
-        query = query.gte('created_at', filters.dateFrom);
+        profileQuery = profileQuery.gte('created_at', filters.dateFrom);
       }
 
       if (filters?.dateTo) {
-        query = query.lte('created_at', filters.dateTo);
+        profileQuery = profileQuery.lte('created_at', filters.dateTo);
       }
 
       // Apply pagination
       const from = (page - 1) * limit;
       const to = from + limit - 1;
-      query = query.range(from, to);
+      profileQuery = profileQuery.range(from, to);
 
-      const { data, error, count } = await query;
+      const { data: profiles, error: profileError, count } = await profileQuery;
 
-      if (error) throw error;
+      if (profileError) throw profileError;
+
+      // Get roles for each user
+      const userIds = profiles?.map(p => p.user_id) || [];
+      
+      const { data: roles } = await supabase
+        .from('user_roles')
+        .select('user_id, role')
+        .in('user_id', userIds);
+
+      const roleMap = new Map(roles?.map(r => [r.user_id, r.role]) || []);
 
       // Get additional user stats
       const usersWithStats = await Promise.all(
-        (data || []).map(async (user) => {
+        (profiles || []).map(async (profile) => {
           // Get order stats
           const { data: orderStats } = await supabase
             .from('orders')
             .select('total')
-            .eq('user_id', user.user_id);
+            .eq('user_id', profile.user_id);
 
           const totalOrders = orderStats?.length || 0;
           const totalSpent = orderStats?.reduce((sum, order) => sum + (order.total || 0), 0) || 0;
@@ -91,14 +88,24 @@ export const useAdminUsers = (filters?: UserFilters, page: number = 1, limit: nu
             return null;
           }
 
+          const role = roleMap.get(profile.user_id) || 'user';
+          
+          if (filters?.role && role !== filters.role) {
+            return null;
+          }
+
           return {
-            ...user,
-            email: (user as any).email,
-            last_sign_in_at: (user as any).last_sign_in_at,
-            role: (user as any).role,
+            id: profile.id,
+            user_id: profile.user_id,
+            email: profile.email,
+            full_name: profile.full_name,
+            phone: profile.phone,
+            role: role as 'admin' | 'user',
+            created_at: profile.created_at,
+            updated_at: profile.updated_at,
             total_orders: totalOrders,
             total_spent: totalSpent,
-            is_active: true // Could be determined from auth.users or a separate status field
+            is_active: true
           } as AdminUser;
         })
       );
@@ -124,17 +131,20 @@ export const useAdminUser = (userId: string) => {
   return useQuery({
     queryKey: ['admin-user', userId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
-        .select(`
-          *,
-          user_roles!inner(role),
-          auth.users!inner(email, last_sign_in_at, created_at)
-        `)
+        .select('*')
         .eq('user_id', userId)
         .single();
 
-      if (error) throw error;
+      if (profileError) throw profileError;
+
+      // Get user's role
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .maybeSingle();
 
       // Get user's orders
       const { data: orders } = await supabase
@@ -164,12 +174,17 @@ export const useAdminUser = (userId: string) => {
       const totalSpent = orders?.reduce((sum, order) => sum + (order.total || 0), 0) || 0;
 
       return {
-        ...data,
-        email: (data as any).email,
-        last_sign_in_at: (data as any).last_sign_in_at,
-        role: (data as any).role,
+        id: profile.id,
+        user_id: profile.user_id,
+        email: profile.email,
+        full_name: profile.full_name,
+        phone: profile.phone,
+        role: (roleData?.role || 'user') as 'admin' | 'user',
+        created_at: profile.created_at,
+        updated_at: profile.updated_at,
         total_orders: totalOrders,
         total_spent: totalSpent,
+        is_active: true,
         orders: orders || [],
         wishlist: wishlist || []
       } as AdminUser & { orders: any[]; wishlist: any[] };
@@ -359,22 +374,12 @@ export const useExportUsers = () => {
           full_name,
           phone,
           email,
-          created_at,
-          user_roles!inner(role)
+          created_at
         `)
         .order('created_at', { ascending: false });
 
-      // Apply filters
-      if (filters?.role) {
-        query = query.eq('user_roles.role', filters.role);
-      }
-
       if (filters?.search) {
-        query = query.or(`
-          full_name.ilike.%${filters.search}%, 
-          email.ilike.%${filters.search}%, 
-          phone.ilike.%${filters.search}%
-        `);
+        query = query.or(`full_name.ilike.%${filters.search}%,email.ilike.%${filters.search}%,phone.ilike.%${filters.search}%`);
       }
 
       const { data, error } = await query;

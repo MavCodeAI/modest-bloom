@@ -76,8 +76,7 @@ export const useDashboardStats = () => {
         supabase
           .from('products')
           .select('id', { count: 'exact' })
-          .eq('in_stock', false)
-          .or('min_order_quantity.gt.0'),
+          .eq('in_stock', false),
         
         // Recent orders (last 7 days)
         supabase
@@ -161,10 +160,8 @@ export const useTopProducts = (limit: number = 10) => {
           product_id,
           product_name,
           quantity,
-          price,
-          products!inner(name)
-        `)
-        .in('orders.status', ['delivered', 'confirmed', 'processing', 'shipped']);
+          price
+        `);
 
       if (error) throw error;
 
@@ -199,8 +196,7 @@ export const useOrderStatusData = () => {
     queryFn: async (): Promise<OrderStatusData[]> => {
       const { data, error } = await supabase
         .from('orders')
-        .select('status')
-        .select('status', { count: 'exact' });
+        .select('status');
 
       if (error) throw error;
 
