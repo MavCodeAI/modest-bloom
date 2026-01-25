@@ -54,7 +54,7 @@ export function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass">
       <div className="luxury-container">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-20 md:h-24">
           {/* Mobile Menu Button */}
           <button
             className="md:hidden p-2 text-foreground/80 hover:text-foreground transition-colors"
@@ -72,7 +72,7 @@ export function Navbar() {
             <img 
               src="/images/logo.png" 
               alt="Modest Way Fashion" 
-              className="h-8 md:h-10 w-auto object-contain"
+              className="h-14 md:h-16 w-auto object-contain"
             />
           </Link>
 
