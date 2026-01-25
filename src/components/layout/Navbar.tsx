@@ -1,55 +1,17 @@
-import { useState, useMemo } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Search, User, ShoppingBag, Heart } from 'lucide-react';
-import { FaInstagram, FaFacebook, FaTwitter, FaWhatsapp } from 'react-icons/fa';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import { MdShoppingCart, MdFavoriteBorder, MdAccountCircle } from 'react-icons/md';
 import { useStore } from '@/hooks/useStore';
 import { cn } from '@/lib/utils';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-
-const navLinks = [
-  { href: '/shop?tag=new_drop', label: 'New In' },
-  { href: '/shop?category=abayas', label: 'Abayas' },
-  { href: '/shop?category=printed', label: 'Printed' },
-  { href: '/shop?category=sets', label: 'Sets' },
-  { href: '/shop?category=kaftans', label: 'Kaftans' },
-  { href: '/shop?tag=sale', label: 'Sale' },
-  { href: '/wholesale', label: 'Wholesale' },
-];
+import { SearchBar } from './SearchBar';
+import { NavLinks } from './NavLinks';
+import { MobileMenu } from './MobileMenu';
 
 export function Navbar() {
-   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-   const [searchValue, setSearchValue] = useState('');
-   const [isSearchOpen, setIsSearchOpen] = useState(false);
-   const { cartCount, wishlist, dispatch, products } = useStore();
-   const location = useLocation();
-   const navigate = useNavigate();
-
-   const suggestions = useMemo(() => {
-     if (!searchValue.trim()) return [];
-     const lowerValue = searchValue.toLowerCase();
-     const uniqueNames = new Set(
-       products
-         .filter(p => p.name.toLowerCase().includes(lowerValue))
-         .map(p => p.name)
-     );
-     return Array.from(uniqueNames).slice(0, 5); // Limit to 5 suggestions
-   }, [products, searchValue]);
-
-   const handleSearch = (query: string) => {
-     if (query.trim()) {
-       navigate(`/search?q=${encodeURIComponent(query.trim())}`);
-       setIsSearchOpen(false);
-       setSearchValue('');
-     }
-   };
-
-   const handleKeyDown = (e: React.KeyboardEvent) => {
-     if (e.key === 'Enter') {
-       handleSearch(searchValue);
-     }
-   };
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { cartCount, wishlist, dispatch } = useStore();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass">
@@ -77,58 +39,13 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={cn(
-                  "text-sm font-medium tracking-wide uppercase transition-colors hover:text-primary",
-                  location.pathname + location.search === link.href
-                    ? "text-primary"
-                    : "text-foreground/70"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          <div className="hidden md:flex">
+            <NavLinks />
+          </div>
 
           {/* Right Actions */}
           <div className="flex items-center space-x-4">
-            <Popover open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-              <PopoverTrigger asChild>
-                <button
-                  className="p-2 text-foreground/80 hover:text-foreground transition-colors"
-                  aria-label="Search"
-                >
-                  <Search size={20} />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[300px] p-0" align="end">
-                <Command>
-                  <CommandInput
-                    placeholder="Search products..."
-                    value={searchValue}
-                    onValueChange={setSearchValue}
-                    onKeyDown={handleKeyDown}
-                  />
-                  <CommandList>
-                    <CommandEmpty>No products found.</CommandEmpty>
-                    <CommandGroup>
-                      {suggestions.map((name) => (
-                        <CommandItem
-                          key={name}
-                          onSelect={() => handleSearch(name)}
-                        >
-                          {name}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+            <SearchBar isOpen={isSearchOpen} onOpenChange={setIsSearchOpen} />
             
             <Link
               to="/wishlist"
@@ -167,30 +84,7 @@ export function Navbar() {
         </div>
 
         {/* Mobile Navigation */}
-        <div
-          className={cn(
-            "md:hidden overflow-hidden transition-all duration-300",
-            isMobileMenuOpen ? "max-h-96 pb-6" : "max-h-0"
-          )}
-        >
-          <nav className="flex flex-col space-y-4 pt-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={cn(
-                  "text-sm font-medium tracking-wide uppercase transition-colors hover:text-primary",
-                  location.pathname + location.search === link.href
-                    ? "text-primary"
-                    : "text-foreground/70"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
+        <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
       </div>
     </header>
   );
