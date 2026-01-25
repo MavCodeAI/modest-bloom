@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = 'https://obtomojdduiokwubwqqw.supabase.co';
-const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9idG9tb2pkZHVpb2t3dWJ3cXF3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2OTI0MDc0MCwiZXhwIjoyMDg0ODE2NzQwfQ.example'; // You'll need to provide the service key
+const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9idG9tb2pkZHVpb2t3dWJ3cXF3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2OTI0MDc0MCwiZXhwIjoyMDg0ODE2NzQwfQ.example'; // Replace with your actual service role key
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
