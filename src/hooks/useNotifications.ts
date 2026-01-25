@@ -17,17 +17,28 @@ export interface Notification {
   read_at?: string;
 }
 
-// Since notifications table doesn't exist, we'll use in-memory notifications
-// and provide hooks that will work when the table is created later
-
 export const useNotifications = (unreadOnly: boolean = false) => {
   const { user } = useAuth();
 
   return useQuery({
     queryKey: ['notifications', user?.id, unreadOnly],
     queryFn: async (): Promise<Notification[]> => {
-      // Return empty array since notifications table doesn't exist
-      return [];
+      if (!user) return [];
+
+      let query = supabase
+        .from('notifications')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (unreadOnly) {
+        query = query.eq('read', false);
+      }
+
+      const { data, error } = await query;
+
+      if (error) throw error;
+      return data as Notification[];
     },
     enabled: !!user,
   });
@@ -39,8 +50,16 @@ export const useUnreadNotificationCount = () => {
   return useQuery({
     queryKey: ['unread-notification-count', user?.id],
     queryFn: async (): Promise<number> => {
-      // Return 0 since notifications table doesn't exist
-      return 0;
+      if (!user) return 0;
+
+      const { count, error } = await supabase
+        .from('notifications')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('read', false);
+
+      if (error) throw error;
+      return count || 0;
     },
     enabled: !!user,
   });
@@ -52,8 +71,18 @@ export const useMarkNotificationAsRead = () => {
 
   return useMutation({
     mutationFn: async (notificationId: string) => {
-      // Placeholder - would update when notifications table exists
-      return { id: notificationId };
+      const { data, error } = await supabase
+        .from('notifications')
+        .update({ 
+          read: true, 
+          read_at: new Date().toISOString() 
+        })
+        .eq('id', notificationId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -77,8 +106,18 @@ export const useMarkAllNotificationsAsRead = () => {
   return useMutation({
     mutationFn: async () => {
       if (!user) throw new Error('User not authenticated');
-      // Placeholder - would update when notifications table exists
-      return null;
+
+      const { data, error } = await supabase
+        .from('notifications')
+        .update({ 
+          read: true, 
+          read_at: new Date().toISOString() 
+        })
+        .eq('user_id', user.id)
+        .eq('read', false);
+
+      if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -104,8 +143,12 @@ export const useDeleteNotification = () => {
 
   return useMutation({
     mutationFn: async (notificationId: string) => {
-      // Placeholder - would delete when notifications table exists
-      return null;
+      const { error } = await supabase
+        .from('notifications')
+        .delete()
+        .eq('id', notificationId);
+
+      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -130,13 +173,24 @@ export const useCreateNotification = () => {
 
   return useMutation({
     mutationFn: async (notification: Omit<Notification, 'id' | 'created_at' | 'read' | 'read_at'>) => {
-      // Placeholder - would insert when notifications table exists
-      return { 
-        id: crypto.randomUUID(), 
-        ...notification, 
-        read: false, 
-        created_at: new Date().toISOString() 
+      const insertData = {
+        user_id: notification.user_id,
+        title: notification.title,
+        message: notification.message,
+        type: notification.type,
+        action_url: notification.action_url || null,
+        action_text: notification.action_text || null,
+        metadata: notification.metadata || {}
       };
+
+      const { data, error } = await supabase
+        .from('notifications')
+        .insert(insertData as any)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -154,7 +208,7 @@ export const useOrderNotificationService = () => {
     orderNumber: string,
     oldStatus: string,
     newStatus: string,
-    customerEmail?: string
+    _customerEmail?: string
   ) => {
     const statusMessages: Record<string, { title: string; message: string; type: 'info' | 'success' | 'warning' | 'error' }> = {
       pending: {
@@ -192,7 +246,6 @@ export const useOrderNotificationService = () => {
     const notification = statusMessages[newStatus];
     if (!notification) return;
 
-    // Create notification for logged-in user (currently just logs since table doesn't exist)
     if (userId) {
       try {
         await createNotification.mutateAsync({
@@ -209,8 +262,7 @@ export const useOrderNotificationService = () => {
           }
         });
       } catch (error) {
-        // Silently fail since table doesn't exist
-        console.log('Notification would be sent:', notification);
+        console.error('Failed to create notification:', error);
       }
     }
   };
@@ -223,7 +275,6 @@ export const useStockNotificationService = () => {
   const createNotification = useCreateNotification();
 
   const notifyLowStock = async (productName: string, currentStock: number) => {
-    // Get all admin users
     const { data: adminUsers } = await supabase
       .from('user_roles')
       .select('user_id')
@@ -231,8 +282,24 @@ export const useStockNotificationService = () => {
 
     if (!adminUsers) return;
 
-    // Currently just logs since table doesn't exist
-    console.log(`Low stock alert for ${productName}: ${currentStock} remaining`);
+    for (const admin of adminUsers) {
+      try {
+        await createNotification.mutateAsync({
+          user_id: admin.user_id,
+          title: 'کم اسٹاک کا الرٹ',
+          message: `پروڈکٹ ${productName} کا اسٹاک کم ہو رہا ہے۔ موجودہ اسٹاک: ${currentStock}`,
+          type: 'warning',
+          action_url: '/admin/inventory',
+          action_text: 'اسٹیک مینج کریں',
+          metadata: {
+            product_name: productName,
+            current_stock: currentStock
+          }
+        });
+      } catch (error) {
+        console.error('Failed to notify admin:', error);
+      }
+    }
   };
 
   return { notifyLowStock };
