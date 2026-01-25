@@ -69,11 +69,11 @@ export function Navbar() {
             to="/" 
             className="flex-shrink-0"
           >
-            <h1 className="font-serif text-xl md:text-2xl tracking-wide">
-              <span className="text-white">Modest</span>
-              <span className="text-white"> Way</span>
-              <span className="text-white"> Fashion</span>
-            </h1>
+            <img 
+              src="/images/logo.jpeg" 
+              alt="Modest Way Fashion" 
+              className="h-8 md:h-10 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Navigation */}

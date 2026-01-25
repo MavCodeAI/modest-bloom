@@ -8,11 +8,11 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1 space-y-4 sm:space-y-6">
-            <h2 className="font-serif text-xl sm:text-2xl">
-              <span className="text-white">Modest</span>
-              <span className="text-white"> Way</span>
-              <span className="text-white"> Fashion</span>
-            </h2>
+            <img 
+              src="/images/logo.jpeg" 
+              alt="Modest Way Fashion" 
+              className="h-12 w-auto object-contain"
+            />
             <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
               UAE-born. Culture-inspired. Redefining luxury modest fashion for the modern woman.
             </p>
