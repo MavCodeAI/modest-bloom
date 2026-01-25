@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Mail, Phone, MapPin, MessageSquare, Clock, Send } from 'lucide-react';
-import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaComments, FaClock, FaPaperPlane, FaWhatsapp, FaInstagram, FaFacebook, FaTwitter } from 'react-icons/fa';
+import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaComments, FaClock, FaPaperPlane, FaWhatsapp, FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
 import { MdSend } from 'react-icons/md';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -313,7 +313,7 @@ const Contact = () => {
             </p>
             <div className="flex justify-center space-x-4">
               <a
-                href="https://instagram.com/modestwayfashion"
+                href="https://www.instagram.com/modest_way_fashion?igsh=OXkzb3k1aWd0ZHl4&utm_source=qr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-12 h-12 bg-card border border-border rounded-full flex items-center justify-center hover:bg-pink-500 hover:text-white transition-colors"
@@ -321,7 +321,7 @@ const Contact = () => {
                 <FaInstagram className="w-5 h-5" />
               </a>
               <a
-                href="https://facebook.com/modestwayfashion"
+                href="https://www.facebook.com/share/1C4XdXZDWi/?mibextid=wwXIfr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-12 h-12 bg-card border border-border rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"
@@ -329,12 +329,12 @@ const Contact = () => {
                 <FaFacebook className="w-5 h-5" />
               </a>
               <a
-                href="https://twitter.com/modestwayfashion"
+                href="https://www.tiktok.com/@modestwayfashion?_r=1&_t=ZS-93Knz5mBfZY"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-12 h-12 bg-card border border-border rounded-full flex items-center justify-center hover:bg-sky-500 hover:text-white transition-colors"
+                className="w-12 h-12 bg-card border border-border rounded-full flex items-center justify-center hover:bg-black hover:text-white transition-colors"
               >
-                <FaTwitter className="w-5 h-5" />
+                <FaTiktok className="w-5 h-5" />
               </a>
               <a
                 href="https://wa.me/971556020293"

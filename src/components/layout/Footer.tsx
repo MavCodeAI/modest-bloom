@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Instagram, Facebook, Twitter, Mail, MapPin, Phone } from 'lucide-react';
+import { Instagram, Facebook, Twitter, Mail, MapPin, Phone, Music } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -17,14 +17,14 @@ export function Footer() {
               UAE-born. Culture-inspired. Redefining luxury modest fashion for the modern woman.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://www.instagram.com/modest_way_fashion?igsh=OXkzb3k1aWd0ZHl4&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                 <Instagram size={18} className="sm:w-5 sm:h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://www.facebook.com/share/1C4XdXZDWi/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                 <Facebook size={18} className="sm:w-5 sm:h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Twitter size={18} className="sm:w-5 sm:h-5" />
+              <a href="https://www.tiktok.com/@modestwayfashion?_r=1&_t=ZS-93Knz5mBfZY" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Music size={18} className="sm:w-5 sm:h-5" />
               </a>
             </div>
           </div>
