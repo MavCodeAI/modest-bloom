@@ -72,7 +72,7 @@ export function Navbar() {
             <img 
               src="/images/logo.png" 
               alt="Modest Way Fashion" 
-              className="h-8 md:h-10 w-auto object-contain"
+              className="h-16 md:h-20 w-auto object-contain"
             />
           </Link>
 

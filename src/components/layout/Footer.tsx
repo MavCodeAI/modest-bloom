@@ -11,7 +11,8 @@ export function Footer() {
             <img 
               src="/images/logo.png" 
               alt="Modest Way Fashion" 
-              className="h-12 w-auto object-contain"
+              className="h-32 w-auto max-w-[240px] object-contain filter brightness-100 contrast-100"
+              style={{ minHeight: '128px' }}
             />
             <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
               UAE-born. Culture-inspired. Redefining luxury modest fashion for the modern woman.
