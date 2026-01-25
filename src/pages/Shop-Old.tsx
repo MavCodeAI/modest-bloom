@@ -43,6 +43,10 @@ const Shop = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get('category') || null);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [sortBy, setSortBy] = useState('newest');
   
   // Parse URL params to filters
   const initialFilters: SearchFilters = useMemo(() => {
@@ -83,6 +87,28 @@ const Shop = () => {
   const { data: categories } = useCategories();
   const { data: suggestions } = useSearchSuggestions(searchQuery, 5);
 
+  // Transform search results to Product type for ProductGrid
+  const filteredProducts = useMemo(() => {
+    if (!searchResults?.results) return [];
+    
+    return searchResults.results.map(result => ({
+      id: result.id,
+      name: result.name,
+      price: result.price,
+      originalPrice: result.sale_price || undefined,
+      category: result.category?.name || '',
+      description: result.description || '',
+      image: result.images?.[0] || '',
+      images: result.images || undefined,
+      sizes: result.sizes || [],
+      colors: result.colors || [],
+      tags: result.tags || [],
+      isWholesale: result.is_wholesale || false,
+      inStock: result.in_stock !== false,
+      createdAt: result.created_at
+    }));
+  }, [searchResults]);
+
   // Update URL when filters change
   useEffect(() => {
     const params = new URLSearchParams();
@@ -109,6 +135,9 @@ const Shop = () => {
   };
 
   const clearFilters = () => {
+    setSelectedCategory(null);
+    setSelectedTag(null);
+    setPriceRange([0, 5000]);
     setFilters({
       query: searchQuery || undefined,
       sortBy: 'created_at',
@@ -123,12 +152,6 @@ const Shop = () => {
     (!Array.isArray(v) || v.length > 0)
   ).length - 3; // Exclude sortBy, sortOrder, page, limit
 
-  const clearFilters = () => {
-    setSelectedCategory(null);
-    setSelectedTag(null);
-    setPriceRange([0, 5000]);
-    setSearchParams({});
-  };
 
   const handleCategoryChange = (category: string | null) => {
     setSelectedCategory(category);
@@ -189,9 +212,6 @@ const Shop = () => {
               )}
             >
               {category.name}
-              <span className="text-muted-foreground ml-2">
-                ({category.count})
-              </span>
             </button>
           ))}
         </div>

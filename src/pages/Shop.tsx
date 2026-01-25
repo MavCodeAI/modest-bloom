@@ -519,7 +519,25 @@ const Shop = () => {
               {/* Products */}
               {!isLoading && searchResults && (
                 <>
-                  <ProductGrid products={searchResults.results} columns={3} />
+                  <ProductGrid 
+                    products={searchResults.results.map(result => ({
+                      id: result.id,
+                      name: result.name,
+                      price: result.price,
+                      originalPrice: result.sale_price || undefined,
+                      category: result.category?.name || '',
+                      description: result.description || '',
+                      image: result.images?.[0] || '',
+                      images: result.images || undefined,
+                      sizes: result.sizes || [],
+                      colors: result.colors || [],
+                      tags: result.tags || [],
+                      isWholesale: result.is_wholesale || false,
+                      inStock: result.in_stock !== false,
+                      createdAt: result.created_at
+                    }))} 
+                    columns={3} 
+                  />
                   
                   {/* Pagination */}
                   {searchResults.totalPages > 1 && (
