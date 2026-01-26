@@ -11,7 +11,11 @@ const navLinks = [
   { href: '/wholesale', label: 'Wholesale' },
 ];
 
-export function NavLinks({ className }) {
+interface NavLinksProps {
+  className?: string;
+}
+
+export function NavLinks({ className }: NavLinksProps) {
   const location = useLocation();
 
   return (
