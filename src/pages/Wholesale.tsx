@@ -282,6 +282,60 @@ const Wholesale = () => {
           </div>
         </section>
 
+        {/* Sample Review Section */}
+        <section className="py-24 md:py-32 bg-primary/5">
+          <div className="luxury-container">
+            <div className="text-center mb-16 md:mb-20">
+              <p className="text-primary text-sm font-medium uppercase tracking-[0.3em] mb-4">
+                Quality Assurance
+              </p>
+              <h2 className="font-serif text-4xl md:text-5xl mb-6">Review Your Sample</h2>
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                Our team will send you a comprehensive video of your sample piece for any notes and final amendments.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+              {[
+                {
+                  icon: Package,
+                  title: 'Sample Creation',
+                  desc: 'We create a sample piece based on your selected design and customizations.'
+                },
+                {
+                  icon: MessageCircle,
+                  title: 'Video Review',
+                  desc: 'Receive a detailed video showcasing your sample from all angles with close-up details.'
+                },
+                {
+                  icon: Sparkles,
+                  title: 'Final Amendments',
+                  desc: 'Share your feedback and we\'ll make any necessary adjustments before bulk production.'
+                }
+              ].map((item, index) => (
+                <div 
+                  key={item.title} 
+                  className="text-center animate-fade-in"
+                  style={{ animationDelay: `${index * 150}ms` }}
+                >
+                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                    <item.icon className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="font-serif text-xl mb-3">{item.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-16 text-center">
+              <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-background border border-primary/20">
+                <Shield className="h-5 w-5 text-primary" />
+                <span className="text-sm font-medium">100% Satisfaction Guaranteed</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Application Form */}
         <section id="apply" className="py-24 md:py-32">
           <div className="luxury-container">
