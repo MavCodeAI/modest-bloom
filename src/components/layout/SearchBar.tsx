@@ -5,7 +5,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useStore } from '@/hooks/useStore';
 
-export function SearchBar({ isOpen, onOpenChange }) {
+interface SearchBarProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export function SearchBar({ isOpen, onOpenChange }: SearchBarProps) {
   const [searchValue, setSearchValue] = useState('');
   const { products } = useStore();
   const navigate = useNavigate();
