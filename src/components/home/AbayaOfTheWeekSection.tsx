@@ -1,13 +1,40 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star } from 'lucide-react';
-import { useStore } from '@/hooks/useStore';
+import { useProducts } from '@/hooks/useProducts';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function AbayaOfTheWeekSection() {
-  const { getProductsByTag } = useStore();
-  const featuredProduct = getProductsByTag('abaya_of_week')[0] || getProductsByTag('best_seller')[0];
+  const { data: abayaOfWeek, isLoading: loadingWeek } = useProducts({ tag: 'abaya_of_week' });
+  const { data: bestSellers, isLoading: loadingBest } = useProducts({ tag: 'best_seller' });
+
+  const isLoading = loadingWeek || loadingBest;
+  const featuredProduct = abayaOfWeek?.[0] || bestSellers?.[0];
+
+  if (isLoading) {
+    return (
+      <section className="section-padding">
+        <div className="luxury-container">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <Skeleton className="aspect-[4/5] rounded-lg" />
+            <div className="lg:pl-8 space-y-4">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-12 w-3/4" />
+              <Skeleton className="h-4 w-40" />
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-10 w-32" />
+              <Skeleton className="h-12 w-40" />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (!featuredProduct) return null;
+
+  const image = featuredProduct.images?.[0] || '/placeholder.svg';
+  const originalPrice = featuredProduct.sale_price;
 
   return (
     <section className="section-padding">
@@ -16,7 +43,7 @@ export function AbayaOfTheWeekSection() {
           {/* Image */}
           <div className="relative aspect-[4/5] rounded-lg overflow-hidden">
             <img
-              src={featuredProduct.image}
+              src={image}
               alt={featuredProduct.name}
               className="w-full h-full object-cover"
             />
@@ -52,9 +79,9 @@ export function AbayaOfTheWeekSection() {
               <span className="font-serif text-3xl text-primary">
                 AED {featuredProduct.price.toLocaleString()}
               </span>
-              {featuredProduct.originalPrice && (
+              {originalPrice && (
                 <span className="text-lg text-muted-foreground line-through">
-                  AED {featuredProduct.originalPrice.toLocaleString()}
+                  AED {originalPrice.toLocaleString()}
                 </span>
               )}
             </div>
