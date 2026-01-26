@@ -58,19 +58,31 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // Custom luxury colors
-        champagne: {
-          DEFAULT: "hsl(var(--champagne))",
-          glow: "hsl(var(--champagne-glow))",
+        // Custom women's fashion colors
+        purple: {
+          primary: "hsl(var(--purple-primary))",
+          glow: "hsl(var(--purple-glow))",
         },
-        navy: {
-          deep: "hsl(var(--navy-deep))",
-          surface: "hsl(var(--navy-surface))",
-          elevated: "hsl(var(--navy-elevated))",
+        pink: {
+          rose: "hsl(var(--pink-rose))",
+          hot: "hsl(var(--pink-hot))",
         },
-        gold: {
-          DEFAULT: "hsl(var(--gold))",
-          muted: "hsl(var(--gold-muted))",
+        blue: {
+          sky: "hsl(var(--blue-sky))",
+          ocean: "hsl(var(--blue-ocean))",
+        },
+        beige: {
+          warm: "hsl(var(--beige-warm))",
+          cream: "hsl(var(--beige-cream))",
+          sand: "hsl(var(--beige-sand))",
+        },
+        black: {
+          charcoal: "hsl(var(--black-charcoal))",
+          soft: "hsl(var(--black-soft))",
+        },
+        white: {
+          cream: "hsl(var(--white-cream))",
+          pure: "hsl(var(--white-pure))",
         },
       },
       fontFamily: {

@@ -176,7 +176,7 @@ const Wholesale = () => {
               
               <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6 leading-tight">
                 Partner With<br />
-                <span className="text-white italic">Modest Way Fashion</span>
+                <span className="text-gradient-purple italic">Modest Way Fashion</span>
               </h1>
               
               <p className="text-muted-foreground text-lg md:text-xl mb-10 leading-relaxed max-w-xl">
@@ -228,24 +228,42 @@ const Wholesale = () => {
               </p>
               <h2 className="font-serif text-4xl md:text-5xl mb-6">Partner Benefits</h2>
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                Join our exclusive wholesale network and experience the <span className="text-white">Modest Way Fashion</span> difference.
+                Join our exclusive wholesale network and experience the <span className="text-gradient-pink">Modest Way Fashion</span> difference.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {benefits.map((benefit, index) => (
-                <div
-                  key={benefit.title}
-                  className="group p-8 rounded-2xl bg-card border border-border/50 hover:border-primary/30 transition-all duration-500 animate-fade-in hover:shadow-xl hover:shadow-primary/5"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
-                    <benefit.icon className="h-7 w-7 text-primary" />
+              {benefits.map((benefit, index) => {
+                const colorClasses = [
+                  'hover:border-purple-primary/30 hover:shadow-purple-primary/5',
+                  'hover:border-pink-rose/30 hover:shadow-pink-rose/5', 
+                  'hover:border-blue-sky/30 hover:shadow-blue-sky/5'
+                ];
+                const iconColors = [
+                  'text-purple-primary',
+                  'text-pink-rose',
+                  'text-blue-sky'
+                ];
+                const bgColors = [
+                  'bg-purple-primary/10 hover:bg-purple-primary/20',
+                  'bg-pink-rose/10 hover:bg-pink-rose/20',
+                  'bg-blue-sky/10 hover:bg-blue-sky/20'
+                ];
+                
+                return (
+                  <div
+                    key={benefit.title}
+                    className={`group p-8 rounded-2xl bg-card border border-border/50 transition-all duration-500 animate-fade-in hover:shadow-xl ${colorClasses[index % 3]}`}
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-colors duration-300 ${bgColors[index % 3]}`}>
+                      <benefit.icon className={`h-7 w-7 ${iconColors[index % 3]}`} />
+                    </div>
+                    <h3 className="font-serif text-xl mb-3">{benefit.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">{benefit.description}</p>
                   </div>
-                  <h3 className="font-serif text-xl mb-3">{benefit.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{benefit.description}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
@@ -300,31 +318,56 @@ const Wholesale = () => {
                 {
                   icon: Package,
                   title: 'Sample Creation',
-                  desc: 'We create a sample piece based on your selected design and customizations.'
+                  desc: 'We create a sample piece based on your selected design and customizations.',
+                  color: 'purple'
                 },
                 {
                   icon: MessageCircle,
                   title: 'Video Review',
-                  desc: 'Receive a detailed video showcasing your sample from all angles with close-up details.'
+                  desc: 'Receive a detailed video showcasing your sample from all angles with close-up details.',
+                  color: 'pink'
                 },
                 {
                   icon: Sparkles,
                   title: 'Final Amendments',
-                  desc: 'Share your feedback and we\'ll make any necessary adjustments before bulk production.'
+                  desc: 'Share your feedback and we\'ll make any necessary adjustments before bulk production.',
+                  color: 'blue'
                 }
-              ].map((item, index) => (
-                <div 
-                  key={item.title} 
-                  className="text-center animate-fade-in"
-                  style={{ animationDelay: `${index * 150}ms` }}
-                >
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                    <item.icon className="h-8 w-8 text-primary" />
+              ].map((item, index) => {
+                const colorConfig = {
+                  purple: {
+                    bg: 'bg-purple-primary/10 hover:bg-purple-primary/20',
+                    text: 'text-purple-primary',
+                    border: 'border-purple-primary/30'
+                  },
+                  pink: {
+                    bg: 'bg-pink-rose/10 hover:bg-pink-rose/20',
+                    text: 'text-pink-rose',
+                    border: 'border-pink-rose/30'
+                  },
+                  blue: {
+                    bg: 'bg-blue-sky/10 hover:bg-blue-sky/20',
+                    text: 'text-blue-sky',
+                    border: 'border-blue-sky/30'
+                  }
+                };
+                
+                const config = colorConfig[item.color as keyof typeof colorConfig];
+                
+                return (
+                  <div 
+                    key={item.title} 
+                    className="text-center animate-fade-in"
+                    style={{ animationDelay: `${index * 150}ms` }}
+                  >
+                    <div className={`w-16 h-16 rounded-full ${config.bg} flex items-center justify-center mx-auto mb-6 transition-colors duration-300`}>
+                      <item.icon className={`h-8 w-8 ${config.text}`} />
+                    </div>
+                    <h3 className="font-serif text-xl mb-3">{item.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
                   </div>
-                  <h3 className="font-serif text-xl mb-3">{item.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="mt-16 text-center">

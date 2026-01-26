@@ -8,68 +8,76 @@
 
 @layer base {
   :root {
-    /* Webpage Image Color Palette */
-    --background: 220 35% 12%;
-    --foreground: 220 15% 95%;
+    /* Women's Fashion Theme - Soft Background with Colorful Text */
+    --background: 45 15% 98%;
+    --foreground: 220 15% 20%;
 
-    --card: 220 30% 15%;
-    --card-foreground: 220 15% 95%;
+    --card: 45 10% 96%;
+    --card-foreground: 220 15% 20%;
 
-    --popover: 220 30% 15%;
-    --popover-foreground: 220 15% 95%;
+    --popover: 45 10% 96%;
+    --popover-foreground: 220 15% 20%;
 
-    /* Orange Accent - Primary */
-    --primary: 25 85% 55%;
-    --primary-foreground: 220 35% 12%;
+    /* Luxury Primary - Elegant Abaya Brand Style */
+    --primary: 260 85% 35%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 25% 18%;
-    --secondary-foreground: 220 15% 85%;
+    --secondary: 340 75% 40%;
+    --secondary-foreground: 220 35% 8%;
 
-    --muted: 220 20% 22%;
-    --muted-foreground: 220 15% 65%;
+    --muted: 45 8% 92%;
+    --muted-foreground: 220 8% 50%;
 
-    --accent: 25 75% 50%;
-    --accent-foreground: 220 35% 12%;
+    --accent: 330 85% 35%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62% 50%;
+    --destructive: 0 100% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 220 20% 25%;
-    --input: 220 20% 25%;
-    --ring: 25 85% 55%;
+    --border: 45 5% 85%;
+    --input: 45 5% 85%;
+    --ring: 260 85% 35%;
 
     --radius: 0.75rem;
 
-    /* Custom Color Tokens from Webpage */
-    --orange-primary: 25 85% 55%;
-    --orange-glow: 25 90% 65%;
-    --blue-deep: 220 35% 12%;
-    --blue-surface: 220 30% 15%;
-    --blue-elevated: 220 25% 18%;
-    --pink-rose: 350 65% 75%;
+    /* Luxury Abaya Brand Colors - Inspired by The Abaya Lab */
+    --purple-primary: 260 85% 35%;
+    --purple-glow: 260 85% 45%;
+    --pink-rose: 340 75% 40%;
+    --pink-hot: 330 85% 35%;
+    --blue-sky: 210 80% 30%;
+    --blue-ocean: 220 85% 25%;
+    --beige-warm: 40 25% 75%;
     --beige-cream: 45 30% 85%;
-    --black-texture: 220 15% 10%;
+    --beige-sand: 35 20% 65%;
+    --black-charcoal: 220 35% 8%;
+    --black-soft: 220 30% 15%;
+    --white-cream: 0 0% 98%;
+    --white-pure: 0 0% 100%;
 
     /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--blue-deep)) 0%, hsl(220 40% 15%) 100%);
-    --gradient-orange: linear-gradient(135deg, hsl(var(--orange-primary)) 0%, hsl(var(--orange-glow)) 100%);
-    --gradient-overlay: linear-gradient(to top, hsl(var(--blue-deep) / 0.95) 0%, transparent 60%);
-    --gradient-card: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(220 32% 10%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(var(--purple-primary)) 0%, hsl(var(--pink-rose)) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(var(--purple-primary)) 0%, hsl(var(--purple-glow)) 100%);
+    --gradient-pink: linear-gradient(135deg, hsl(var(--pink-rose)) 0%, hsl(var(--pink-hot)) 100%);
+    --gradient-blue: linear-gradient(135deg, hsl(var(--blue-sky)) 0%, hsl(var(--blue-ocean)) 100%);
+    --gradient-beige: linear-gradient(135deg, hsl(var(--beige-warm)) 0%, hsl(var(--beige-cream)) 100%);
+    --gradient-overlay: linear-gradient(to top, hsl(45 15% 98% / 0.95) 0%, transparent 60%);
+    --gradient-card: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(45 8% 94%) 100%);
 
     /* Shadows */
-    --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.4);
-    --shadow-glow: 0 0 40px -10px hsl(var(--orange-primary) / 0.3);
-    --shadow-card: 0 8px 30px -8px hsl(0 0% 0% / 0.5);
+    --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.1);
+    --shadow-glow: 0 0 40px -10px hsl(var(--purple-primary) / 0.2);
+    --shadow-card: 0 8px 30px -8px hsl(0 0% 0% / 0.08);
 
     /* Sidebar */
-    --sidebar-background: 220 30% 15%;
-    --sidebar-foreground: 220 15% 95%;
-    --sidebar-primary: 25 85% 55%;
-    --sidebar-primary-foreground: 220 35% 12%;
-    --sidebar-accent: 220 25% 18%;
-    --sidebar-accent-foreground: 220 15% 85%;
-    --sidebar-border: 220 20% 25%;
-    --sidebar-ring: 25 85% 55%;
+    --sidebar-background: 0 0% 99%;
+    --sidebar-foreground: 220 15% 20%;
+    --sidebar-primary: 270 65% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 340 75% 85%;
+    --sidebar-accent-foreground: 220 15% 20%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 270 65% 65%;
   }
 
   .dark {
@@ -120,7 +128,44 @@
   }
 
   .btn-luxury-outline {
-    @apply btn-luxury border-2 border-foreground/80 text-foreground hover:bg-foreground hover:text-background;
+    @apply btn-luxury border-2 border-purple-primary text-purple-primary hover:bg-purple-primary hover:text-primary-foreground;
+  }
+
+  /* Colorful text utilities for women's fashion */
+  .text-purple {
+    color: hsl(var(--purple-primary));
+  }
+
+  .text-pink {
+    color: hsl(var(--pink-rose));
+  }
+
+  .text-blue {
+    color: hsl(var(--blue-sky));
+  }
+
+  .text-beige {
+    color: hsl(var(--beige-warm));
+  }
+
+  .text-gradient-purple {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+
+  .text-gradient-pink {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-pink);
+  }
+
+  .text-gradient-blue {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-blue);
+  }
+
+  .text-gradient-beige {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-beige);
   }
 
   /* Product card hover effect */
