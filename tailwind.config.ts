@@ -58,7 +58,7 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // Custom women's fashion colors
+        // Custom CAS Basics inspired abaya colors
         purple: {
           primary: "hsl(var(--purple-primary))",
           glow: "hsl(var(--purple-glow))",
@@ -75,6 +75,20 @@ export default {
           warm: "hsl(var(--beige-warm))",
           cream: "hsl(var(--beige-cream))",
           sand: "hsl(var(--beige-sand))",
+          dark: "hsl(var(--beige-dark))",
+          nude: "hsl(var(--beige-nude))",
+        },
+        maroon: {
+          rich: "hsl(var(--maroon-rich))",
+        },
+        brown: {
+          earthy: "hsl(var(--brown-earthy))",
+        },
+        grey: {
+          stone: "hsl(var(--grey-stone))",
+        },
+        sage: {
+          soft: "hsl(var(--sage-soft))",
         },
         black: {
           charcoal: "hsl(var(--black-charcoal))",

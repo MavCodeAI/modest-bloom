@@ -40,19 +40,25 @@
 
     --radius: 0.75rem;
 
-    /* Luxury Abaya Brand Colors - Inspired by The Abaya Lab */
-    --purple-primary: 260 85% 35%;
-    --purple-glow: 260 85% 45%;
-    --pink-rose: 340 75% 40%;
-    --pink-hot: 330 85% 35%;
-    --blue-sky: 210 80% 30%;
-    --blue-ocean: 220 85% 25%;
-    --beige-warm: 40 25% 75%;
-    --beige-cream: 45 30% 85%;
-    --beige-sand: 35 20% 65%;
-    --black-charcoal: 220 35% 8%;
-    --black-soft: 220 30% 15%;
-    --white-cream: 0 0% 98%;
+    /* CAS Basics Inspired Luxury Abaya Brand Colors */
+    --purple-primary: 280 75% 30%;
+    --purple-glow: 280 75% 40%;
+    --pink-rose: 340 65% 35%;
+    --pink-hot: 330 75% 30%;
+    --blue-sky: 200 70% 25%;
+    --blue-ocean: 210 75% 20%;
+    --beige-warm: 35 40% 50%;
+    --beige-cream: 40 35% 60%;
+    --beige-sand: 30 30% 40%;
+    --beige-dark: 25 25% 30%;
+    --beige-nude: 30 25% 55%;
+    --maroon-rich: 350 60% 35%;
+    --brown-earthy: 25 45% 35%;
+    --grey-stone: 200 15% 45%;
+    --sage-soft: 180 25% 50%;
+    --black-charcoal: 220 30% 8%;
+    --black-soft: 220 25% 15%;
+    --white-cream: 45 10% 98%;
     --white-pure: 0 0% 100%;
 
     /* Gradients */
@@ -61,6 +67,9 @@
     --gradient-pink: linear-gradient(135deg, hsl(var(--pink-rose)) 0%, hsl(var(--pink-hot)) 100%);
     --gradient-blue: linear-gradient(135deg, hsl(var(--blue-sky)) 0%, hsl(var(--blue-ocean)) 100%);
     --gradient-beige: linear-gradient(135deg, hsl(var(--beige-warm)) 0%, hsl(var(--beige-cream)) 100%);
+    --gradient-beige-dark: linear-gradient(135deg, hsl(var(--beige-sand)) 0%, hsl(var(--beige-dark)) 100%);
+    --gradient-maroon: linear-gradient(135deg, hsl(var(--maroon-rich)) 0%, hsl(var(--brown-earthy)) 100%);
+    --gradient-sage: linear-gradient(135deg, hsl(var(--sage-soft)) 0%, hsl(var(--beige-nude)) 100%);
     --gradient-overlay: linear-gradient(to top, hsl(45 15% 98% / 0.95) 0%, transparent 60%);
     --gradient-card: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(45 8% 94%) 100%);
 
@@ -166,6 +175,11 @@
   .text-gradient-beige {
     @apply bg-clip-text text-transparent;
     background-image: var(--gradient-beige);
+  }
+
+  .text-gradient-beige-dark {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-beige-dark);
   }
 
   /* Product card hover effect */
