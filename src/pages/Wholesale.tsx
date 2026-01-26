@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useStore } from '@/hooks/useStore';
+import { useCreateWholesaleQuote } from '@/hooks/useWholesaleQuotes';
 import { useToast } from '@/hooks/use-toast';
 
 const quoteSchema = z.object({
@@ -110,7 +110,7 @@ const stats = [
 
 const Wholesale = () => {
   const { toast } = useToast();
-  const { dispatch } = useStore();
+  const createQuote = useCreateWholesaleQuote();
 
   const {
     register,
@@ -123,28 +123,27 @@ const Wholesale = () => {
   });
 
   const onSubmit = async (data: QuoteFormData) => {
-    const quote = {
-      id: `QT-${Date.now()}`,
-      businessName: data.businessName,
-      contactPerson: data.contactPerson,
-      email: data.email,
-      phone: data.phone,
-      region: data.region,
-      volume: data.volume,
-      message: data.message || '',
-      products: [],
-      status: 'pending' as const,
-      createdAt: new Date().toISOString(),
-    };
+    try {
+      await createQuote.mutateAsync({
+        business_name: data.businessName,
+        contact_name: data.contactPerson,
+        email: data.email,
+        phone: data.phone,
+        country: data.region,
+        message: data.message || null,
+        products: [],
+        status: 'pending',
+      });
 
-    dispatch({ type: 'ADD_QUOTE', payload: quote });
+      toast({
+        title: 'Quote Request Submitted! ✨',
+        description: 'Our wholesale team will contact you within 24 hours.',
+      });
 
-    toast({
-      title: 'Quote Request Submitted! ✨',
-      description: 'Our wholesale team will contact you within 24 hours.',
-    });
-
-    reset();
+      reset();
+    } catch (error) {
+      // Error is handled by the hook
+    }
   };
 
   return (
