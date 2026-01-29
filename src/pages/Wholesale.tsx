@@ -156,8 +156,8 @@ const Wholesale = () => {
         <section className="relative py-32 md:py-40 lg:py-48 overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=1920&q=80"
-              alt="Wholesale showroom"
+              src="/images/wholesale-hero.jpeg"
+              alt="Luxury Abaya Showroom"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/50" />
@@ -662,8 +662,8 @@ const Wholesale = () => {
             <div className="relative rounded-3xl overflow-hidden">
               <div className="absolute inset-0">
                 <img
-                  src="https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1920&q=80"
-                  alt="Catalog preview"
+                  src="/images/wholesale-catalog-bg.jpeg"
+                  alt="Wholesale Abaya Catalog Collection"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
