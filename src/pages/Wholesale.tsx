@@ -299,6 +299,78 @@ const Wholesale = () => {
           </div>
         </section>
 
+        {/* Featured Abayas Section */}
+        <section className="py-24 md:py-32 bg-card">
+          <div className="luxury-container">
+            <div className="text-center mb-16 md:mb-20">
+              <p className="text-primary text-sm font-medium uppercase tracking-[0.3em] mb-4">
+                Our Collection
+              </p>
+              <h2 className="font-serif text-4xl md:text-5xl mb-6">Featured Wholesale Abayas</h2>
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                Premium quality abayas crafted with finest fabrics. Available for bulk orders with competitive pricing.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  image: '/images/wholesale-abaya-1.jpeg',
+                  title: 'Classic Black Abaya',
+                  description: 'Elegant wrap-style abaya in premium matte crepe fabric',
+                  price: 'From AED 180',
+                  moq: 'MOQ: 10 pieces'
+                },
+                {
+                  image: '/images/wholesale-abaya-2.jpeg',
+                  title: 'Navy Embroidered Kaftan',
+                  description: 'Luxurious navy kaftan with intricate gold embroidery details',
+                  price: 'From AED 320',
+                  moq: 'MOQ: 10 pieces'
+                },
+                {
+                  image: '/images/wholesale-abaya-3.jpeg',
+                  title: 'Emerald Heritage Abaya',
+                  description: 'Rich emerald green with traditional hand-embroidered patterns',
+                  price: 'From AED 380',
+                  moq: 'MOQ: 10 pieces'
+                }
+              ].map((abaya, index) => (
+                <div 
+                  key={abaya.title}
+                  className="group bg-background rounded-2xl overflow-hidden border border-border/50 hover:shadow-xl transition-all duration-500 animate-fade-in"
+                  style={{ animationDelay: `${index * 150}ms` }}
+                >
+                  <div className="aspect-[4/5] overflow-hidden">
+                    <img 
+                      src={abaya.image} 
+                      alt={abaya.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="font-serif text-xl mb-2">{abaya.title}</h3>
+                    <p className="text-muted-foreground text-sm mb-4">{abaya.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-primary font-semibold">{abaya.price}</span>
+                      <span className="text-xs text-muted-foreground bg-primary/10 px-3 py-1 rounded-full">{abaya.moq}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-12">
+              <Link to="/wholesale/catalog">
+                <Button variant="outline" className="btn-luxury-outline">
+                  View Full Catalog
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Sample Review Section */}
         <section className="py-24 md:py-32 bg-primary/5">
           <div className="luxury-container">
