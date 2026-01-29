@@ -8,61 +8,63 @@
 
 @layer base {
   :root {
-    /* Women's Fashion Theme - Soft Background with Colorful Text */
-    --background: 45 15% 98%;
-    --foreground: 220 15% 20%;
+    /* Beach Theme - Sandy Warmth with Ocean Blues */
+    --background: 35 30% 96%;
+    --foreground: 200 25% 20%;
 
-    --card: 45 10% 96%;
-    --card-foreground: 220 15% 20%;
+    --card: 35 25% 94%;
+    --card-foreground: 200 25% 20%;
 
-    --popover: 45 10% 96%;
-    --popover-foreground: 220 15% 20%;
+    --popover: 35 25% 94%;
+    --popover-foreground: 200 25% 20%;
 
-    /* Luxury Primary - Elegant Abaya Brand Style */
-    --primary: 260 85% 35%;
+    /* Primary - Ocean Teal */
+    --primary: 185 65% 35%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 340 75% 40%;
-    --secondary-foreground: 220 35% 8%;
+    /* Secondary - Coral Sunset */
+    --secondary: 15 75% 55%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 45 8% 92%;
-    --muted-foreground: 220 8% 50%;
+    --muted: 35 15% 90%;
+    --muted-foreground: 200 15% 45%;
 
-    --accent: 330 85% 35%;
+    /* Accent - Seafoam Green */
+    --accent: 165 50% 40%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 100% 50%;
+    --destructive: 0 85% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 45 5% 85%;
-    --input: 45 5% 85%;
-    --ring: 260 85% 35%;
+    --border: 35 20% 82%;
+    --input: 35 20% 82%;
+    --ring: 185 65% 35%;
 
     --radius: 0.75rem;
 
-    /* CAS Basics Inspired Luxury Abaya Brand Colors */
-    --purple-primary: 280 75% 30%;
-    --purple-glow: 280 75% 40%;
-    --pink-rose: 340 65% 35%;
-    --pink-hot: 330 75% 30%;
-    --blue-sky: 200 70% 25%;
-    --blue-ocean: 210 75% 20%;
-    --beige-warm: 35 40% 50%;
-    --beige-cream: 40 35% 60%;
-    --beige-sand: 30 30% 40%;
-    --beige-dark: 25 25% 30%;
-    --beige-nude: 30 25% 55%;
-    --maroon-rich: 350 60% 35%;
-    --brown-earthy: 25 45% 35%;
-    --grey-stone: 200 15% 45%;
-    --sage-soft: 180 25% 50%;
-    --black-charcoal: 220 30% 8%;
-    --black-soft: 220 25% 15%;
-    --white-cream: 45 10% 98%;
+    /* Beach Palette Colors */
+    --purple-primary: 185 65% 35%;
+    --purple-glow: 185 70% 45%;
+    --pink-rose: 15 75% 55%;
+    --pink-hot: 5 70% 50%;
+    --blue-sky: 195 80% 50%;
+    --blue-ocean: 200 85% 40%;
+    --beige-warm: 35 45% 65%;
+    --beige-cream: 40 40% 75%;
+    --beige-sand: 30 50% 55%;
+    --beige-dark: 25 35% 40%;
+    --beige-nude: 32 30% 60%;
+    --maroon-rich: 15 70% 45%;
+    --brown-earthy: 25 50% 40%;
+    --grey-stone: 200 20% 55%;
+    --sage-soft: 165 40% 55%;
+    --black-charcoal: 200 30% 15%;
+    --black-soft: 200 25% 22%;
+    --white-cream: 35 30% 97%;
     --white-pure: 0 0% 100%;
 
-    /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--purple-primary)) 0%, hsl(var(--pink-rose)) 100%);
+    /* Beach Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--blue-ocean)) 0%, hsl(var(--sage-soft)) 100%);
     --gradient-primary: linear-gradient(135deg, hsl(var(--purple-primary)) 0%, hsl(var(--purple-glow)) 100%);
     --gradient-pink: linear-gradient(135deg, hsl(var(--pink-rose)) 0%, hsl(var(--pink-hot)) 100%);
     --gradient-blue: linear-gradient(135deg, hsl(var(--blue-sky)) 0%, hsl(var(--blue-ocean)) 100%);
@@ -70,23 +72,23 @@
     --gradient-beige-dark: linear-gradient(135deg, hsl(var(--beige-sand)) 0%, hsl(var(--beige-dark)) 100%);
     --gradient-maroon: linear-gradient(135deg, hsl(var(--maroon-rich)) 0%, hsl(var(--brown-earthy)) 100%);
     --gradient-sage: linear-gradient(135deg, hsl(var(--sage-soft)) 0%, hsl(var(--beige-nude)) 100%);
-    --gradient-overlay: linear-gradient(to top, hsl(45 15% 98% / 0.95) 0%, transparent 60%);
-    --gradient-card: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(45 8% 94%) 100%);
+    --gradient-overlay: linear-gradient(to top, hsl(35 30% 96% / 0.95) 0%, transparent 60%);
+    --gradient-card: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(35 20% 92%) 100%);
 
-    /* Shadows */
-    --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.1);
-    --shadow-glow: 0 0 40px -10px hsl(var(--purple-primary) / 0.2);
-    --shadow-card: 0 8px 30px -8px hsl(0 0% 0% / 0.08);
+    /* Soft Beach Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(200 30% 30% / 0.12);
+    --shadow-glow: 0 0 40px -10px hsl(var(--purple-primary) / 0.25);
+    --shadow-card: 0 8px 30px -8px hsl(200 30% 30% / 0.1);
 
     /* Sidebar */
-    --sidebar-background: 0 0% 99%;
-    --sidebar-foreground: 220 15% 20%;
-    --sidebar-primary: 270 65% 65%;
+    --sidebar-background: 35 25% 97%;
+    --sidebar-foreground: 200 25% 20%;
+    --sidebar-primary: 185 65% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 340 75% 85%;
-    --sidebar-accent-foreground: 220 15% 20%;
-    --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 270 65% 65%;
+    --sidebar-accent: 165 45% 85%;
+    --sidebar-accent-foreground: 200 25% 20%;
+    --sidebar-border: 35 15% 88%;
+    --sidebar-ring: 185 65% 40%;
   }
 
   .dark {
