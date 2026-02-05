@@ -3,11 +3,10 @@ import { cn } from '@/lib/utils';
 
 const navLinks = [
   { href: '/shop?tag=new_drop', label: 'New In' },
-  { href: '/shop?category=abayas', label: 'Abayas' },
+  { href: '/shop?category=basic', label: 'Basic' },
   { href: '/shop?category=printed', label: 'Printed' },
-  { href: '/shop?category=sets', label: 'Sets' },
-  { href: '/shop?category=kaftans', label: 'Kaftans' },
-  { href: '/shop?tag=sale', label: 'Sale' },
+  { href: '/shop?category=embroidery', label: 'Embroidery' },
+  { href: '/shop?category=beaded', label: 'Beaded' },
   { href: '/wholesale', label: 'Wholesale' },
 ];
 
