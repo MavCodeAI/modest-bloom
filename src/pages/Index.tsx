@@ -1,6 +1,7 @@
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/layout/CartDrawer';
+import { WhatsAppFloat } from '@/components/layout/WhatsAppFloat';
 import { HeroSection } from '@/components/home/HeroSection';
 import { NewDropsSection } from '@/components/home/NewDropsSection';
 import { PromoTilesSection } from '@/components/home/PromoTilesSection';
@@ -17,6 +18,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <CartDrawer />
+      <WhatsAppFloat />
       
       <main>
         <HeroSection />
