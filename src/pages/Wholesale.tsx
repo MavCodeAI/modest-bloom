@@ -277,11 +277,12 @@ const Wholesale = () => {
               <h2 className="font-serif text-4xl md:text-5xl">How It Works</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
               {[
                 { step: '01', title: 'Submit Inquiry', desc: 'Fill out our simple form with your business details and requirements.' },
-                { step: '02', title: 'Get Your Quote', desc: 'Our team reviews your request and sends a custom pricing proposal.' },
-                { step: '03', title: 'Start Ordering', desc: 'Approve the quote and place your first wholesale order with us.' },
+                { step: '02', title: 'Sample Process', desc: 'We create and review samples based on your selected designs.' },
+                { step: '03', title: 'Get Your Quote', desc: 'Our team sends a custom pricing proposal for your approval.' },
+                { step: '04', title: 'Start Ordering', desc: 'Approve the quote and place your first wholesale order with us.' },
               ].map((item, index) => (
                 <div 
                   key={item.step} 
