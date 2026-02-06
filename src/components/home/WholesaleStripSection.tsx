@@ -24,15 +24,15 @@ export function WholesaleStripSection() {
             <div className="flex flex-wrap gap-6 mb-8">
               <div className="flex items-center gap-2 text-sm">
                 <Building2 className="h-5 w-5 text-primary" />
-                <span>MOQ from 10 pieces</span>
+                <span>MOQ 12 pcs/color</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <Package className="h-5 w-5 text-primary" />
-                <span>Priority fulfillment</span>
+                <span>7-8 working days</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <Globe className="h-5 w-5 text-primary" />
-                <span>Global shipping</span>
+                <span>UPS, DPD, DHL & more</span>
               </div>
             </div>
 

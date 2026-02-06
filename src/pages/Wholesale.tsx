@@ -44,12 +44,12 @@ const features = [
   {
     icon: FaBoxOpen,
     title: 'Bulk Orders',
-    description: 'Minimum order quantity of just 50 pieces per design with flexible sizing options.',
+    description: 'Minimum 12 pieces per color with flexible sizing options.',
   },
   {
     icon: FaGlobeAmericas,
     title: 'Global Shipping',
-    description: 'We ship to 50+ countries via DHL, FedEx & Aramex with full tracking.',
+    description: 'We ship to 50+ countries via DHL, FedEx, Aramex, UPS & DPD with full tracking.',
   },
   {
     icon: RiHandHeartLine,
@@ -72,17 +72,17 @@ const benefits = [
   {
     icon: FaBoxOpen,
     title: 'Low MOQ',
-    description: 'Start with as few as 10 pieces per style. Perfect for boutiques of any size.',
+    description: 'Minimum 12 pieces per color. Perfect for boutiques of any size.',
   },
   {
     icon: FaShippingFast,
     title: 'Priority Fulfillment',
-    description: 'Dedicated logistics team ensures your orders ship within 3-5 business days.',
+    description: 'Order shipment in 7-8 working days depending on quantity.',
   },
   {
     icon: FaGlobeAmericas,
     title: 'Global Shipping',
-    description: 'We ship to 50+ countries via DHL, FedEx & Aramex with full tracking.',
+    description: 'We ship to 50+ countries via DHL, FedEx, Aramex, UPS & DPD with full tracking.',
   },
   {
     icon: RiHandHeartLine,
@@ -320,21 +320,21 @@ const Wholesale = () => {
                   title: 'Classic Black Abaya',
                   description: 'Elegant wrap-style abaya in premium matte crepe fabric',
                   price: 'From AED 180',
-                  moq: 'MOQ: 10 pieces'
+                  moq: 'MOQ: 12 pcs/color'
                 },
                 {
                   image: '/images/wholesale-abaya-2.jpeg',
                   title: 'Navy Embroidered Kaftan',
                   description: 'Luxurious navy kaftan with intricate gold embroidery details',
                   price: 'From AED 320',
-                  moq: 'MOQ: 10 pieces'
+                  moq: 'MOQ: 12 pcs/color'
                 },
                 {
                   image: '/images/wholesale-abaya-3.jpeg',
                   title: 'Emerald Heritage Abaya',
                   description: 'Rich emerald green with traditional hand-embroidered patterns',
                   price: 'From AED 380',
-                  moq: 'MOQ: 10 pieces'
+                  moq: 'MOQ: 12 pcs/color'
                 }
               ].map((abaya, index) => (
                 <div 
