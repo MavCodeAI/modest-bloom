@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Minus, Plus, Check, Truck, RotateCcw, Shield } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/layout/CartDrawer';
 import { useStore } from '@/hooks/useStore';
 import { useSEO } from '@/hooks/useSEO';
+import { useProduct } from '@/hooks/useProducts';
 import { Button } from '@/components/ui/button';
 import {
   Accordion,
@@ -15,6 +16,7 @@ import {
 } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const sizes = ['50', '52', '54', '56', '58', '60'];
 
@@ -22,13 +24,29 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { getProductById, dispatch } = useStore();
+  const { dispatch } = useStore();
   
-  const product = getProductById(id || '');
+  // Fetch product from database
+  const { data: dbProduct, isLoading, error } = useProduct(id || '');
   
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+
+  // Transform database product to match local Product type
+  const product = dbProduct ? {
+    id: dbProduct.id,
+    name: dbProduct.name,
+    description: dbProduct.description || '',
+    price: dbProduct.sale_price || dbProduct.price,
+    originalPrice: dbProduct.sale_price ? dbProduct.price : undefined,
+    image: dbProduct.images?.[0] || '/placeholder.svg',
+    images: dbProduct.images || [],
+    category: 'Abayas',
+    tags: dbProduct.tags || [],
+    inStock: dbProduct.in_stock,
+    sizes: dbProduct.sizes || sizes,
+  } : null;
 
   // SEO optimization - must be called before any early returns
   useSEO({
@@ -46,7 +64,36 @@ const ProductDetail = () => {
     } : undefined
   });
 
-  if (!product) {
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <main className="pt-20 md:pt-24">
+          <div className="luxury-container py-6 sm:py-8">
+            <Skeleton className="h-6 w-20 mb-6" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+              <Skeleton className="aspect-editorial rounded-lg" />
+              <div className="space-y-6">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-10 w-3/4" />
+                <Skeleton className="h-8 w-32" />
+                <div className="grid grid-cols-6 gap-2">
+                  {sizes.map((_, i) => (
+                    <Skeleton key={i} className="h-12" />
+                  ))}
+                </div>
+                <Skeleton className="h-14 w-full" />
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error || !product) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -59,7 +106,7 @@ const ProductDetail = () => {
     );
   }
 
-  const images = product.images || [product.image];
+  const images = product.images.length > 0 ? product.images : [product.image];
   const isOnSale = product.originalPrice && product.originalPrice > product.price;
 
   const handleAddToCart = () => {
@@ -74,7 +121,25 @@ const ProductDetail = () => {
 
     dispatch({
       type: 'ADD_TO_CART',
-      payload: { product, size: selectedSize, quantity },
+      payload: { 
+        product: {
+          id: product.id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          originalPrice: product.originalPrice,
+          image: product.image,
+          images: product.images,
+          category: product.category,
+          tags: product.tags,
+          inStock: product.inStock,
+          sizes: product.sizes,
+          isWholesale: false,
+          createdAt: new Date().toISOString(),
+        }, 
+        size: selectedSize, 
+        quantity 
+      },
     });
 
     toast({
