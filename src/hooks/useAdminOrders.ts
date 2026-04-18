@@ -148,21 +148,21 @@ export const useUpdateOrderStatus = () => {
       status: string; 
       estimatedDelivery?: string | null 
     }) => {
-      const updateData: TablesUpdate<'orders'> = { status };
-      
-      if (estimatedDelivery !== undefined) {
-        updateData.estimated_delivery = estimatedDelivery;
-      }
+      const pin = import.meta.env.VITE_ADMIN_PIN || '345345';
 
-      const { data, error } = await supabase
-        .from('orders')
-        .update(updateData)
-        .eq('id', id)
-        .select()
-        .single();
+      const { data, error } = await supabase.functions.invoke('admin-update-status', {
+        body: {
+          table: 'orders',
+          id,
+          status,
+          pin,
+          estimated_delivery: estimatedDelivery,
+        },
+      });
 
       if (error) throw error;
-      return data;
+      if (data?.error) throw new Error(data.error);
+      return data?.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
