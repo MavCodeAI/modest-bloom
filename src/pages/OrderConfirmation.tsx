@@ -1,31 +1,12 @@
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, Package, Truck, DollarSign, CreditCard, ClipboardList } from 'lucide-react';
+import { CheckCircle, Package, Truck, DollarSign, CreditCard, ClipboardList } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { OrderTimeline } from '@/components/order/OrderTimeline';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
-
-interface OrderData {
-  order: {
-    id: string;
-    items: OrderItem[];
-    customer: {
-      name: string;
-      email: string;
-      phone: string;
-      address: string;
-      city: string;
-      country: string;
-    };
-    total: number;
-    subtotal: number;
-    shipping: number;
-    codFee: number;
-    paymentMethod: 'cod' | 'card';
-    status: string;
-  };
-}
+import { supabase } from '@/integrations/supabase/client';
 
 interface OrderItem {
   product: {
@@ -38,11 +19,74 @@ interface OrderItem {
   quantity: number;
 }
 
+interface OrderData {
+  order: {
+    id: string; // UUID
+    orderNumber?: string;
+    items: OrderItem[];
+    customer: {
+      name: string;
+      email: string;
+      phone: string;
+      address: string;
+      city: string;
+      country?: string;
+      emirate?: string;
+    };
+    total: number;
+    subtotal: number;
+    shipping: number;
+    codFee: number;
+    paymentMethod: 'cod' | 'card';
+    status: string;
+  };
+}
+
 const OrderConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { order } = (location.state as OrderData) || { order: null };
+
+  const [liveStatus, setLiveStatus] = useState<string>(order?.status || 'pending');
+
+  // Fetch latest status from DB + subscribe to realtime updates
+  useEffect(() => {
+    if (!order?.id) return;
+    let active = true;
+
+    const fetchStatus = async () => {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('status')
+        .eq('id', order.id)
+        .maybeSingle();
+      if (!error && data && active) setLiveStatus(data.status);
+    };
+    fetchStatus();
+
+    const channel = supabase
+      .channel(`order-${order.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'orders',
+          filter: `id=eq.${order.id}`,
+        },
+        (payload) => {
+          const next = (payload.new as { status?: string })?.status;
+          if (next) setLiveStatus(next);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      active = false;
+      supabase.removeChannel(channel);
+    };
+  }, [order?.id]);
 
   if (!order) {
     return (
@@ -60,10 +104,12 @@ const OrderConfirmation = () => {
   const estimatedDelivery = new Date();
   estimatedDelivery.setDate(estimatedDelivery.getDate() + 3);
 
+  const displayId = order.orderNumber || order.id;
+
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
-      
+
       <main className="pt-16 md:pt-24">
         <div className="luxury-container py-6 sm:py-8">
           {/* Success Message */}
@@ -75,12 +121,12 @@ const OrderConfirmation = () => {
             <p className="text-muted-foreground text-sm sm:text-base">
               Thank you for your purchase. Your order has been received.
             </p>
-            <p className="text-primary font-medium mt-2">Order #{order.id}</p>
+            <p className="text-primary font-medium mt-2">Order #{displayId}</p>
           </div>
 
-          {/* Order Status Timeline */}
+          {/* Live Order Status Timeline */}
           <div className="mb-8 sm:mb-10 max-w-3xl mx-auto">
-            <OrderTimeline status={order.status} />
+            <OrderTimeline status={liveStatus} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
@@ -97,11 +143,13 @@ const OrderConfirmation = () => {
                     <span className="font-medium">{order.customer.name}</span>
                   </div>
                   <div className="text-muted-foreground">
-                    {order.customer.address}<br />
-                    {order.customer.city}, {order.customer.country}
+                    {order.customer.address}
+                    <br />
+                    {order.customer.city}, {order.customer.emirate || order.customer.country}
                   </div>
                   <div className="text-muted-foreground">
-                    {order.customer.email}<br />
+                    {order.customer.email}
+                    <br />
                     {order.customer.phone}
                   </div>
                 </div>
@@ -203,16 +251,14 @@ const OrderConfirmation = () => {
                     <p className="font-medium text-sm sm:text-base">Estimated Delivery</p>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground">
-                    {estimatedDelivery.toLocaleDateString('en-US', { 
-                      weekday: 'long', 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
+                    {estimatedDelivery.toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
                     })}
                   </p>
-                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                    3-5 business days
-                  </p>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">3-5 business days</p>
                 </div>
 
                 {/* Action Buttons */}
