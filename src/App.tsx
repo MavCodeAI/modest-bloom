@@ -30,6 +30,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const Auth = lazy(() => import("./pages/Auth"));
 const SearchResults = lazy(() => import("./pages/SearchResults"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Account = lazy(() => import("./pages/Account"));
 
 const queryClient = new QueryClient();
 
@@ -62,7 +63,7 @@ const App = () => (
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/order-confirmation" element={<OrderConfirmation />} />
                   <Route path="/wishlist" element={<Wishlist />} />
-                  <Route path="/account" element={<Auth />} />
+                  <Route path="/account" element={<Account />} />
                   <Route path="/size-guide" element={<SizeGuide />} />
                   <Route path="/shipping" element={<Shipping />} />
                   <Route path="/returns" element={<Returns />} />
