@@ -221,6 +221,7 @@ export type Database = {
           slug: string
           tags: string[] | null
           updated_at: string
+          wholesale_price: number | null
         }
         Insert: {
           category_id?: string | null
@@ -239,6 +240,7 @@ export type Database = {
           slug: string
           tags?: string[] | null
           updated_at?: string
+          wholesale_price?: number | null
         }
         Update: {
           category_id?: string | null
@@ -257,6 +259,7 @@ export type Database = {
           slug?: string
           tags?: string[] | null
           updated_at?: string
+          wholesale_price?: number | null
         }
         Relationships: [
           {
