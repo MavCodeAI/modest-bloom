@@ -195,14 +195,19 @@ export const useBulkUpdateOrderStatus = () => {
       orderIds: string[]; 
       status: string; 
     }) => {
-      const { data, error } = await supabase
-        .from('orders')
-        .update({ status })
-        .in('id', orderIds)
-        .select();
-
-      if (error) throw error;
-      return data;
+      const pin = import.meta.env.VITE_ADMIN_PIN || '345345';
+      const results = await Promise.all(
+        orderIds.map((id) =>
+          supabase.functions.invoke('admin-update-status', {
+            body: { table: 'orders', id, status, pin },
+          })
+        )
+      );
+      const failed = results.filter((r) => r.error || r.data?.error);
+      if (failed.length > 0) {
+        throw new Error(`${failed.length} updates failed`);
+      }
+      return results.map((r) => r.data?.data);
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
