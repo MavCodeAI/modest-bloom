@@ -152,6 +152,7 @@ const Admin = () => {
       slug: '',
       price: 0,
       sale_price: null,
+      wholesale_price: null,
       description: '',
       images: [],
       sizes: ['50', '52', '54', '56', '58', '60'],
@@ -170,6 +171,7 @@ const Admin = () => {
       slug: product.slug,
       price: product.price,
       sale_price: product.sale_price,
+      wholesale_price: product.wholesale_price ?? null,
       description: product.description || '',
       images: product.images || [],
       sizes: product.sizes || ['50', '52', '54', '56', '58', '60'],
@@ -183,18 +185,21 @@ const Admin = () => {
 
   const onSubmit = async (data: ProductFormData) => {
     try {
+      const finalSlug = data.slug?.trim() || slugify(data.name);
       if (editingProduct) {
         await updateProduct.mutateAsync({
           id: editingProduct.id,
           ...data,
+          slug: finalSlug,
         });
       } else {
         await createProduct.mutateAsync({
           name: data.name,
-          slug: data.slug || data.name.toLowerCase().replace(/\s+/g, '-'),
+          slug: finalSlug,
           description: data.description,
           price: data.price,
           sale_price: data.sale_price || null,
+          wholesale_price: data.wholesale_price || null,
           images: data.images || [],
           sizes: data.sizes || ['50', '52', '54', '56', '58', '60'],
           colors: data.colors || [],
