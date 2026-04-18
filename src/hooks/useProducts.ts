@@ -9,6 +9,7 @@ export interface Product {
   description: string | null;
   price: number;
   sale_price: number | null;
+  wholesale_price: number | null;
   category_id: string | null;
   images: string[];
   sizes: string[];
