@@ -249,6 +249,54 @@ const ProductDetail = () => {
                 </div>
               </div>
 
+              {/* Color Selector — large visual swatches */}
+              {product.colors.length > 0 && (
+                <div>
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <span className="text-sm font-medium">
+                      Color: <span className="text-muted-foreground font-normal">
+                        {selectedColor ? parseColor(selectedColor).name : 'Select a color'}
+                      </span>
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    {product.colors.map((c) => {
+                      const { name, hex } = parseColor(c);
+                      const isSelected = selectedColor === c;
+                      return (
+                        <button
+                          key={c}
+                          onClick={() => setSelectedColor(c)}
+                          aria-label={`Select color ${name}`}
+                          title={name}
+                          className={cn(
+                            "group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full transition-all",
+                            "ring-offset-2 ring-offset-background",
+                            isSelected
+                              ? "ring-2 ring-primary scale-110"
+                              : "ring-1 ring-border hover:ring-foreground/40 hover:scale-105"
+                          )}
+                          style={{ backgroundColor: hex }}
+                        >
+                          {isSelected && (
+                            <Check
+                              size={20}
+                              className={cn(
+                                "absolute inset-0 m-auto",
+                                // pick contrasting check color
+                                hex.toLowerCase() === '#ffffff' || hex.toLowerCase() === '#f5f1ea'
+                                  ? "text-foreground"
+                                  : "text-white"
+                              )}
+                            />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Size Selector */}
               <div>
                 <div className="flex items-center justify-between mb-3 sm:mb-4">
@@ -258,21 +306,31 @@ const ProductDetail = () => {
                   </button>
                 </div>
                 <div className="grid grid-cols-6 gap-2">
-                  {sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={cn(
-                        "h-10 sm:h-12 rounded-lg border-2 text-xs sm:text-sm font-medium transition-all",
-                        selectedSize === size
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border hover:border-foreground/50"
-                      )}
-                    >
-                      {size}
-                    </button>
-                  ))}
+                  {product.sizes.map((size) => {
+                    const outOfStock = selectedColor ? isVariantOutOfStock(size, selectedColor) : false;
+                    return (
+                      <button
+                        key={size}
+                        onClick={() => !outOfStock && setSelectedSize(size)}
+                        disabled={outOfStock}
+                        className={cn(
+                          "h-10 sm:h-12 rounded-lg border-2 text-xs sm:text-sm font-medium transition-all relative",
+                          selectedSize === size
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border hover:border-foreground/50",
+                          outOfStock && "opacity-40 cursor-not-allowed line-through hover:border-border"
+                        )}
+                      >
+                        {size}
+                      </button>
+                    );
+                  })}
                 </div>
+                {selectedVariantStock !== null && selectedVariantStock > 0 && selectedVariantStock <= 5 && (
+                  <p className="text-xs text-orange-500 mt-2">
+                    صرف {selectedVariantStock} stock میں رہ گئے!
+                  </p>
+                )}
               </div>
 
               {/* Quantity */}
