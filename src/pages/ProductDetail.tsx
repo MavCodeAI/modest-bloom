@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Minus, Plus, Check, Truck, RotateCcw, Shield } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -7,6 +7,7 @@ import { CartDrawer } from '@/components/layout/CartDrawer';
 import { useStore } from '@/hooks/useStore';
 import { useSEO } from '@/hooks/useSEO';
 import { useProduct } from '@/hooks/useProducts';
+import { useProductVariants } from '@/hooks/useProductVariants';
 import { Button } from '@/components/ui/button';
 import {
   Accordion,
@@ -18,7 +19,12 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const sizes = ['50', '52', '54', '56', '58', '60'];
+const fallbackSizes = ['50', '52', '54', '56', '58', '60'];
+
+const parseColor = (raw: string) => {
+  const [name, hex] = raw.split(':');
+  return { name: name.trim(), hex: hex?.trim() || '#cccccc' };
+};
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
