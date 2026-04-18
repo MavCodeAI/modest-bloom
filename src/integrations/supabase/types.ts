@@ -85,6 +85,7 @@ export type Database = {
       }
       order_items: {
         Row: {
+          color: string | null
           created_at: string
           id: string
           order_id: string
@@ -96,6 +97,7 @@ export type Database = {
           size: string
         }
         Insert: {
+          color?: string | null
           created_at?: string
           id?: string
           order_id: string
@@ -107,6 +109,7 @@ export type Database = {
           size: string
         }
         Update: {
+          color?: string | null
           created_at?: string
           id?: string
           order_id?: string
