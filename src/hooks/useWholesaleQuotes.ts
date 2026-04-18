@@ -69,15 +69,14 @@ export const useUpdateQuoteStatus = () => {
 
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const { data, error } = await supabase
-        .from('wholesale_quotes')
-        .update({ status })
-        .eq('id', id)
-        .select()
-        .single();
+      const pin = import.meta.env.VITE_ADMIN_PIN || '345345';
+      const { data, error } = await supabase.functions.invoke('admin-update-status', {
+        body: { table: 'wholesale_quotes', id, status, pin },
+      });
 
       if (error) throw error;
-      return data;
+      if (data?.error) throw new Error(data.error);
+      return data?.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['wholesale-quotes'] });
