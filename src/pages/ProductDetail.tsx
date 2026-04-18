@@ -4,6 +4,7 @@ import { ArrowLeft, Minus, Plus, Check, Truck, RotateCcw, Shield } from 'lucide-
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/layout/CartDrawer';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { useStore } from '@/hooks/useStore';
 import { useSEO } from '@/hooks/useSEO';
 import { useProduct } from '@/hooks/useProducts';
@@ -91,9 +92,9 @@ const ProductDetail = () => {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-16 md:pb-0">
         <Navbar />
-        <main className="pt-20 md:pt-24">
+        <main className="pt-16 md:pt-24">
           <div className="luxury-container py-6 sm:py-8">
             <Skeleton className="h-6 w-20 mb-6" />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
@@ -119,7 +120,7 @@ const ProductDetail = () => {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-16 md:pb-0">
         <Navbar />
         <div className="pt-32 text-center px-4">
           <h1 className="font-serif text-xl sm:text-2xl mb-4">Product Not Found</h1>
@@ -185,16 +186,26 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
       <CartDrawer />
       
-      <main className="pt-20 md:pt-24">
-        <div className="luxury-container py-6 sm:py-8">
+      <main className="pt-16 md:pt-24">
+        <div className="luxury-container py-4 sm:py-6">
+          {/* Breadcrumbs */}
+          <Breadcrumbs
+            items={[
+              { label: 'Shop', href: '/shop' },
+              { label: product.category, href: '/shop' },
+              { label: product.name },
+            ]}
+            className="mb-4"
+          />
+
           {/* Back Button */}
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 sm:mb-8"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4 sm:mb-6"
           >
             <ArrowLeft size={16} />
             Back

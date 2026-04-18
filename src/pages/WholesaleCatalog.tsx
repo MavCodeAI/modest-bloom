@@ -11,11 +11,11 @@ const WholesaleCatalog = () => {
   const wholesaleProducts = products.filter(p => p.isWholesale);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
       <CartDrawer />
       
-      <main className="pt-20 md:pt-24">
+      <main className="pt-16 md:pt-24">
         {/* Header */}
         <div className="luxury-container py-12">
           <p className="text-primary text-sm font-medium uppercase tracking-[0.2em] mb-3 text-center">

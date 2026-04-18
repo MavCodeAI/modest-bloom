@@ -50,10 +50,10 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
       
-      <main className="pt-20 md:pt-24">
+      <main className="pt-16 md:pt-24">
         <div className="luxury-container py-6 sm:py-8">
           {/* Header */}
           <div className="text-center mb-8 sm:mb-12">

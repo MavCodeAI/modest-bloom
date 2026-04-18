@@ -2,6 +2,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/layout/CartDrawer';
 import { WhatsAppFloat } from '@/components/layout/WhatsAppFloat';
+import { BottomNav } from '@/components/layout/BottomNav';
 import { HeroSection } from '@/components/home/HeroSection';
 import { NewDropsSection } from '@/components/home/NewDropsSection';
 import { PromoTilesSection } from '@/components/home/PromoTilesSection';
@@ -15,11 +16,11 @@ import { WholesaleStripSection } from '@/components/home/WholesaleStripSection';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
       <CartDrawer />
       <WhatsAppFloat />
-      
+
       <main>
         <HeroSection />
         <NewDropsSection />
@@ -34,6 +35,7 @@ const Index = () => {
       </main>
 
       <Footer />
+      <BottomNav />
     </div>
   );
 };

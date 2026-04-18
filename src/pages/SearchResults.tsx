@@ -23,11 +23,11 @@ const SearchResults = () => {
   }, [products, query]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
       <CartDrawer />
 
-      <main className="pt-20 md:pt-24">
+      <main className="pt-16 md:pt-24">
         <div className="luxury-container py-8 sm:py-12">
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-center mb-2 sm:mb-4">
             Search Results
