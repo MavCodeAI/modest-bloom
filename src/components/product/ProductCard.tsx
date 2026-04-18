@@ -10,9 +10,17 @@ interface ProductCardProps {
   className?: string;
 }
 
+const parseColor = (raw: string) => {
+  const [name, hex] = raw.split(':');
+  return { name: name.trim(), hex: hex?.trim() || '#cccccc' };
+};
+
 export const ProductCard = memo(function ProductCard({ product, showPrice = true, className }: ProductCardProps) {
   const isOnSale = product.originalPrice && product.originalPrice > product.price;
   const isNew = product.tags.includes('new_drop');
+  const colors = product.colors || [];
+  const visibleColors = colors.slice(0, 4);
+  const extraColors = colors.length - visibleColors.length;
 
   return (
     <Link
@@ -51,7 +59,29 @@ export const ProductCard = memo(function ProductCard({ product, showPrice = true
         <h3 className="font-medium text-xs sm:text-sm text-foreground group-hover:text-primary transition-colors line-clamp-2 sm:line-clamp-1">
           {product.name}
         </h3>
-        
+
+        {/* Color swatches */}
+        {visibleColors.length > 0 && (
+          <div className="flex items-center gap-1" aria-label={`Available in ${colors.length} color${colors.length > 1 ? 's' : ''}`}>
+            {visibleColors.map((c) => {
+              const { name, hex } = parseColor(c);
+              return (
+                <span
+                  key={c}
+                  title={name}
+                  className="inline-block w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full ring-1 ring-border"
+                  style={{ backgroundColor: hex }}
+                />
+              );
+            })}
+            {extraColors > 0 && (
+              <span className="text-[10px] sm:text-xs text-muted-foreground ml-0.5">
+                +{extraColors}
+              </span>
+            )}
+          </div>
+        )}
+
         {showPrice && (
           <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
             <span className="price-tag text-xs sm:text-sm">
