@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Loader2, LogOut, Package, User as UserIcon, ShoppingBag, ChevronRight } from 'lucide-react';
+import { Loader2, LogOut, Package, User as UserIcon, ShoppingBag, ChevronRight, Eye, MapPin, CreditCard, Phone, Mail } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/layout/CartDrawer';
@@ -12,8 +12,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
-import { useOrders } from '@/hooks/useOrders';
+import { useOrders, type Order } from '@/hooks/useOrders';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useSEO } from '@/hooks/useSEO';
@@ -45,6 +46,7 @@ const Account = () => {
   const [savingProfile, setSavingProfile] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useSEO({
     title: 'My Account - Modest Way Fashion',
@@ -272,14 +274,21 @@ const Account = () => {
                         )}
                       </div>
 
-                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-border text-xs text-muted-foreground">
-                        <span>
+                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-border text-xs text-muted-foreground gap-3">
+                        <span className="truncate">
                           Payment: <span className="capitalize text-foreground">{order.payment_method}</span>
+                          <span className="hidden sm:inline"> • Ship to {order.emirate}</span>
                         </span>
-                        <span className="flex items-center gap-1">
-                          Ship to {order.emirate}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSelectedOrder(order)}
+                          className="h-8 px-2 gap-1 text-xs hover:text-primary -mr-2"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          View Details
                           <ChevronRight className="w-3 h-3" />
-                        </span>
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -349,6 +358,142 @@ const Account = () => {
           </Tabs>
         </div>
       </main>
+
+      {/* Order Details Modal */}
+      <Dialog open={!!selectedOrder} onOpenChange={(open) => !open && setSelectedOrder(null)}>
+        <DialogContent className="max-w-2xl w-[calc(100vw-1rem)] max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+          {selectedOrder && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="font-serif text-xl flex items-center justify-between gap-3 pr-8">
+                  <span>Order #{selectedOrder.order_number}</span>
+                  <Badge variant={statusVariant(selectedOrder.status)} className="capitalize text-xs">
+                    {selectedOrder.status}
+                  </Badge>
+                </DialogTitle>
+                <DialogDescription>
+                  Placed on{' '}
+                  {new Date(selectedOrder.created_at).toLocaleDateString('en-AE', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })}
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-5">
+                {/* Status timeline */}
+                <OrderTimeline status={selectedOrder.status} showHeader={false} />
+
+                {/* Shipping + Contact */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="rounded-lg border border-border p-3">
+                    <div className="flex items-center gap-2 mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      <MapPin className="w-3.5 h-3.5" />
+                      Shipping
+                    </div>
+                    <p className="text-sm font-medium">{selectedOrder.customer_name}</p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {selectedOrder.shipping_address}
+                      <br />
+                      {selectedOrder.city}, {selectedOrder.emirate}
+                      {selectedOrder.postal_code && ` ${selectedOrder.postal_code}`}
+                    </p>
+                  </div>
+                  <div className="rounded-lg border border-border p-3 space-y-2">
+                    <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      <UserIcon className="w-3.5 h-3.5" />
+                      Contact
+                    </div>
+                    <p className="text-sm flex items-center gap-2 text-muted-foreground">
+                      <Mail className="w-3.5 h-3.5 flex-shrink-0" />
+                      <span className="truncate">{selectedOrder.customer_email}</span>
+                    </p>
+                    <p className="text-sm flex items-center gap-2 text-muted-foreground">
+                      <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+                      {selectedOrder.customer_phone}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Items */}
+                <div>
+                  <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+                    <Package className="w-4 h-4" />
+                    Items ({selectedOrder.items?.length || 0})
+                  </h3>
+                  <div className="space-y-2">
+                    {selectedOrder.items?.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center gap-3 p-2 rounded-md bg-muted/40"
+                      >
+                        {item.product_image && (
+                          <img
+                            src={item.product_image}
+                            alt={item.product_name}
+                            className="w-14 h-16 object-cover rounded bg-background flex-shrink-0"
+                            loading="lazy"
+                          />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{item.product_name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Size {item.size} • Qty {item.quantity}
+                          </p>
+                        </div>
+                        <p className="text-sm font-medium whitespace-nowrap">
+                          AED {Number(item.price).toLocaleString()}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Totals */}
+                <div className="rounded-lg border border-border p-3 space-y-1.5 text-sm">
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Subtotal</span>
+                    <span>AED {Number(selectedOrder.subtotal).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Shipping</span>
+                    <span>
+                      {(selectedOrder.shipping_cost || 0) === 0
+                        ? 'Free'
+                        : `AED ${Number(selectedOrder.shipping_cost).toLocaleString()}`}
+                    </span>
+                  </div>
+                  {(selectedOrder.cod_fee || 0) > 0 && (
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>COD Fee</span>
+                      <span>AED {Number(selectedOrder.cod_fee).toLocaleString()}</span>
+                    </div>
+                  )}
+                  <Separator className="my-1.5" />
+                  <div className="flex justify-between font-serif text-base">
+                    <span>Total</span>
+                    <span className="text-primary">
+                      AED {Number(selectedOrder.total).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Payment method */}
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <CreditCard className="w-4 h-4" />
+                  Payment:{' '}
+                  <span className="capitalize text-foreground font-medium">
+                    {selectedOrder.payment_method === 'cod'
+                      ? 'Cash on Delivery'
+                      : selectedOrder.payment_method}
+                  </span>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>
