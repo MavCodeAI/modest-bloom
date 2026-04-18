@@ -4,6 +4,12 @@ import { useStore } from '@/hooks/useStore';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
+const parseColor = (raw?: string) => {
+  if (!raw) return null;
+  const [name, hex] = raw.split(':');
+  return { name: name.trim(), hex: hex?.trim() || '#cccccc' };
+};
+
 export function CartDrawer() {
   const { cart, cartTotal, isCartOpen, dispatch } = useStore();
 
@@ -11,18 +17,18 @@ export function CartDrawer() {
     dispatch({ type: 'TOGGLE_CART', payload: false });
   };
 
-  const updateQuantity = (productId: string, size: string, delta: number) => {
-    const item = cart.find(i => i.product.id === productId && i.size === size);
+  const updateQuantity = (productId: string, size: string, color: string | undefined, delta: number) => {
+    const item = cart.find(i => i.product.id === productId && i.size === size && (i.color || '') === (color || ''));
     if (item) {
       dispatch({
         type: 'UPDATE_CART_ITEM',
-        payload: { productId, size, quantity: item.quantity + delta },
+        payload: { productId, size, color, quantity: item.quantity + delta },
       });
     }
   };
 
-  const removeItem = (productId: string, size: string) => {
-    dispatch({ type: 'REMOVE_FROM_CART', payload: { productId, size } });
+  const removeItem = (productId: string, size: string, color: string | undefined) => {
+    dispatch({ type: 'REMOVE_FROM_CART', payload: { productId, size, color } });
   };
 
   return (
@@ -67,9 +73,11 @@ export function CartDrawer() {
               </div>
             ) : (
               <div className="space-y-6">
-                {cart.map((item) => (
+                {cart.map((item) => {
+                  const color = parseColor(item.color);
+                  return (
                   <div
-                    key={`${item.product.id}-${item.size}`}
+                    key={`${item.product.id}-${item.size}-${item.color || 'na'}`}
                     className="flex gap-4 pb-6 border-b border-border last:border-0"
                   >
                     {/* Image */}
@@ -84,7 +92,22 @@ export function CartDrawer() {
                     {/* Details */}
                     <div className="flex-1 min-w-0">
                       <h3 className="font-medium text-sm truncate">{item.product.name}</h3>
-                      <p className="text-xs text-muted-foreground mt-1">Size: {item.size}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-xs text-muted-foreground">Size: {item.size}</p>
+                        {color && (
+                          <>
+                            <span className="text-muted-foreground">·</span>
+                            <span className="flex items-center gap-1.5">
+                              <span
+                                className="inline-block w-3 h-3 rounded-full ring-1 ring-border"
+                                style={{ backgroundColor: color.hex }}
+                                aria-hidden="true"
+                              />
+                              <span className="text-xs text-muted-foreground">{color.name}</span>
+                            </span>
+                          </>
+                        )}
+                      </div>
                       <p className="text-primary font-medium mt-2">
                         AED {item.product.price.toLocaleString()}
                       </p>
@@ -92,7 +115,7 @@ export function CartDrawer() {
                       {/* Quantity Controls */}
                       <div className="flex items-center gap-3 mt-3">
                         <button
-                          onClick={() => updateQuantity(item.product.id, item.size, -1)}
+                          onClick={() => updateQuantity(item.product.id, item.size, item.color, -1)}
                           className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
                         >
                           <Minus size={14} />
@@ -101,7 +124,7 @@ export function CartDrawer() {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() => updateQuantity(item.product.id, item.size, 1)}
+                          onClick={() => updateQuantity(item.product.id, item.size, item.color, 1)}
                           className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
                         >
                           <Plus size={14} />
@@ -111,13 +134,14 @@ export function CartDrawer() {
 
                     {/* Remove Button */}
                     <button
-                      onClick={() => removeItem(item.product.id, item.size)}
+                      onClick={() => removeItem(item.product.id, item.size, item.color)}
                       className="text-muted-foreground hover:text-destructive transition-colors"
                     >
                       <X size={18} />
                     </button>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

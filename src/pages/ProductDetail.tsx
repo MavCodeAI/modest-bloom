@@ -142,10 +142,18 @@ const ProductDetail = () => {
       });
       return;
     }
+    if (product.colors.length > 0 && !selectedColor) {
+      toast({
+        title: 'Please select a color',
+        description: 'Choose your preferred color before adding to cart.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     dispatch({
       type: 'ADD_TO_CART',
-      payload: { 
+      payload: {
         product: {
           id: product.id,
           name: product.name,
@@ -158,17 +166,19 @@ const ProductDetail = () => {
           tags: product.tags,
           inStock: product.inStock,
           sizes: product.sizes,
+          colors: product.colors,
           isWholesale: false,
           createdAt: new Date().toISOString(),
-        }, 
-        size: selectedSize, 
-        quantity 
+        },
+        size: selectedSize,
+        color: selectedColor || undefined,
+        quantity,
       },
     });
 
     toast({
       title: 'Added to bag',
-      description: `${product.name} (Size ${selectedSize}) has been added to your bag.`,
+      description: `${product.name} (Size ${selectedSize}${selectedColor ? `, ${parseColor(selectedColor).name}` : ''}) has been added to your bag.`,
     });
 
     dispatch({ type: 'TOGGLE_CART', payload: true });
