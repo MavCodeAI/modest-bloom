@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Loader2, LogOut, Package, User as UserIcon, ShoppingBag, ChevronRight } from 'lucide-react';
+import { Loader2, LogOut, Package, User as UserIcon, ShoppingBag, ChevronRight, Eye, MapPin, CreditCard, Phone, Mail } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/layout/CartDrawer';
@@ -12,8 +12,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
-import { useOrders } from '@/hooks/useOrders';
+import { useOrders, type Order } from '@/hooks/useOrders';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useSEO } from '@/hooks/useSEO';
