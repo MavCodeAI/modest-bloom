@@ -1,41 +1,49 @@
 
+User wants:
+1. Admin mobile responsiveness improvements (menu + overall)
+2. Size variants management in admin product form
+3. Color variants management in admin product form
 
-## Issues Found
+Looking at current state: products table already has `sizes` (default S/M/L/XL) and `colors` arrays. Need to check Admin.tsx product form to see what's currently there.
 
-**1. Mobile menu Admin میں نہیں کھلتا**
-`src/pages/Admin.tsx` کا header `sticky top-0 z-50` ہے، لیکن header کے اندر موجود `Sheet` component ایک overlay/portal open کرتا ہے جو `z-50` پر ہے — وہ portal تو render ہوتا ہے، لیکن اصل بٹن tap area پر ایک issue ہے: hamburger button drawer `Sheet` کے ساتھ ٹھیک ہے لیکن mobile پر `<header>` اور main content کے درمیان touch event propagation کا کوئی مسئلہ نہیں نظر آتا۔ اصل مسئلہ یہ ہے کہ `SheetTrigger asChild` کے اوپر `className="md:hidden"` لگا ہوا ہے — `asChild` کے ساتھ یہ className child Button پر صحیح طرح pass نہیں ہوتی، اور بعض صورتوں میں button render ہی نہیں ہوتا۔ Fix: `md:hidden` کو wrapper `div` پر لگانا، یا `SheetTrigger` کے بجائے controlled `open`/`onOpenChange` state کے ساتھ plain button استعمال کرنا۔
+The product form likely has basic text inputs. Need proper UI for adding/removing size and color chips.
 
-**2. Order status تبدیل نہیں ہوتا (Order palace حالت نہیں بدلتی)**
-Database میں `orders` table کی RLS policy:
-```
-"Admins can update orders" — USING: has_role(auth.uid(), 'admin')
-```
-Admin panel PIN-based local auth استعمال کرتا ہے (`AdminAuthContext`), Supabase Auth سے login نہیں ہوتا۔ یعنی `auth.uid()` `NULL` ہے → RLS policy fail ہوتی ہے → `update` silently 0 rows لوٹاتا ہے یا error دیتا ہے۔ یہی وجہ ہے کہ status badge update نہیں ہوتا۔
+## Plan
 
-## Fix Plan
+### 1. Size & Color variants UI in Admin product form (`src/pages/Admin.tsx`)
+Add two new sections in the Add/Edit Product dialog:
 
-### Fix 1 — Mobile menu (file: `src/pages/Admin.tsx`)
-- `SheetTrigger asChild` سے `className="md:hidden"` ہٹا کر، بٹن کو `<div className="md:hidden">` wrapper میں ڈالنا تاکہ trigger ہمیشہ proper Button کے طور پر mobile میں render ہو۔
-- Confirm کرنا کہ `Sheet`'s `open`/`onOpenChange` state درست wired ہے (پہلے سے ہے).
+**Sizes manager:**
+- Quick-add preset buttons: `XS, S, M, L, XL, XXL, 3XL, Free Size, 52, 54, 56, 58, 60` (Abaya standard sizes)
+- Custom size input + "Add" button
+- Selected sizes shown as removable chips (Badge with X)
+- Stored in `sizes: string[]` array
 
-### Fix 2 — Order status update working (RLS کے بغیر admin updates)
-چونکہ admin panel Supabase Auth استعمال نہیں کرتا، دو options:
+**Colors manager:**
+- Color name input + color picker (HTML `<input type="color">`)
+- "Add Color" button → adds to list
+- Each color shown as a chip: small swatch circle + color name + remove X
+- Stored as `colors: string[]` (format: `"Name:#hex"` or just name; keep simple as name strings to match existing schema)
+- Preset palette: Black, Navy, Beige, Maroon, Olive, Grey, Brown, White
 
-**Option A (recommended, secure):** Admin operations کے لیے ایک Supabase Edge Function بنائیں جو service role key استعمال کر کے order status update کرے۔ PIN check edge function میں ہو۔
+### 2. Admin Mobile Responsiveness (`src/pages/Admin.tsx` + sub-components)
+- Verify hamburger Sheet menu works (already fixed previously) and improve drawer content
+- Make stats cards stack properly on mobile (`grid-cols-2 lg:grid-cols-4`)
+- Tabs: switch to horizontal scroll on mobile (`overflow-x-auto`) with smaller text
+- Product/Order tables: ensure they're wrapped in `overflow-x-auto` containers
+- Dialog forms: full-screen on mobile (`max-w-full sm:max-w-2xl h-screen sm:h-auto`)
+- Reduce padding on mobile (`p-3 sm:p-6`)
+- Action buttons in headers: stack vertically on mobile (`flex-col sm:flex-row`)
+- Bottom safe-area padding for forms with sticky save button
 
-**Option B (quick fix, less secure):** RLS policy تبدیل کر کے `orders` table پر `UPDATE` کو anonymous role کے لیے بھی allow کریں (صرف status field) — لیکن یہ سب کو order تبدیل کرنے دے گا، ٹھیک نہیں۔
-
-**Recommended approach: Option A**
-1. ایک edge function بنائیں: `supabase/functions/admin-update-order/index.ts` جو request body سے `{ id, status, pin }` لے، PIN verify کرے (`345345`), پھر service role client سے order update کرے۔
-2. `config.toml` میں function add کریں `verify_jwt = false`.
-3. `useUpdateOrderStatus` hook کو modify کریں کہ `supabase.functions.invoke('admin-update-order', { body: { id, status, pin } })` call کرے۔
-4. PIN کو `AdminAuthContext` سے نکالیں اور hook میں pass کریں — یا pin کو edge function میں hardcode رکھیں (موجودہ pattern کی طرح)۔
-5. وہی fix `useUpdateQuoteStatus` پر بھی apply کریں کیونکہ wholesale_quotes پر بھی غالباً same RLS issue ہو گا۔
+### 3. Reusable component
+Create `src/components/admin/VariantManager.tsx` — generic chip-based add/remove for both sizes and colors (color variant shows swatch).
 
 ### Files to edit
-- `src/pages/Admin.tsx` — mobile menu trigger fix
-- `src/hooks/useAdminOrders.ts` — `useUpdateOrderStatus` کو edge function invoke کرنے کے لیے بدلیں
-- `src/hooks/useWholesaleQuotes.ts` — same fix for quote status
-- **Create:** `supabase/functions/admin-update-order/index.ts` (handles both orders + quotes status updates with PIN check)
-- **Create:** `supabase/config.toml` block for the new function (`verify_jwt = false`)
+- `src/pages/Admin.tsx` — wire VariantManager into product form, mobile responsive polish
+- `src/components/admin/VariantManager.tsx` — **new**, reusable size/color chip manager
+- Possibly `src/components/admin/AdminProducts.tsx` — table mobile overflow wrapper if needed
 
+### Out of scope
+- No DB schema changes (sizes & colors arrays already exist)
+- No per-variant inventory (would need new `product_variants` table — ask separately if needed)
