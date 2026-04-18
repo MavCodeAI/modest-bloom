@@ -8,6 +8,8 @@ import { StoreProvider } from "@/contexts/StoreContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
+import { BottomNav } from "@/components/layout/BottomNav";
+import { useLocation } from "react-router-dom";
 
 // Lazy load components
 const Index = lazy(() => import("./pages/Index"));
