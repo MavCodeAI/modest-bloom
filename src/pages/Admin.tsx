@@ -297,6 +297,7 @@ const Admin = () => {
                 </div>
               </SheetContent>
             </Sheet>
+            </div>
 
             <h1 className="font-serif text-lg sm:text-2xl">
               <span className="text-foreground">Modest Way Fashion</span>
