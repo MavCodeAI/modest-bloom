@@ -75,11 +75,20 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 const productSchema = z.object({
   name: z.string().min(2, 'Name required'),
   slug: z.string().min(2, 'Slug required'),
   price: z.number().min(1, 'Price required'),
   sale_price: z.number().nullable().optional(),
+  wholesale_price: z.number().nullable().optional(),
   description: z.string().min(10, 'Description required'),
   images: z.array(z.string()).optional(),
   sizes: z.array(z.string()).optional(),
