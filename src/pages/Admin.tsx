@@ -76,6 +76,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { ProductImageUploader } from '@/components/admin/ProductImageUploader';
 import { VariantManager } from '@/components/admin/VariantManager';
+import { VariantInventoryManager } from '@/components/admin/VariantInventoryManager';
 
 const slugify = (text: string) =>
   text
@@ -882,6 +883,22 @@ const Admin = () => {
                 onChange={(vals) => setValue('colors', vals, { shouldDirty: true })}
               />
             </div>
+
+            {editingProduct && (
+              <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-3">
+                <div>
+                  <Label className="text-base font-semibold">Per-Variant Inventory</Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    ہر size + color combination کا اپنا stock count set کریں۔
+                  </p>
+                </div>
+                <VariantInventoryManager
+                  productId={editingProduct.id}
+                  sizes={watch('sizes') || []}
+                  colors={watch('colors') || []}
+                />
+              </div>
+            )}
 
             <div>
               <Label>Tags (comma separated)</Label>
