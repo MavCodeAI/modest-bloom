@@ -765,42 +765,81 @@ const Admin = () => {
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="name">Product Name</Label>
-                <Input id="name" {...register('name')} />
+                <Input
+                  id="name"
+                  {...register('name', {
+                    onChange: (e) => {
+                      // Auto-generate slug only when creating a new product
+                      // or when slug field is empty / matches previous auto-slug
+                      if (!editingProduct) {
+                        setValue('slug', slugify(e.target.value));
+                      }
+                    },
+                  })}
+                />
                 {errors.name && (
-                  <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+                  <p className="text-destructive text-xs mt-1">{errors.name.message}</p>
                 )}
               </div>
               <div>
                 <Label htmlFor="slug">Slug</Label>
-                <Input 
-                  id="slug" 
-                  {...register('slug')} 
-                  placeholder="auto-generated-from-name"
-                />
+                <div className="flex gap-2">
+                  <Input
+                    id="slug"
+                    {...register('slug')}
+                    placeholder="auto-generated-from-name"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setValue('slug', slugify(watch('name') || ''))}
+                    title="Regenerate from name"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <Label htmlFor="price">Price (AED)</Label>
                 <Input
                   id="price"
                   type="number"
+                  step="0.01"
                   {...register('price', { valueAsNumber: true })}
                 />
                 {errors.price && (
-                  <p className="text-red-500 text-xs mt-1">{errors.price.message}</p>
+                  <p className="text-destructive text-xs mt-1">{errors.price.message}</p>
                 )}
               </div>
               <div>
-                <Label htmlFor="sale_price">Original Price (Optional)</Label>
+                <Label htmlFor="sale_price">Compare-at Price</Label>
                 <Input
                   id="sale_price"
                   type="number"
-                  {...register('sale_price', { valueAsNumber: true })}
+                  step="0.01"
+                  placeholder="Optional"
+                  {...register('sale_price', {
+                    setValueAs: (v) => (v === '' || v == null ? null : Number(v)),
+                  })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="wholesale_price">Wholesale Price</Label>
+                <Input
+                  id="wholesale_price"
+                  type="number"
+                  step="0.01"
+                  placeholder="Bulk price"
+                  {...register('wholesale_price', {
+                    setValueAs: (v) => (v === '' || v == null ? null : Number(v)),
+                  })}
                 />
               </div>
             </div>
@@ -813,19 +852,15 @@ const Admin = () => {
                 {...register('description')}
               />
               {errors.description && (
-                <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>
+                <p className="text-destructive text-xs mt-1">{errors.description.message}</p>
               )}
             </div>
 
             <div>
-              <Label>Image URLs (comma separated)</Label>
-              <Input
-                placeholder="/images/product-1.jpeg, /images/product-2.jpeg"
-                defaultValue={(watch('images') || []).join(', ')}
-                onChange={(e) => {
-                  const urls = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
-                  setValue('images', urls);
-                }}
+              <Label>Product Images</Label>
+              <ProductImageUploader
+                images={watch('images') || []}
+                onChange={(imgs) => setValue('images', imgs, { shouldDirty: true })}
               />
             </div>
 
