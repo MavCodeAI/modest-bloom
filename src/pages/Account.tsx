@@ -46,6 +46,7 @@ const Account = () => {
   const [savingProfile, setSavingProfile] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useSEO({
     title: 'My Account - Modest Way Fashion',
