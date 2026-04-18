@@ -75,6 +75,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { ProductImageUploader } from '@/components/admin/ProductImageUploader';
+import { VariantManager } from '@/components/admin/VariantManager';
 
 const slugify = (text: string) =>
   text
@@ -758,7 +759,7 @@ const Admin = () => {
 
       {/* Product Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl w-[calc(100vw-1rem)] max-h-[95vh] sm:max-h-[90vh] overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle className="font-serif text-xl">
               {editingProduct ? 'Edit Product' : 'Add New Product'}
@@ -861,6 +862,24 @@ const Admin = () => {
               <ProductImageUploader
                 images={watch('images') || []}
                 onChange={(imgs) => setValue('images', imgs, { shouldDirty: true })}
+              />
+            </div>
+
+            <div>
+              <Label className="mb-2 block">Sizes</Label>
+              <VariantManager
+                type="size"
+                values={watch('sizes') || []}
+                onChange={(vals) => setValue('sizes', vals, { shouldDirty: true })}
+              />
+            </div>
+
+            <div>
+              <Label className="mb-2 block">Colors</Label>
+              <VariantManager
+                type="color"
+                values={watch('colors') || []}
+                onChange={(vals) => setValue('colors', vals, { shouldDirty: true })}
               />
             </div>
 
