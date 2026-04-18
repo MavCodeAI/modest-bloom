@@ -25,9 +25,9 @@ export type StoreAction =
   | { type: 'ADD_PRODUCT'; payload: Product }
   | { type: 'UPDATE_PRODUCT'; payload: Product }
   | { type: 'DELETE_PRODUCT'; payload: string }
-  | { type: 'ADD_TO_CART'; payload: { product: Product; size: string; quantity: number } }
-  | { type: 'UPDATE_CART_ITEM'; payload: { productId: string; size: string; quantity: number } }
-  | { type: 'REMOVE_FROM_CART'; payload: { productId: string; size: string } }
+  | { type: 'ADD_TO_CART'; payload: { product: Product; size: string; quantity: number; color?: string } }
+  | { type: 'UPDATE_CART_ITEM'; payload: { productId: string; size: string; color?: string; quantity: number } }
+  | { type: 'REMOVE_FROM_CART'; payload: { productId: string; size: string; color?: string } }
   | { type: 'CLEAR_CART' }
   | { type: 'TOGGLE_CART'; payload?: boolean }
   | { type: 'ADD_QUOTE'; payload: QuoteRequest }

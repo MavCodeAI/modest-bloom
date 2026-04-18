@@ -26,9 +26,9 @@ function storeReducer(state: StoreState, action: StoreAction): StoreState {
       };
 
     case 'ADD_TO_CART': {
-      const { product, size, quantity } = action.payload;
+      const { product, size, quantity, color } = action.payload;
       const existingIndex = state.cart.findIndex(
-        item => item.product.id === product.id && item.size === size
+        item => item.product.id === product.id && item.size === size && (item.color || '') === (color || '')
       );
 
       if (existingIndex >= 0) {
@@ -39,27 +39,23 @@ function storeReducer(state: StoreState, action: StoreAction): StoreState {
 
       return {
         ...state,
-        cart: [...state.cart, { product, size, quantity }],
+        cart: [...state.cart, { product, size, quantity, color }],
       };
     }
 
     case 'UPDATE_CART_ITEM': {
-      const { productId, size, quantity } = action.payload;
+      const { productId, size, color, quantity } = action.payload;
+      const matches = (item: CartItem) =>
+        item.product.id === productId && item.size === size && (item.color || '') === (color || '');
       if (quantity <= 0) {
         return {
           ...state,
-          cart: state.cart.filter(
-            item => !(item.product.id === productId && item.size === size)
-          ),
+          cart: state.cart.filter(item => !matches(item)),
         };
       }
       return {
         ...state,
-        cart: state.cart.map(item =>
-          item.product.id === productId && item.size === size
-            ? { ...item, quantity }
-            : item
-        ),
+        cart: state.cart.map(item => (matches(item) ? { ...item, quantity } : item)),
       };
     }
 
@@ -69,7 +65,8 @@ function storeReducer(state: StoreState, action: StoreAction): StoreState {
         cart: state.cart.filter(
           item =>
             !(item.product.id === action.payload.productId &&
-              item.size === action.payload.size)
+              item.size === action.payload.size &&
+              (item.color || '') === (action.payload.color || ''))
         ),
       };
 
@@ -158,7 +155,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       cartItems.forEach((item: CartItem) => {
         dispatch({
           type: 'ADD_TO_CART',
-          payload: { product: item.product, size: item.size, quantity: item.quantity },
+          payload: { product: item.product, size: item.size, color: item.color, quantity: item.quantity },
         });
       });
     }
