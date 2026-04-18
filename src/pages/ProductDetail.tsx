@@ -36,8 +36,12 @@ const ProductDetail = () => {
   const { data: dbProduct, isLoading, error } = useProduct(id || '');
   
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+
+  // Fetch per-variant inventory
+  const { data: variants } = useProductVariants(id);
 
   // Transform database product to match local Product type
   const product = dbProduct ? {
@@ -51,8 +55,22 @@ const ProductDetail = () => {
     category: 'Abayas',
     tags: dbProduct.tags || [],
     inStock: dbProduct.in_stock,
-    sizes: dbProduct.sizes || sizes,
+    sizes: dbProduct.sizes || fallbackSizes,
+    colors: dbProduct.colors || [],
   } : null;
+
+  // Stock for current size+color combo (if variants exist)
+  const selectedVariantStock = useMemo(() => {
+    if (!variants || variants.length === 0 || !selectedSize || !selectedColor) return null;
+    const v = variants.find(v => v.size === selectedSize && v.color === selectedColor);
+    return v ? v.stock : 0;
+  }, [variants, selectedSize, selectedColor]);
+
+  const isVariantOutOfStock = (size: string, color: string) => {
+    if (!variants || variants.length === 0) return false;
+    const v = variants.find(x => x.size === size && x.color === color);
+    return !v || v.stock <= 0;
+  };
 
   // SEO optimization - must be called before any early returns
   useSEO({
@@ -85,7 +103,7 @@ const ProductDetail = () => {
                 <Skeleton className="h-10 w-3/4" />
                 <Skeleton className="h-8 w-32" />
                 <div className="grid grid-cols-6 gap-2">
-                  {sizes.map((_, i) => (
+                  {fallbackSizes.map((_, i) => (
                     <Skeleton key={i} className="h-12" />
                   ))}
                 </div>
