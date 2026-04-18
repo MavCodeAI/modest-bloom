@@ -1,40 +1,41 @@
 
-User wants Admin Auth page UI/UX redesigned to match the main website's "Beach Luxury" theme (sandy beige + ocean teal + coral). Currently it uses dark purple/slate gradient which clashes with the brand.
 
-Plan:
+## Issues Found
 
-**Redesign `src/components/admin/AdminAuth.tsx`** to match the main site's Beach Luxury design system:
+**1. Mobile menu Admin میں نہیں کھلتا**
+`src/pages/Admin.tsx` کا header `sticky top-0 z-50` ہے، لیکن header کے اندر موجود `Sheet` component ایک overlay/portal open کرتا ہے جو `z-50` پر ہے — وہ portal تو render ہوتا ہے، لیکن اصل بٹن tap area پر ایک issue ہے: hamburger button drawer `Sheet` کے ساتھ ٹھیک ہے لیکن mobile پر `<header>` اور main content کے درمیان touch event propagation کا کوئی مسئلہ نہیں نظر آتا۔ اصل مسئلہ یہ ہے کہ `SheetTrigger asChild` کے اوپر `className="md:hidden"` لگا ہوا ہے — `asChild` کے ساتھ یہ className child Button پر صحیح طرح pass نہیں ہوتی، اور بعض صورتوں میں button render ہی نہیں ہوتا۔ Fix: `md:hidden` کو wrapper `div` پر لگانا، یا `SheetTrigger` کے بجائے controlled `open`/`onOpenChange` state کے ساتھ plain button استعمال کرنا۔
 
-1. **Background**: Replace dark purple/slate gradient with brand-appropriate background — soft beige/cream gradient using `bg-gradient-to-br from-background via-muted to-background` with subtle ocean teal accent blobs.
+**2. Order status تبدیل نہیں ہوتا (Order palace حالت نہیں بدلتی)**
+Database میں `orders` table کی RLS policy:
+```
+"Admins can update orders" — USING: has_role(auth.uid(), 'admin')
+```
+Admin panel PIN-based local auth استعمال کرتا ہے (`AdminAuthContext`), Supabase Auth سے login نہیں ہوتا۔ یعنی `auth.uid()` `NULL` ہے → RLS policy fail ہوتی ہے → `update` silently 0 rows لوٹاتا ہے یا error دیتا ہے۔ یہی وجہ ہے کہ status badge update نہیں ہوتا۔
 
-2. **Card styling**: Use `bg-card` with proper border (`border-border`) and `shadow-card` instead of dark glass morphism. Use the project's defined `--shadow-card` and `--shadow-soft`.
+## Fix Plan
 
-3. **Typography**: 
-   - Heading uses `font-serif` (Playfair Display) with `text-foreground` 
-   - Replace "Modest Way Fashion" tag with proper brand styling matching navbar
+### Fix 1 — Mobile menu (file: `src/pages/Admin.tsx`)
+- `SheetTrigger asChild` سے `className="md:hidden"` ہٹا کر، بٹن کو `<div className="md:hidden">` wrapper میں ڈالنا تاکہ trigger ہمیشہ proper Button کے طور پر mobile میں render ہو۔
+- Confirm کرنا کہ `Sheet`'s `open`/`onOpenChange` state درست wired ہے (پہلے سے ہے).
 
-4. **Icon container**: Ocean teal background (`bg-primary/10`) with `text-primary` Shield icon — keep but ensure colors map to theme tokens.
+### Fix 2 — Order status update working (RLS کے بغیر admin updates)
+چونکہ admin panel Supabase Auth استعمال نہیں کرتا، دو options:
 
-5. **PIN inputs**: 
-   - Use `bg-background border-input` 
-   - Focus ring uses `ring-primary` (ocean teal)
-   - Text color `text-foreground`
+**Option A (recommended, secure):** Admin operations کے لیے ایک Supabase Edge Function بنائیں جو service role key استعمال کر کے order status update کرے۔ PIN check edge function میں ہو۔
 
-6. **Buttons**:
-   - Primary submit: default `Button` (already uses primary ocean teal)
-   - Clear: `variant="outline"` with proper border tokens
-   - Back to Store: `variant="ghost"` with `text-muted-foreground`
+**Option B (quick fix, less secure):** RLS policy تبدیل کر کے `orders` table پر `UPDATE` کو anonymous role کے لیے بھی allow کریں (صرف status field) — لیکن یہ سب کو order تبدیل کرنے دے گا، ٹھیک نہیں۔
 
-7. **Show/Hide PIN toggle**: Use `text-muted-foreground hover:text-foreground`
+**Recommended approach: Option A**
+1. ایک edge function بنائیں: `supabase/functions/admin-update-order/index.ts` جو request body سے `{ id, status, pin }` لے، PIN verify کرے (`345345`), پھر service role client سے order update کرے۔
+2. `config.toml` میں function add کریں `verify_jwt = false`.
+3. `useUpdateOrderStatus` hook کو modify کریں کہ `supabase.functions.invoke('admin-update-order', { body: { id, status, pin } })` call کرے۔
+4. PIN کو `AdminAuthContext` سے نکالیں اور hook میں pass کریں — یا pin کو edge function میں hardcode رکھیں (موجودہ pattern کی طرح)۔
+5. وہی fix `useUpdateQuoteStatus` پر بھی apply کریں کیونکہ wholesale_quotes پر بھی غالباً same RLS issue ہو گا۔
 
-8. **Error alert**: Use `variant="destructive"` from existing Alert component instead of custom red styling.
+### Files to edit
+- `src/pages/Admin.tsx` — mobile menu trigger fix
+- `src/hooks/useAdminOrders.ts` — `useUpdateOrderStatus` کو edge function invoke کرنے کے لیے بدلیں
+- `src/hooks/useWholesaleQuotes.ts` — same fix for quote status
+- **Create:** `supabase/functions/admin-update-order/index.ts` (handles both orders + quotes status updates with PIN check)
+- **Create:** `supabase/config.toml` block for the new function (`verify_jwt = false`)
 
-9. **Security notice**: `text-xs text-muted-foreground` 
-
-10. **Decorative blobs**: Replace purple/blue blurs with `bg-primary/10` and `bg-secondary/10` (ocean teal + coral) blurred circles for subtle brand-aligned ambiance.
-
-11. **Mobile responsiveness**: Ensure PIN input boxes scale on small viewports (already 393px wide) — use `w-10 h-12 sm:w-12 sm:h-12` and reduce gap on mobile (`gap-1.5 sm:gap-2`).
-
-**File to edit**: `src/components/admin/AdminAuth.tsx` only.
-
-No database, routing, or logic changes — purely visual redesign aligned with the existing Beach Luxury design tokens defined in `src/index.css`.
