@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, Package, Truck, DollarSign, CreditCard } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Package, Truck, DollarSign, CreditCard, ClipboardList } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -39,6 +40,7 @@ interface OrderItem {
 const OrderConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { order } = (location.state as OrderData) || { order: null };
 
   if (!order) {
@@ -217,6 +219,14 @@ const OrderConfirmation = () => {
                   </Button>
                   <Button
                     variant="outline"
+                    onClick={() => navigate(user ? '/account' : '/auth?redirect=/account')}
+                    className="w-full h-11 sm:h-12 text-sm sm:text-base gap-2"
+                  >
+                    <ClipboardList className="w-4 h-4" />
+                    View All Orders
+                  </Button>
+                  <Button
+                    variant="ghost"
                     onClick={() => navigate('/')}
                     className="w-full h-11 sm:h-12 text-sm sm:text-base"
                   >
