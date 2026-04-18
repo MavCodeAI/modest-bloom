@@ -278,13 +278,14 @@ const Admin = () => {
         <div className="luxury-container flex items-center justify-between">
           <div className="flex items-center gap-3">
             {/* Mobile Menu */}
-            <Sheet open={isMobileNavOpen} onOpenChange={setIsMobileNavOpen}>
-              <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-[240px] p-0">
+            <div className="md:hidden">
+              <Sheet open={isMobileNavOpen} onOpenChange={setIsMobileNavOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" aria-label="Open menu">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-[240px] p-0">
                 <div className="py-6">
                   <h2 className="font-serif text-lg px-4 mb-4">Navigation</h2>
                   <nav className="space-y-1">
@@ -296,6 +297,7 @@ const Admin = () => {
                 </div>
               </SheetContent>
             </Sheet>
+            </div>
 
             <h1 className="font-serif text-lg sm:text-2xl">
               <span className="text-foreground">Modest Way Fashion</span>

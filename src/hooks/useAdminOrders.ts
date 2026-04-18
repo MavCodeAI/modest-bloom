@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import type { TablesUpdate } from '@/integrations/supabase/types';
 
 export interface OrderFilters {
   status?: string;
@@ -148,21 +147,21 @@ export const useUpdateOrderStatus = () => {
       status: string; 
       estimatedDelivery?: string | null 
     }) => {
-      const updateData: TablesUpdate<'orders'> = { status };
-      
-      if (estimatedDelivery !== undefined) {
-        updateData.estimated_delivery = estimatedDelivery;
-      }
+      const pin = import.meta.env.VITE_ADMIN_PIN || '345345';
 
-      const { data, error } = await supabase
-        .from('orders')
-        .update(updateData)
-        .eq('id', id)
-        .select()
-        .single();
+      const { data, error } = await supabase.functions.invoke('admin-update-status', {
+        body: {
+          table: 'orders',
+          id,
+          status,
+          pin,
+          estimated_delivery: estimatedDelivery,
+        },
+      });
 
       if (error) throw error;
-      return data;
+      if (data?.error) throw new Error(data.error);
+      return data?.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
@@ -195,14 +194,19 @@ export const useBulkUpdateOrderStatus = () => {
       orderIds: string[]; 
       status: string; 
     }) => {
-      const { data, error } = await supabase
-        .from('orders')
-        .update({ status })
-        .in('id', orderIds)
-        .select();
-
-      if (error) throw error;
-      return data;
+      const pin = import.meta.env.VITE_ADMIN_PIN || '345345';
+      const results = await Promise.all(
+        orderIds.map((id) =>
+          supabase.functions.invoke('admin-update-status', {
+            body: { table: 'orders', id, status, pin },
+          })
+        )
+      );
+      const failed = results.filter((r) => r.error || r.data?.error);
+      if (failed.length > 0) {
+        throw new Error(`${failed.length} updates failed`);
+      }
+      return results.map((r) => r.data?.data);
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
