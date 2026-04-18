@@ -970,7 +970,11 @@ const Admin = () => {
               <div>
                 <Label className="text-muted-foreground">Items</Label>
                 <div className="space-y-2 mt-2">
-                  {selectedOrder.items?.map((item) => (
+                  {selectedOrder.items?.map((item) => {
+                    const colorParts = item.color?.split(':');
+                    const colorName = colorParts?.[0]?.trim();
+                    const colorHex = colorParts?.[1]?.trim();
+                    return (
                     <div key={item.id} className="flex justify-between items-center p-2 bg-muted/50 rounded">
                       <div className="flex items-center gap-3">
                         {item.product_image && (
@@ -978,12 +982,28 @@ const Admin = () => {
                         )}
                         <div>
                           <p className="font-medium text-sm">{item.product_name}</p>
-                          <p className="text-xs text-muted-foreground">Size: {item.size} × {item.quantity}</p>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1.5 flex-wrap">
+                            <span>Size: {item.size}</span>
+                            {colorName && (
+                              <>
+                                <span>·</span>
+                                <span className="flex items-center gap-1">
+                                  <span
+                                    className="inline-block w-2.5 h-2.5 rounded-full ring-1 ring-border"
+                                    style={{ backgroundColor: colorHex || '#ccc' }}
+                                  />
+                                  {colorName}
+                                </span>
+                              </>
+                            )}
+                            <span>· × {item.quantity}</span>
+                          </p>
                         </div>
                       </div>
                       <p className="font-serif">AED {item.price.toLocaleString()}</p>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
