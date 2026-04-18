@@ -16,17 +16,17 @@ import { Loader2, Mail, Lock, User, AlertCircle, ArrowLeft } from 'lucide-react'
 import { Link } from 'react-router-dom';
 
 const signInSchema = z.object({
-  email: z.string().email('براہ کرم درست ای میل درج کریں'),
-  password: z.string().min(6, 'پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے'),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
 const signUpSchema = z.object({
-  fullName: z.string().min(2, 'نام کم از کم 2 حروف کا ہونا چاہیے'),
-  email: z.string().email('براہ کرم درست ای میل درج کریں'),
-  password: z.string().min(6, 'پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے'),
+  fullName: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: 'پاس ورڈ میچ نہیں کر رہے',
+  message: 'Passwords do not match',
   path: ['confirmPassword'],
 });
 
@@ -64,7 +64,7 @@ const Auth = () => {
 
     if (error) {
       if (error.message.includes('Invalid login credentials')) {
-        setError('ای میل یا پاس ورڈ غلط ہے');
+        setError('Invalid email or password');
       } else {
         setError(error.message);
       }
@@ -81,12 +81,12 @@ const Auth = () => {
 
     if (error) {
       if (error.message.includes('already registered')) {
-        setError('یہ ای میل پہلے سے رجسٹرڈ ہے');
+        setError('This email is already registered');
       } else {
         setError(error.message);
       }
     } else {
-      setSuccessMessage('اکاؤنٹ بن گیا! آپ اب لاگ ان کر سکتے ہیں۔');
+      setSuccessMessage('Account created! You can now sign in.');
       signUpForm.reset();
     }
     setIsLoading(false);
@@ -108,19 +108,19 @@ const Auth = () => {
         <div className="max-w-md mx-auto">
           <Link to="/" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-8 transition-colors">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            واپس ہوم پیج پر
+            Back to Home
           </Link>
 
           <Card className="border-border/50 shadow-xl">
             <CardHeader className="text-center pb-2">
               <CardTitle className="font-serif text-2xl">Modest Way Fashion</CardTitle>
-              <CardDescription>اپنے اکاؤنٹ میں لاگ ان کریں</CardDescription>
+              <CardDescription>Sign in to your account</CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="signin" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-6">
-                  <TabsTrigger value="signin">لاگ ان</TabsTrigger>
-                  <TabsTrigger value="signup">نیا اکاؤنٹ</TabsTrigger>
+                  <TabsTrigger value="signin">Sign In</TabsTrigger>
+                  <TabsTrigger value="signup">Create Account</TabsTrigger>
                 </TabsList>
 
                 {error && (
@@ -139,7 +139,7 @@ const Auth = () => {
                 <TabsContent value="signin">
                   <form onSubmit={signInForm.handleSubmit(handleSignIn)} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="signin-email">ای میل</Label>
+                      <Label htmlFor="signin-email">Email</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -156,7 +156,7 @@ const Auth = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signin-password">پاس ورڈ</Label>
+                      <Label htmlFor="signin-password">Password</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -174,7 +174,7 @@ const Auth = () => {
 
                     <Button type="submit" className="w-full btn-luxury-primary" disabled={isLoading}>
                       {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                      لاگ ان کریں
+                      Sign In
                     </Button>
                   </form>
                 </TabsContent>
@@ -182,13 +182,13 @@ const Auth = () => {
                 <TabsContent value="signup">
                   <form onSubmit={signUpForm.handleSubmit(handleSignUp)} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="signup-name">پورا نام</Label>
+                      <Label htmlFor="signup-name">Full Name</Label>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                           id="signup-name"
                           type="text"
-                          placeholder="آپ کا نام"
+                          placeholder="Your name"
                           className="pl-10"
                           {...signUpForm.register('fullName')}
                         />
@@ -199,7 +199,7 @@ const Auth = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-email">ای میل</Label>
+                      <Label htmlFor="signup-email">Email</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -216,13 +216,13 @@ const Auth = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-password">پاس ورڈ</Label>
+                      <Label htmlFor="signup-password">Password</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                           id="signup-password"
                           type="password"
-                          placeholder="کم از کم 6 حروف"
+                          placeholder="At least 6 characters"
                           className="pl-10"
                           {...signUpForm.register('password')}
                         />
@@ -233,13 +233,13 @@ const Auth = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-confirm">پاس ورڈ دوبارہ</Label>
+                      <Label htmlFor="signup-confirm">Confirm Password</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                           id="signup-confirm"
                           type="password"
-                          placeholder="پاس ورڈ دوبارہ لکھیں"
+                          placeholder="Re-enter your password"
                           className="pl-10"
                           {...signUpForm.register('confirmPassword')}
                         />
@@ -251,7 +251,7 @@ const Auth = () => {
 
                     <Button type="submit" className="w-full btn-luxury-primary" disabled={isLoading}>
                       {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                      اکاؤنٹ بنائیں
+                      Create Account
                     </Button>
                   </form>
                 </TabsContent>
