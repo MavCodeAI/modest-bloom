@@ -274,14 +274,21 @@ const Account = () => {
                         )}
                       </div>
 
-                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-border text-xs text-muted-foreground">
-                        <span>
+                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-border text-xs text-muted-foreground gap-3">
+                        <span className="truncate">
                           Payment: <span className="capitalize text-foreground">{order.payment_method}</span>
+                          <span className="hidden sm:inline"> • Ship to {order.emirate}</span>
                         </span>
-                        <span className="flex items-center gap-1">
-                          Ship to {order.emirate}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSelectedOrder(order)}
+                          className="h-8 px-2 gap-1 text-xs hover:text-primary -mr-2"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          View Details
                           <ChevronRight className="w-3 h-3" />
-                        </span>
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
