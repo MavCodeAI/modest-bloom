@@ -18,6 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useSEO } from '@/hooks/useSEO';
 import { cn } from '@/lib/utils';
+import { OrderTimeline } from '@/components/order/OrderTimeline';
 
 const statusVariant = (status: string): 'default' | 'secondary' | 'outline' | 'destructive' => {
   switch (status?.toLowerCase()) {
@@ -238,6 +239,7 @@ const Account = () => {
                     </CardHeader>
                     <CardContent className="pt-0">
                       <Separator className="mb-3" />
+                      <OrderTimeline status={order.status} compact className="mb-4" />
                       <div className="space-y-2">
                         {order.items?.slice(0, 3).map((item) => (
                           <div

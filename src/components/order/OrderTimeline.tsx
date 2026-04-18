@@ -6,6 +6,8 @@ type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelle
 interface OrderTimelineProps {
   status: OrderStatus;
   className?: string;
+  compact?: boolean;
+  showHeader?: boolean;
 }
 
 const steps = [
@@ -15,7 +17,12 @@ const steps = [
   { key: 'delivered', label: 'Delivered', icon: Home, desc: 'Order arrived' },
 ] as const;
 
-export function OrderTimeline({ status, className }: OrderTimelineProps) {
+export function OrderTimeline({
+  status,
+  className,
+  compact = false,
+  showHeader = true,
+}: OrderTimelineProps) {
   const normalized = (status || 'pending').toLowerCase();
   const isCancelled = normalized === 'cancelled';
   const currentIndex = isCancelled
@@ -26,19 +33,87 @@ export function OrderTimeline({ status, className }: OrderTimelineProps) {
     return (
       <div
         className={cn(
-          'rounded-lg border border-destructive/30 bg-destructive/5 p-4 sm:p-5 flex items-center gap-3',
+          'rounded-lg border border-destructive/30 bg-destructive/5 flex items-center gap-3',
+          compact ? 'p-3' : 'p-4 sm:p-5',
           className
         )}
       >
-        <div className="w-9 h-9 rounded-full bg-destructive/15 flex items-center justify-center flex-shrink-0">
-          <X className="w-5 h-5 text-destructive" />
+        <div
+          className={cn(
+            'rounded-full bg-destructive/15 flex items-center justify-center flex-shrink-0',
+            compact ? 'w-7 h-7' : 'w-9 h-9'
+          )}
+        >
+          <X className={cn('text-destructive', compact ? 'w-4 h-4' : 'w-5 h-5')} />
         </div>
         <div>
-          <p className="font-medium text-sm sm:text-base text-destructive">Order Cancelled</p>
-          <p className="text-xs sm:text-sm text-muted-foreground">
-            This order has been cancelled. Contact support if you have questions.
+          <p
+            className={cn(
+              'font-medium text-destructive',
+              compact ? 'text-xs' : 'text-sm sm:text-base'
+            )}
+          >
+            Order Cancelled
           </p>
+          {!compact && (
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              This order has been cancelled. Contact support if you have questions.
+            </p>
+          )}
         </div>
+      </div>
+    );
+  }
+
+  // Compact: single horizontal stepper, no description text
+  if (compact) {
+    return (
+      <div
+        className={cn(
+          'rounded-md border border-border bg-muted/30 px-3 py-3',
+          className
+        )}
+      >
+        <ol className="flex items-center justify-between relative">
+          <div className="absolute top-3 left-3 right-3 h-px bg-border" aria-hidden="true">
+            <div
+              className="h-full bg-primary transition-all duration-500"
+              style={{
+                width: `${currentIndex === 0 ? 0 : (currentIndex / (steps.length - 1)) * 100}%`,
+              }}
+            />
+          </div>
+          {steps.map((step, index) => {
+            const isComplete = index < currentIndex;
+            const isCurrent = index === currentIndex;
+            const Icon = step.icon;
+            return (
+              <li
+                key={step.key}
+                className="relative flex flex-col items-center text-center flex-1 z-10"
+              >
+                <div
+                  className={cn(
+                    'w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all bg-background',
+                    isComplete && 'bg-primary border-primary text-primary-foreground',
+                    isCurrent && 'border-primary text-primary ring-2 ring-primary/20',
+                    !isComplete && !isCurrent && 'border-border text-muted-foreground'
+                  )}
+                >
+                  {isComplete ? <Check className="w-3 h-3" /> : <Icon className="w-3 h-3" />}
+                </div>
+                <p
+                  className={cn(
+                    'mt-1.5 text-[10px] font-medium leading-tight',
+                    (isComplete || isCurrent) ? 'text-foreground' : 'text-muted-foreground'
+                  )}
+                >
+                  {step.label}
+                </p>
+              </li>
+            );
+          })}
+        </ol>
       </div>
     );
   }
@@ -50,16 +125,18 @@ export function OrderTimeline({ status, className }: OrderTimelineProps) {
         className
       )}
     >
-      <div className="flex items-baseline justify-between mb-5">
-        <h2 className="font-serif text-lg sm:text-xl">Order Status</h2>
-        <span className="text-xs text-muted-foreground capitalize">
-          Currently: <span className="text-primary font-medium">{steps[currentIndex].label}</span>
-        </span>
-      </div>
+      {showHeader && (
+        <div className="flex items-baseline justify-between mb-5">
+          <h2 className="font-serif text-lg sm:text-xl">Order Status</h2>
+          <span className="text-xs text-muted-foreground">
+            Currently:{' '}
+            <span className="text-primary font-medium">{steps[currentIndex].label}</span>
+          </span>
+        </div>
+      )}
 
       {/* Desktop / tablet: horizontal stepper */}
       <ol className="hidden sm:flex items-start justify-between relative">
-        {/* Connector line behind icons */}
         <div className="absolute top-5 left-0 right-0 h-px bg-border" aria-hidden="true">
           <div
             className="h-full bg-primary transition-all duration-500"
