@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Minus, Plus, Check, Truck, RotateCcw, Shield } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -7,6 +7,7 @@ import { CartDrawer } from '@/components/layout/CartDrawer';
 import { useStore } from '@/hooks/useStore';
 import { useSEO } from '@/hooks/useSEO';
 import { useProduct } from '@/hooks/useProducts';
+import { useProductVariants } from '@/hooks/useProductVariants';
 import { Button } from '@/components/ui/button';
 import {
   Accordion,
@@ -18,7 +19,12 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const sizes = ['50', '52', '54', '56', '58', '60'];
+const fallbackSizes = ['50', '52', '54', '56', '58', '60'];
+
+const parseColor = (raw: string) => {
+  const [name, hex] = raw.split(':');
+  return { name: name.trim(), hex: hex?.trim() || '#cccccc' };
+};
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,8 +36,12 @@ const ProductDetail = () => {
   const { data: dbProduct, isLoading, error } = useProduct(id || '');
   
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+
+  // Fetch per-variant inventory
+  const { data: variants } = useProductVariants(id);
 
   // Transform database product to match local Product type
   const product = dbProduct ? {
@@ -45,8 +55,22 @@ const ProductDetail = () => {
     category: 'Abayas',
     tags: dbProduct.tags || [],
     inStock: dbProduct.in_stock,
-    sizes: dbProduct.sizes || sizes,
+    sizes: dbProduct.sizes || fallbackSizes,
+    colors: dbProduct.colors || [],
   } : null;
+
+  // Stock for current size+color combo (if variants exist)
+  const selectedVariantStock = useMemo(() => {
+    if (!variants || variants.length === 0 || !selectedSize || !selectedColor) return null;
+    const v = variants.find(v => v.size === selectedSize && v.color === selectedColor);
+    return v ? v.stock : 0;
+  }, [variants, selectedSize, selectedColor]);
+
+  const isVariantOutOfStock = (size: string, color: string) => {
+    if (!variants || variants.length === 0) return false;
+    const v = variants.find(x => x.size === size && x.color === color);
+    return !v || v.stock <= 0;
+  };
 
   // SEO optimization - must be called before any early returns
   useSEO({
@@ -79,7 +103,7 @@ const ProductDetail = () => {
                 <Skeleton className="h-10 w-3/4" />
                 <Skeleton className="h-8 w-32" />
                 <div className="grid grid-cols-6 gap-2">
-                  {sizes.map((_, i) => (
+                  {fallbackSizes.map((_, i) => (
                     <Skeleton key={i} className="h-12" />
                   ))}
                 </div>
@@ -225,6 +249,54 @@ const ProductDetail = () => {
                 </div>
               </div>
 
+              {/* Color Selector — large visual swatches */}
+              {product.colors.length > 0 && (
+                <div>
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <span className="text-sm font-medium">
+                      Color: <span className="text-muted-foreground font-normal">
+                        {selectedColor ? parseColor(selectedColor).name : 'Select a color'}
+                      </span>
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    {product.colors.map((c) => {
+                      const { name, hex } = parseColor(c);
+                      const isSelected = selectedColor === c;
+                      return (
+                        <button
+                          key={c}
+                          onClick={() => setSelectedColor(c)}
+                          aria-label={`Select color ${name}`}
+                          title={name}
+                          className={cn(
+                            "group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full transition-all",
+                            "ring-offset-2 ring-offset-background",
+                            isSelected
+                              ? "ring-2 ring-primary scale-110"
+                              : "ring-1 ring-border hover:ring-foreground/40 hover:scale-105"
+                          )}
+                          style={{ backgroundColor: hex }}
+                        >
+                          {isSelected && (
+                            <Check
+                              size={20}
+                              className={cn(
+                                "absolute inset-0 m-auto",
+                                // pick contrasting check color
+                                hex.toLowerCase() === '#ffffff' || hex.toLowerCase() === '#f5f1ea'
+                                  ? "text-foreground"
+                                  : "text-white"
+                              )}
+                            />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Size Selector */}
               <div>
                 <div className="flex items-center justify-between mb-3 sm:mb-4">
@@ -234,21 +306,31 @@ const ProductDetail = () => {
                   </button>
                 </div>
                 <div className="grid grid-cols-6 gap-2">
-                  {sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={cn(
-                        "h-10 sm:h-12 rounded-lg border-2 text-xs sm:text-sm font-medium transition-all",
-                        selectedSize === size
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border hover:border-foreground/50"
-                      )}
-                    >
-                      {size}
-                    </button>
-                  ))}
+                  {product.sizes.map((size) => {
+                    const outOfStock = selectedColor ? isVariantOutOfStock(size, selectedColor) : false;
+                    return (
+                      <button
+                        key={size}
+                        onClick={() => !outOfStock && setSelectedSize(size)}
+                        disabled={outOfStock}
+                        className={cn(
+                          "h-10 sm:h-12 rounded-lg border-2 text-xs sm:text-sm font-medium transition-all relative",
+                          selectedSize === size
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border hover:border-foreground/50",
+                          outOfStock && "opacity-40 cursor-not-allowed line-through hover:border-border"
+                        )}
+                      >
+                        {size}
+                      </button>
+                    );
+                  })}
                 </div>
+                {selectedVariantStock !== null && selectedVariantStock > 0 && selectedVariantStock <= 5 && (
+                  <p className="text-xs text-orange-500 mt-2">
+                    صرف {selectedVariantStock} stock میں رہ گئے!
+                  </p>
+                )}
               </div>
 
               {/* Quantity */}
