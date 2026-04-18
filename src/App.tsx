@@ -33,6 +33,14 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
+const GlobalBottomNav = () => {
+  const location = useLocation();
+  // Hide bottom nav on admin, auth, and checkout flow to avoid clutter
+  const hideOn = ['/admin', '/auth', '/checkout'];
+  if (hideOn.some((p) => location.pathname.startsWith(p))) return null;
+  return <BottomNav />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -54,6 +62,7 @@ const App = () => (
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/order-confirmation" element={<OrderConfirmation />} />
                   <Route path="/wishlist" element={<Wishlist />} />
+                  <Route path="/account" element={<Auth />} />
                   <Route path="/size-guide" element={<SizeGuide />} />
                   <Route path="/shipping" element={<Shipping />} />
                   <Route path="/returns" element={<Returns />} />
@@ -74,6 +83,7 @@ const App = () => (
                   <Route path="/search" element={<SearchResults />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
+                <GlobalBottomNav />
               </Suspense>
             </BrowserRouter>
           </TooltipProvider>

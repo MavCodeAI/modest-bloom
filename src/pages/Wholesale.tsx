@@ -147,11 +147,11 @@ const Wholesale = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
       <CartDrawer />
       
-      <main className="pt-20 md:pt-24">
+      <main className="pt-16 md:pt-24">
         {/* Hero Section */}
         <section className="relative py-32 md:py-40 lg:py-48 overflow-hidden">
           <div className="absolute inset-0">

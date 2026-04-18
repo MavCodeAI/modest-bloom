@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/button';
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
       
-      <main className="pt-20 md:pt-24">
+      <main className="pt-16 md:pt-24">
         {/* Hero Section */}
         <section className="relative bg-gradient-to-b from-primary/5 to-background py-16 sm:py-24">
           <div className="luxury-container">

@@ -43,7 +43,7 @@ const OrderConfirmation = () => {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-16 md:pb-0">
         <Navbar />
         <div className="pt-32 text-center luxury-container px-4">
           <h1 className="font-serif text-xl sm:text-2xl mb-4">Order not found</h1>
@@ -58,10 +58,10 @@ const OrderConfirmation = () => {
   estimatedDelivery.setDate(estimatedDelivery.getDate() + 3);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
       
-      <main className="pt-20 md:pt-24">
+      <main className="pt-16 md:pt-24">
         <div className="luxury-container py-6 sm:py-8">
           {/* Success Message */}
           <div className="text-center mb-8 sm:mb-12">

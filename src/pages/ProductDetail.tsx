@@ -91,9 +91,9 @@ const ProductDetail = () => {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-16 md:pb-0">
         <Navbar />
-        <main className="pt-20 md:pt-24">
+        <main className="pt-16 md:pt-24">
           <div className="luxury-container py-6 sm:py-8">
             <Skeleton className="h-6 w-20 mb-6" />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
@@ -119,7 +119,7 @@ const ProductDetail = () => {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-16 md:pb-0">
         <Navbar />
         <div className="pt-32 text-center px-4">
           <h1 className="font-serif text-xl sm:text-2xl mb-4">Product Not Found</h1>
@@ -185,11 +185,11 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
       <CartDrawer />
       
-      <main className="pt-20 md:pt-24">
+      <main className="pt-16 md:pt-24">
         <div className="luxury-container py-6 sm:py-8">
           {/* Back Button */}
           <button

@@ -55,10 +55,10 @@ export function Wishlist() {
   // Not logged in state
   if (!user) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-16 md:pb-0">
         <Navbar />
         
-        <main className="pt-20 md:pt-24">
+        <main className="pt-16 md:pt-24">
           <div className="luxury-container py-6 sm:py-8">
             <div className="text-center py-12 sm:py-16">
               <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-muted rounded-full mb-4">
@@ -83,10 +83,10 @@ export function Wishlist() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-16 md:pb-0">
         <Navbar />
         
-        <main className="pt-20 md:pt-24">
+        <main className="pt-16 md:pt-24">
           <div className="luxury-container py-6 sm:py-8">
             <div className="flex items-center gap-3 mb-6 sm:mb-8">
               <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
@@ -116,10 +116,10 @@ export function Wishlist() {
   const wishlistProducts = wishlistItems?.filter(item => item.product) || [];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
       
-      <main className="pt-20 md:pt-24">
+      <main className="pt-16 md:pt-24">
         <div className="luxury-container py-6 sm:py-8">
           <div className="flex items-center gap-3 mb-6 sm:mb-8">
             <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
