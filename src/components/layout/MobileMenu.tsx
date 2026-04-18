@@ -7,7 +7,9 @@ const navLinks = [
   { href: '/shop?category=printed', label: 'Printed' },
   { href: '/shop?category=embroidery', label: 'Embroidery' },
   { href: '/shop?category=beaded', label: 'Beaded' },
-  { href: '/wholesale', label: 'Wholesale' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
+  { href: '/wholesale', label: 'Wholesale (B2B)' },
 ];
 
 export function MobileMenu({ isOpen, onClose }) {
