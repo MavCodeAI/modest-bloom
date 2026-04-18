@@ -1,136 +1,40 @@
 
-# App Complete Fix Plan - Client Handover Ready
+User wants Admin Auth page UI/UX redesigned to match the main website's "Beach Luxury" theme (sandy beige + ocean teal + coral). Currently it uses dark purple/slate gradient which clashes with the brand.
 
-## Issues Identified
+Plan:
 
-### 1. Vercel 404 "Not Found" Issue for Admin Page
-**Problem**: When accessing `/admin` via Vercel deployment, a "Not Found" error appears.
+**Redesign `src/components/admin/AdminAuth.tsx`** to match the main site's Beach Luxury design system:
 
-**Root Cause**: Vercel doesn't know how to handle SPA (Single Page Application) routing. When someone directly visits `/admin`, Vercel looks for a physical file at that path instead of serving `index.html` and letting React Router handle the route.
+1. **Background**: Replace dark purple/slate gradient with brand-appropriate background — soft beige/cream gradient using `bg-gradient-to-br from-background via-muted to-background` with subtle ocean teal accent blobs.
 
-**Solution**: Create a `vercel.json` file with proper rewrites configuration to route all paths to `index.html`.
+2. **Card styling**: Use `bg-card` with proper border (`border-border`) and `shadow-card` instead of dark glass morphism. Use the project's defined `--shadow-card` and `--shadow-soft`.
 
-### 2. Empty Products - No Data in Database
-**Problem**: Products and categories tables are empty (`COUNT = 0`). Shop page shows "0 products found".
+3. **Typography**: 
+   - Heading uses `font-serif` (Playfair Display) with `text-foreground` 
+   - Replace "Modest Way Fashion" tag with proper brand styling matching navbar
 
-**Root Cause**: The Shop page uses `useAdvancedSearch` hook which queries the database directly, but there's no data.
+4. **Icon container**: Ocean teal background (`bg-primary/10`) with `text-primary` Shield icon — keep but ensure colors map to theme tokens.
 
-**Solution**: Add sample products and categories to the database so the shop displays products.
+5. **PIN inputs**: 
+   - Use `bg-background border-input` 
+   - Focus ring uses `ring-primary` (ocean teal)
+   - Text color `text-foreground`
 
-### 3. Homepage Product Sections Not Connected to Database
-**Problem**: Homepage sections (`BestSellersSection`, `NewDropsSection`, `AbayaOfTheWeekSection`) use `useStore()` hook which reads from localStorage with mock data, not from the database.
+6. **Buttons**:
+   - Primary submit: default `Button` (already uses primary ocean teal)
+   - Clear: `variant="outline"` with proper border tokens
+   - Back to Store: `variant="ghost"` with `text-muted-foreground`
 
-**Current State**: 
-- `StoreContext.tsx` loads products from localStorage or seeds with `initialProducts` from `src/lib/data.ts`
-- Shop page uses database hooks (`useAdvancedSearch`)
-- Homepage uses localStorage-based store
+7. **Show/Hide PIN toggle**: Use `text-muted-foreground hover:text-foreground`
 
-**Solution**: Update homepage sections to use database hooks instead of localStorage, or add hybrid approach.
+8. **Error alert**: Use `variant="destructive"` from existing Alert component instead of custom red styling.
 
-### 4. Admin Dashboard Uses Local State Only
-**Problem**: Admin page (`src/pages/Admin.tsx`) uses `useStore()` for products/orders/quotes which is localStorage-based, not connected to Supabase.
+9. **Security notice**: `text-xs text-muted-foreground` 
 
-**Solution**: Connect Admin dashboard to use Supabase hooks for CRUD operations.
+10. **Decorative blobs**: Replace purple/blue blurs with `bg-primary/10` and `bg-secondary/10` (ocean teal + coral) blurred circles for subtle brand-aligned ambiance.
 
----
+11. **Mobile responsiveness**: Ensure PIN input boxes scale on small viewports (already 393px wide) — use `w-10 h-12 sm:w-12 sm:h-12` and reduce gap on mobile (`gap-1.5 sm:gap-2`).
 
-## Implementation Plan
+**File to edit**: `src/components/admin/AdminAuth.tsx` only.
 
-### Step 1: Fix Vercel SPA Routing
-Create `vercel.json` in project root:
-```json
-{
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
-  ]
-}
-```
-This ensures all routes serve `index.html`, allowing React Router to handle client-side routing.
-
-### Step 2: Seed Database with Sample Data
-Add categories and products to the database:
-- 4 Categories: Abayas, Kaftans, Sets, Printed
-- 12-15 Sample products with proper images, prices, tags, and sizes
-
-### Step 3: Update Homepage to Use Database
-Update these components to fetch from database:
-- `NewDropsSection.tsx` - Use `useProducts({ tag: 'new_drop' })`
-- `BestSellersSection.tsx` - Use `useProducts({ tag: 'best_seller' })`
-- `AbayaOfTheWeekSection.tsx` - Use `useProducts({ tag: 'abaya_of_week' })`
-
-### Step 4: Connect Admin Dashboard to Database
-Update `Admin.tsx` to use Supabase hooks:
-- Replace `useStore()` products with `useProducts()`, `useCreateProduct()`, `useUpdateProduct()`, `useDeleteProduct()`
-- Use `useAdminOrders()` for orders
-- Use `useWholesaleQuotes()` for quotes
-
-### Step 5: Clean Up & Optimize
-- Remove duplicate data sources (localStorage vs database)
-- Ensure consistent data flow
-- Add loading states for database fetches
-
----
-
-## Technical Details
-
-### vercel.json Configuration
-```json
-{
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
-  ]
-}
-```
-
-### Database Seed Data (SQL)
-**Categories:**
-1. Abayas (slug: abayas)
-2. Kaftans (slug: kaftans)
-3. Sets (slug: sets)
-4. Printed (slug: printed)
-
-**Products:** 12+ products with:
-- name, slug, description, price
-- images array from public/images/
-- sizes: ['50', '52', '54', '56', '58', '60']
-- tags: ['new_drop', 'best_seller', 'abaya_of_week', 'sale', etc.]
-- in_stock: true
-- is_wholesale: true/false
-
-### Component Updates
-Each homepage section will be updated to:
-1. Import `useProducts` hook
-2. Fetch products with appropriate tag filter
-3. Handle loading/error states
-4. Map database products to UI
-
-### Admin Dashboard Changes
-1. Replace localStorage dispatch with mutation hooks
-2. Add React Query for data fetching
-3. Implement proper loading states
-4. Connect forms to create/update mutations
-
----
-
-## Files to Create
-- `vercel.json` (new)
-
-## Files to Edit
-- `src/components/home/NewDropsSection.tsx`
-- `src/components/home/BestSellersSection.tsx`
-- `src/components/home/AbayaOfTheWeekSection.tsx`
-- `src/pages/Admin.tsx`
-
-## Database Operations
-- INSERT categories (4 records)
-- INSERT products (12+ records)
-
----
-
-## Expected Outcome
-After implementation:
-1. `/admin` route will work on Vercel deployment
-2. Shop page will display products from database
-3. Homepage sections will show real products
-4. Admin can manage products/orders via database
-5. App will be fully production-ready for client handover
+No database, routing, or logic changes — purely visual redesign aligned with the existing Beach Luxury design tokens defined in `src/index.css`.
