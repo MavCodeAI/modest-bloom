@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, Package, Truck, DollarSign, CreditCard, ClipboardList } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { OrderTimeline } from '@/components/order/OrderTimeline';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -75,6 +76,11 @@ const OrderConfirmation = () => {
               Thank you for your purchase. Your order has been received.
             </p>
             <p className="text-primary font-medium mt-2">Order #{order.id}</p>
+          </div>
+
+          {/* Order Status Timeline */}
+          <div className="mb-8 sm:mb-10 max-w-3xl mx-auto">
+            <OrderTimeline status={order.status} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
