@@ -55,6 +55,7 @@ import { VariantInventoryManager } from '@/components/admin/VariantInventoryMana
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
 import type { AdminTab } from '@/components/admin/AdminSidebar';
+import { OrderTimeline } from '@/components/order/OrderTimeline';
 
 const slugify = (text: string) =>
   text
@@ -705,95 +706,164 @@ const Admin = () => {
 
       {/* Order Details Modal */}
       <Dialog open={isOrderModalOpen} onOpenChange={setIsOrderModalOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl w-[calc(100vw-1rem)] max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="font-serif text-xl">
               Order Details - {selectedOrder?.order_number}
             </DialogTitle>
           </DialogHeader>
-          {selectedOrder && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+          {selectedOrder && (() => {
+            // Always read from latest orders array so status reflects updates
+            const liveOrder = orders.find((o) => o.id === selectedOrder.id) || selectedOrder;
+            const isCancelled = liveOrder.status === 'cancelled';
+            const isDelivered = liveOrder.status === 'delivered';
+            return (
+              <div className="space-y-4">
+                {/* Live Status Timeline */}
                 <div>
-                  <Label className="text-muted-foreground">Customer</Label>
-                  <p className="font-medium">{selectedOrder.customer_name}</p>
-                  <p className="text-sm text-muted-foreground">{selectedOrder.customer_email}</p>
-                  <p className="text-sm text-muted-foreground">{selectedOrder.customer_phone}</p>
+                  <Label className="text-muted-foreground mb-2 block">Order Status</Label>
+                  <OrderTimeline status={liveOrder.status} showHeader={false} />
                 </div>
-                <div>
-                  <Label className="text-muted-foreground">Shipping Address</Label>
-                  <p className="text-sm">{selectedOrder.shipping_address}</p>
-                  <p className="text-sm">
-                    {selectedOrder.city}, {selectedOrder.emirate}
-                  </p>
-                </div>
-              </div>
 
-              <div>
-                <Label className="text-muted-foreground">Items</Label>
-                <div className="space-y-2 mt-2">
-                  {selectedOrder.items?.map((item) => {
-                    const colorParts = item.color?.split(':');
-                    const colorName = colorParts?.[0]?.trim();
-                    const colorHex = colorParts?.[1]?.trim();
-                    return (
-                      <div
-                        key={item.id}
-                        className="flex justify-between items-center p-2 bg-muted/50 rounded"
+                {/* Status update controls */}
+                {!isDelivered && !isCancelled && (
+                  <div className="flex flex-wrap gap-2 p-3 rounded-lg border border-border bg-muted/30">
+                    <span className="text-xs font-medium text-muted-foreground self-center mr-1">
+                      Update status:
+                    </span>
+                    {liveOrder.status !== 'confirmed' && liveOrder.status === 'pending' && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleUpdateOrderStatus(liveOrder.id, 'confirmed')}
+                        disabled={updateOrderStatus.isPending}
+                        className="gap-1"
                       >
-                        <div className="flex items-center gap-3">
-                          {item.product_image && (
-                            <img src={item.product_image} alt="" className="w-12 h-12 object-cover rounded" />
-                          )}
-                          <div>
-                            <p className="font-medium text-sm">{item.product_name}</p>
-                            <p className="text-xs text-muted-foreground flex items-center gap-1.5 flex-wrap">
-                              <span>Size: {item.size}</span>
-                              {colorName && (
-                                <>
-                                  <span>·</span>
-                                  <span className="flex items-center gap-1">
-                                    <span
-                                      className="inline-block w-2.5 h-2.5 rounded-full ring-1 ring-border"
-                                      style={{ backgroundColor: colorHex || '#ccc' }}
-                                    />
-                                    {colorName}
-                                  </span>
-                                </>
-                              )}
-                              <span>· × {item.quantity}</span>
-                            </p>
-                          </div>
-                        </div>
-                        <p className="font-serif">AED {item.price.toLocaleString()}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="border-t pt-4">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>AED {selectedOrder.subtotal.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span>AED {(selectedOrder.shipping_cost || 0).toLocaleString()}</span>
-                </div>
-                {selectedOrder.cod_fee && selectedOrder.cod_fee > 0 && (
-                  <div className="flex justify-between">
-                    <span>COD Fee</span>
-                    <span>AED {selectedOrder.cod_fee.toLocaleString()}</span>
+                        <Check className="h-3.5 w-3.5" />
+                        Confirm
+                      </Button>
+                    )}
+                    {(liveOrder.status === 'pending' || liveOrder.status === 'confirmed') && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleUpdateOrderStatus(liveOrder.id, 'shipped')}
+                        disabled={updateOrderStatus.isPending}
+                        className="gap-1"
+                      >
+                        <Truck className="h-3.5 w-3.5" />
+                        Mark Shipped
+                      </Button>
+                    )}
+                    {liveOrder.status !== 'delivered' && (
+                      <Button
+                        size="sm"
+                        onClick={() => handleUpdateOrderStatus(liveOrder.id, 'delivered')}
+                        disabled={updateOrderStatus.isPending}
+                        className="gap-1"
+                      >
+                        <Check className="h-3.5 w-3.5" />
+                        Mark Delivered
+                      </Button>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        if (confirm('Cancel this order? This will notify the customer.')) {
+                          handleUpdateOrderStatus(liveOrder.id, 'cancelled');
+                        }
+                      }}
+                      disabled={updateOrderStatus.isPending}
+                      className="gap-1 text-destructive hover:text-destructive hover:bg-destructive/10 ml-auto"
+                    >
+                      Cancel order
+                    </Button>
                   </div>
                 )}
-                <div className="flex justify-between font-serif text-lg mt-2 pt-2 border-t">
-                  <span>Total</span>
-                  <span>AED {selectedOrder.total.toLocaleString()}</span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-muted-foreground">Customer</Label>
+                    <p className="font-medium">{liveOrder.customer_name}</p>
+                    <p className="text-sm text-muted-foreground">{liveOrder.customer_email}</p>
+                    <p className="text-sm text-muted-foreground">{liveOrder.customer_phone}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Shipping Address</Label>
+                    <p className="text-sm">{liveOrder.shipping_address}</p>
+                    <p className="text-sm">
+                      {liveOrder.city}, {liveOrder.emirate}
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-muted-foreground">Items</Label>
+                  <div className="space-y-2 mt-2">
+                    {liveOrder.items?.map((item) => {
+                      const colorParts = item.color?.split(':');
+                      const colorName = colorParts?.[0]?.trim();
+                      const colorHex = colorParts?.[1]?.trim();
+                      return (
+                        <div
+                          key={item.id}
+                          className="flex justify-between items-center p-2 bg-muted/50 rounded"
+                        >
+                          <div className="flex items-center gap-3">
+                            {item.product_image && (
+                              <img src={item.product_image} alt="" className="w-12 h-12 object-cover rounded" />
+                            )}
+                            <div>
+                              <p className="font-medium text-sm">{item.product_name}</p>
+                              <p className="text-xs text-muted-foreground flex items-center gap-1.5 flex-wrap">
+                                <span>Size: {item.size}</span>
+                                {colorName && (
+                                  <>
+                                    <span>·</span>
+                                    <span className="flex items-center gap-1">
+                                      <span
+                                        className="inline-block w-2.5 h-2.5 rounded-full ring-1 ring-border"
+                                        style={{ backgroundColor: colorHex || '#ccc' }}
+                                      />
+                                      {colorName}
+                                    </span>
+                                  </>
+                                )}
+                                <span>· × {item.quantity}</span>
+                              </p>
+                            </div>
+                          </div>
+                          <p className="font-serif">AED {item.price.toLocaleString()}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="border-t pt-4">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>AED {liveOrder.subtotal.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Shipping</span>
+                    <span>AED {(liveOrder.shipping_cost || 0).toLocaleString()}</span>
+                  </div>
+                  {liveOrder.cod_fee && liveOrder.cod_fee > 0 && (
+                    <div className="flex justify-between">
+                      <span>COD Fee</span>
+                      <span>AED {liveOrder.cod_fee.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between font-serif text-lg mt-2 pt-2 border-t">
+                    <span>Total</span>
+                    <span>AED {liveOrder.total.toLocaleString()}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
         </DialogContent>
       </Dialog>
     </AdminLayout>
