@@ -117,6 +117,7 @@ const Checkout = () => {
         product_name: item.product.name,
         product_image: item.product.image,
         size: item.size,
+        color: item.color || null,
         quantity: item.quantity,
         price: item.product.originalPrice ? item.product.price : item.product.price,
       }));
@@ -404,9 +405,13 @@ const Checkout = () => {
 
                 {/* Items */}
                 <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6 max-h-[40vh] lg:max-h-none overflow-y-auto">
-                  {cart.map((item) => (
+                  {cart.map((item) => {
+                    const colorParts = item.color?.split(':');
+                    const colorName = colorParts?.[0]?.trim();
+                    const colorHex = colorParts?.[1]?.trim();
+                    return (
                     <div
-                      key={`${item.product.id}-${item.size}`}
+                      key={`${item.product.id}-${item.size}-${item.color || 'na'}`}
                       className="flex gap-3 sm:gap-4"
                     >
                       <div className="w-14 h-[70px] sm:w-16 sm:h-20 bg-muted rounded overflow-hidden flex-shrink-0">
@@ -421,12 +426,22 @@ const Checkout = () => {
                         <p className="text-[10px] sm:text-xs text-muted-foreground">
                           Size {item.size} × {item.quantity}
                         </p>
+                        {colorName && (
+                          <p className="text-[10px] sm:text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                            <span
+                              className="inline-block w-2.5 h-2.5 rounded-full ring-1 ring-border"
+                              style={{ backgroundColor: colorHex || '#ccc' }}
+                            />
+                            {colorName}
+                          </p>
+                        )}
                         <p className="text-xs sm:text-sm text-primary mt-1">
                           AED {(item.product.price * item.quantity).toLocaleString()}
                         </p>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 {/* Totals */}
