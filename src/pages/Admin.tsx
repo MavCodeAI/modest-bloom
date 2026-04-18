@@ -74,6 +74,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { ProductImageUploader } from '@/components/admin/ProductImageUploader';
 
 const slugify = (text: string) =>
   text
