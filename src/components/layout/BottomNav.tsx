@@ -16,11 +16,19 @@ export function BottomNav() {
 
   const accountHref = user ? '/account' : '/auth';
 
-  const items = [
+  type Item = {
+    href: string;
+    label: string;
+    icon: typeof Home;
+    badge?: number;
+    action?: 'cart';
+  };
+
+  const items: Item[] = [
     { href: '/', label: 'Home', icon: Home },
     { href: '/shop', label: 'Shop', icon: LayoutGrid },
     { href: '/wishlist', label: 'Wishlist', icon: Heart, badge: wishlist.length },
-    { href: '#cart', label: 'Bag', icon: ShoppingBag, badge: cartCount, action: 'cart' as const },
+    { href: '#cart', label: 'Bag', icon: ShoppingBag, badge: cartCount, action: 'cart' },
     { href: accountHref, label: 'Account', icon: User },
   ];
 
