@@ -88,11 +88,8 @@ export const VariantInventoryManager = ({ productId, sizes, colors }: Props) => 
         </div>
       </div>
 
-      {isLoading ? (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground p-4">
-          <Loader2 className="h-4 w-4 animate-spin" /> Loading variants…
-        </div>
-      ) : (
+      {isLoading ? null : (
+
         <div className="overflow-x-auto rounded-md border border-border">
           <table className="w-full text-sm">
             <thead className="bg-muted/50">
