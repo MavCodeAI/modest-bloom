@@ -13,10 +13,8 @@ import {
   WholesaleState,
   MockAssistantProduct,
 } from '@/types/assistant';
-import {
-  DEFAULT_AI_CONFIG,
-  MOCK_ASSISTANT_PRODUCTS,
-} from '@/data/mockAssistantData';
+import { DEFAULT_AI_CONFIG } from '@/data/mockAssistantData';
+import { filterCatalog, searchCatalog } from '@/services/assistantCatalog';
 
 export class MockAIAssistantService implements IAIAssistantService {
   private config: AIAssistantConfig;
@@ -122,7 +120,7 @@ export class MockAIAssistantService implements IAIAssistantService {
       lower.includes('رخيصة') ||
       lower.includes('ميزانية')
     ) {
-      return this.generateBudgetResponse(activeLang, isRTL);
+      return await this.generateBudgetResponse(activeLang, isRTL);
     }
 
     // 4. Check for Occasion / Luxury Recommendation
@@ -140,7 +138,7 @@ export class MockAIAssistantService implements IAIAssistantService {
       lower.includes('سهرة') ||
       lower.includes('فاخر')
     ) {
-      return this.generateOccasionResponse(activeLang, isRTL);
+      return await this.generateOccasionResponse(activeLang, isRTL);
     }
 
     // 5. Check for Black Abayas / Specific Search
@@ -151,7 +149,7 @@ export class MockAIAssistantService implements IAIAssistantService {
       lower.includes('اسود') ||
       lower.includes('سوداء')
     ) {
-      return this.generateBlackAbayaResponse(activeLang, isRTL);
+      return await this.generateBlackAbayaResponse(activeLang, isRTL);
     }
 
     // 6. Check for Shipping / Delivery Questions
@@ -195,15 +193,52 @@ export class MockAIAssistantService implements IAIAssistantService {
       return this.generateSizingResponse(activeLang, isRTL);
     }
 
+    // 9. Try a real catalog search before falling back
+    const found = await searchCatalog(rawText);
+    if (found.length > 0) {
+      return this.buildProductResponse(found, activeLang, isRTL);
+    }
+
     // Default Fallback Exploration Response
     return this.generateGeneralHelpResponse(activeLang, isRTL);
   }
 
   // --- Specialized Scenario Generators ---
 
-  private generateBlackAbayaResponse(lang: AssistantLanguage, isRTL: boolean): AssistantResponse {
-    const products = MOCK_ASSISTANT_PRODUCTS.filter(
-      (p) => p.category === 'Black Abayas' || p.tags.includes('black')
+  private buildProductResponse(
+    products: MockAssistantProduct[],
+    lang: AssistantLanguage,
+    isRTL: boolean
+  ): AssistantResponse {
+    const text =
+      lang === 'ar'
+        ? 'إليكِ ما وجدته في مجموعتنا الحالية:'
+        : 'Here is what I found in our current collection:';
+
+    return {
+      message: {
+        id: `msg-${Date.now()}`,
+        sender: 'assistant',
+        text,
+        timestamp: new Date(),
+        language: lang,
+        isRTL,
+        actionType: 'product_search',
+        products,
+        quickReplies:
+          lang === 'ar'
+            ? ['دليل المقاسات', 'أقل من 300 درهم', 'واتساب']
+            : ['Size guide', 'Under AED 300', 'Chat on WhatsApp'],
+      },
+    };
+  }
+
+  private async generateBlackAbayaResponse(lang: AssistantLanguage, isRTL: boolean): Promise<AssistantResponse> {
+    const products = await filterCatalog((p) =>
+      [p.name, p.category, p.color, ...(p.colors || []), ...p.tags]
+        .join(' ')
+        .toLowerCase()
+        .includes('black')
     );
 
     let text = 'Of course! Here are our signature pure black abayas, crafted from premium Japanese Silk and authentic Korean Nida with breathable, crease-resistant drape:';
@@ -228,9 +263,11 @@ export class MockAIAssistantService implements IAIAssistantService {
     };
   }
 
-  private generateOccasionResponse(lang: AssistantLanguage, isRTL: boolean): AssistantResponse {
-    const products = MOCK_ASSISTANT_PRODUCTS.filter(
-      (p) => p.category === 'Luxury Abayas' || p.tags.includes('luxury') || p.tags.includes('occasion')
+  private async generateOccasionResponse(lang: AssistantLanguage, isRTL: boolean): Promise<AssistantResponse> {
+    const products = await filterCatalog((p) =>
+      /luxury|occasion|wedding|eid|embroider|beaded|party/i.test(
+        [p.name, p.category, p.description, ...p.tags].join(' ')
+      )
     );
 
     let text = 'For weddings and prestigious events, I highly recommend our hand-embellished luxury collection with intricate gold zardozi threadwork and Swarovski crystal pleating:';
@@ -255,8 +292,8 @@ export class MockAIAssistantService implements IAIAssistantService {
     };
   }
 
-  private generateBudgetResponse(lang: AssistantLanguage, isRTL: boolean): AssistantResponse {
-    const products = MOCK_ASSISTANT_PRODUCTS.filter((p) => p.price <= 300);
+  private async generateBudgetResponse(lang: AssistantLanguage, isRTL: boolean): Promise<AssistantResponse> {
+    const products = await filterCatalog((p) => p.price <= 300);
 
     let text = 'Certainly! We have exquisite everyday and open-cut abayas under AED 300 crafted from breathable linens and wrinkle-resistant Korean Nida:';
     if (lang === 'ar') {
