@@ -30,14 +30,17 @@ export const loadCatalog = async (): Promise<MockAssistantProduct[]> => {
 
   const items: MockAssistantProduct[] = (products || []).map((p) => {
     const colors = (p.colors || []).map(colorName).filter(Boolean);
-    const price = Number(p.sale_price ?? p.price);
+    const base = Number(p.price);
+    const alt = p.sale_price != null ? Number(p.sale_price) : null;
+    const price = alt != null ? Math.min(base, alt) : base;
+    const original = alt != null && Math.max(base, alt) > price ? Math.max(base, alt) : undefined;
     return {
       id: p.id,
       slug: p.slug,
       name: p.name,
       sku: `MWF-${String(p.id).slice(0, 6).toUpperCase()}`,
       price,
-      originalPrice: p.sale_price ? Number(p.price) : undefined,
+      originalPrice: original,
       wholesalePrice: p.wholesale_price ? Number(p.wholesale_price) : undefined,
       category: (p.category_id && catMap.get(p.category_id)) || 'Abayas',
       color: colors[0] || 'Black',
