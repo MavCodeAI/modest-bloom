@@ -6,15 +6,32 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-const ADMIN_PIN = Deno.env.get('ADMIN_PIN') || '345345';
+const json = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
 
 interface RequestBody {
   table: 'orders' | 'wholesale_quotes';
   id: string;
   status: string;
-  pin: string;
   estimated_delivery?: string | null;
 }
+
+const ALLOWED_TABLES = ['orders', 'wholesale_quotes'];
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const ALLOWED_STATUS = [
+  'pending',
+  'confirmed',
+  'processing',
+  'shipped',
+  'delivered',
+  'cancelled',
+  'quoted',
+  'accepted',
+  'rejected',
+];
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -22,41 +39,60 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const authHeader = req.headers.get('Authorization') ?? '';
+    if (!authHeader.startsWith('Bearer ')) {
+      return json({ error: 'Unauthorized' }, 401);
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+
+    // Identify the caller from their JWT
+    const userClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const { data: userData, error: userError } = await userClient.auth.getUser();
+    if (userError || !userData?.user) {
+      return json({ error: 'Unauthorized' }, 401);
+    }
+
+    const admin = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+
+    // Server-side admin role check
+    const { data: isAdmin, error: roleError } = await admin.rpc('has_role', {
+      _user_id: userData.user.id,
+      _role: 'admin',
+    });
+
+    if (roleError || isAdmin !== true) {
+      return json({ error: 'Forbidden' }, 403);
+    }
+
     const body = (await req.json()) as RequestBody;
-    const { table, id, status, pin, estimated_delivery } = body;
+    const { table, id, status, estimated_delivery } = body ?? {};
 
-    if (pin !== ADMIN_PIN) {
-      return new Response(JSON.stringify({ error: 'Invalid PIN' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    if (!table || !ALLOWED_TABLES.includes(table)) {
+      return json({ error: 'Invalid table' }, 400);
     }
-
-    if (!id || !status || !table) {
-      return new Response(JSON.stringify({ error: 'Missing required fields' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    if (!id || !UUID_RE.test(id)) {
+      return json({ error: 'Invalid id' }, 400);
     }
-
-    if (!['orders', 'wholesale_quotes'].includes(table)) {
-      return new Response(JSON.stringify({ error: 'Invalid table' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    if (!status || !ALLOWED_STATUS.includes(status)) {
+      return json({ error: 'Invalid status' }, 400);
     }
-
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    );
+    if (
+      estimated_delivery != null &&
+      !/^\d{4}-\d{2}-\d{2}$/.test(String(estimated_delivery))
+    ) {
+      return json({ error: 'Invalid delivery date' }, 400);
+    }
 
     const updateData: Record<string, unknown> = { status };
     if (table === 'orders' && estimated_delivery !== undefined) {
       updateData.estimated_delivery = estimated_delivery;
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await admin
       .from(table)
       .update(updateData)
       .eq('id', id)
@@ -64,23 +100,13 @@ Deno.serve(async (req) => {
       .single();
 
     if (error) {
-      console.error('Update error:', error);
-      return new Response(JSON.stringify({ error: error.message }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      console.error('Update error:', error.message);
+      return json({ error: 'Could not update record' }, 500);
     }
 
-    return new Response(JSON.stringify({ success: true, data }), {
-      status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return json({ success: true, data });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unknown error';
-    console.error('Function error:', message);
-    return new Response(JSON.stringify({ error: message }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    console.error('Function error:', err instanceof Error ? err.message : 'Unknown error');
+    return json({ error: 'Unexpected error' }, 500);
   }
 });
