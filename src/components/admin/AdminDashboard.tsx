@@ -138,6 +138,8 @@ interface TopProductProps {
   product: {
     id?: string;
     name: string;
+    total_sold?: number;
+    revenue?: number;
   };
   index: number;
 }
