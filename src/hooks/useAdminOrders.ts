@@ -148,14 +148,12 @@ export const useUpdateOrderStatus = () => {
       status: string; 
       estimatedDelivery?: string | null 
     }) => {
-      const pin = import.meta.env.VITE_ADMIN_PIN || '345345';
 
       const { data, error } = await supabase.functions.invoke('admin-update-status', {
         body: {
           table: 'orders',
           id,
           status,
-          pin,
           estimated_delivery: estimatedDelivery,
         },
       });
@@ -195,11 +193,10 @@ export const useBulkUpdateOrderStatus = () => {
       orderIds: string[]; 
       status: string; 
     }) => {
-      const pin = import.meta.env.VITE_ADMIN_PIN || '345345';
       const results = await Promise.all(
         orderIds.map((id) =>
           supabase.functions.invoke('admin-update-status', {
-            body: { table: 'orders', id, status, pin },
+            body: { table: 'orders', id, status },
           })
         )
       );
