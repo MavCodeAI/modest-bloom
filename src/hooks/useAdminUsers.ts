@@ -36,8 +36,9 @@ export const useAdminUsers = (filters?: UserFilters, page: number = 1, limit: nu
         .select('*', { count: 'exact' })
         .order('created_at', { ascending: false });
 
-      if (filters?.search) {
-        profileQuery = profileQuery.or(`full_name.ilike.%${filters.search}%,email.ilike.%${filters.search}%,phone.ilike.%${filters.search}%`);
+      if (filters?.search && filters.search.trim()) {
+        const cleanSearch = filters.search.trim().replace(/[%,]/g, '');
+        profileQuery = profileQuery.or(`full_name.ilike.%${cleanSearch}%,email.ilike.%${cleanSearch}%,phone.ilike.%${cleanSearch}%`);
       }
 
       if (filters?.dateFrom) {
@@ -378,8 +379,9 @@ export const useExportUsers = () => {
         `)
         .order('created_at', { ascending: false });
 
-      if (filters?.search) {
-        query = query.or(`full_name.ilike.%${filters.search}%,email.ilike.%${filters.search}%,phone.ilike.%${filters.search}%`);
+      if (filters?.search && filters.search.trim()) {
+        const cleanSearch = filters.search.trim().replace(/[%,]/g, '');
+        query = query.or(`full_name.ilike.%${cleanSearch}%,email.ilike.%${cleanSearch}%,phone.ilike.%${cleanSearch}%`);
       }
 
       const { data, error } = await query;

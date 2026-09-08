@@ -84,12 +84,9 @@ export const useAdvancedSearch = (filters: SearchFilters) => {
         `, { count: 'exact' });
 
       // Text search
-      if (query) {
-        dbQuery = dbQuery.or(`
-          name.ilike.%${query}%, 
-          description.ilike.%${query}%, 
-          tags.cs.{${query}}
-        `);
+      if (query && query.trim()) {
+        const cleanQuery = query.trim().replace(/[%,]/g, '');
+        dbQuery = dbQuery.or(`name.ilike.%${cleanQuery}%,description.ilike.%${cleanQuery}%,tags.cs.{"${cleanQuery}"}`);
       }
 
       // Category filter
@@ -197,12 +194,9 @@ const getSearchFacets = async (filters: SearchFilters) => {
   `);
 
   // Apply same filters as main search but without pagination
-  if (query) {
-    baseQuery = baseQuery.or(`
-      name.ilike.%${query}%, 
-      description.ilike.%${query}%, 
-      tags.cs.{${query}}
-    `);
+  if (query && query.trim()) {
+    const cleanQuery = query.trim().replace(/[%,]/g, '');
+    baseQuery = baseQuery.or(`name.ilike.%${cleanQuery}%,description.ilike.%${cleanQuery}%,tags.cs.{"${cleanQuery}"}`);
   }
 
   if (category) {
@@ -313,10 +307,11 @@ export const useSearchSuggestions = (query: string, limit: number = 5) => {
     queryFn: async (): Promise<string[]> => {
       if (!query || query.length < 2) return [];
 
+      const cleanQuery = query.trim().replace(/[%,]/g, '');
       const { data, error } = await supabase
         .from('products')
         .select('name, tags')
-        .or(`name.ilike.%${query}%, tags.cs.{${query}}`)
+        .or(`name.ilike.%${cleanQuery}%,tags.cs.{"${cleanQuery}"}`)
         .limit(limit * 2); // Get more to have better suggestions
 
       if (error) throw error;
