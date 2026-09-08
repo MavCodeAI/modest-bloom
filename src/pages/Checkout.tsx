@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { createGuestCheckoutClient } from '@/integrations/supabase/guestClient';
 import { useAuth } from '@/contexts/AuthContext';
 
 const checkoutSchema = z.object({
@@ -136,8 +137,13 @@ const Checkout = () => {
     setIsProcessing(true);
     
     try {
+      // Private checkout code so only this browser session can attach items to a guest order
+      const guestToken = crypto.randomUUID();
+
       // Create order in Supabase
-      const { data: orderData, error: orderError } = await supabase
+      const db = user?.id ? supabase : createGuestCheckoutClient(guestToken);
+
+      const { data: orderData, error: orderError } = await db
         .from('orders')
         .insert({
           customer_name: `${data.firstName} ${data.lastName}`,
@@ -155,6 +161,7 @@ const Checkout = () => {
           total: total,
           status: 'pending',
           user_id: user?.id || null,
+          guest_token: user?.id ? null : guestToken,
         })
         .select()
         .single();
@@ -173,9 +180,10 @@ const Checkout = () => {
         color: item.color || null,
         quantity: item.quantity,
         price: item.product.originalPrice ? item.product.price : item.product.price,
+        guest_token: user?.id ? null : guestToken,
       }));
 
-      const { error: itemsError } = await supabase
+      const { error: itemsError } = await db
         .from('order_items')
         .insert(orderItems);
 
