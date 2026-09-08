@@ -154,8 +154,8 @@ const TopProduct = ({ product, index }: TopProductProps) => {
         {index + 1}
       </div>
       <p className="font-medium text-sm truncate">{product.name}</p>
-      <p className="text-xs text-muted-foreground">{product.total_sold} sold</p>
-      <p className="text-sm font-serif text-primary mt-1">AED {product.revenue.toLocaleString()}</p>
+      <p className="text-xs text-muted-foreground">{product.total_sold ?? 0} sold</p>
+      <p className="text-sm font-serif text-primary mt-1">AED {(product.revenue ?? 0).toLocaleString()}</p>
     </div>
   );
 };
