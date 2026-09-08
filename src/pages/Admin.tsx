@@ -54,6 +54,7 @@ import { VariantManager } from '@/components/admin/VariantManager';
 import { VariantInventoryManager } from '@/components/admin/VariantInventoryManager';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
+import { AccountingDashboard } from '@/components/admin/accounting/AccountingDashboard';
 import type { AdminTab } from '@/components/admin/AdminSidebar';
 import { OrderTimeline } from '@/components/order/OrderTimeline';
 
@@ -83,10 +84,16 @@ const productSchema = z.object({
 type ProductFormData = z.infer<typeof productSchema>;
 
 const TITLES: Record<AdminTab, { title: string; subtitle: string }> = {
-  dashboard: { title: 'Dashboard', subtitle: 'Overview of your store performance' },
-  products: { title: 'Products', subtitle: 'Manage your catalog' },
-  orders: { title: 'Orders', subtitle: 'Process and fulfill customer orders' },
-  quotes: { title: 'Wholesale Quotes', subtitle: 'B2B quote requests' },
+  pos_terminal: { title: 'POS Terminal Counter', subtitle: 'Live boutique barcode scanner & fast checkout' },
+  accounting: { title: 'Business Accounting & POS', subtitle: 'LedgerOne-grade double-entry sales, procurement & financial management' },
+  inventory_valuation: { title: 'Inventory & Stock Valuation', subtitle: 'Abaya stock quantities, variant sizes, cost valuation & movements' },
+  customer_khata: { title: 'Customer & Khata Ledgers', subtitle: 'VIP client accounts, wholesale B2B balances & payment collections' },
+  suppliers_payables: { title: 'Suppliers & Accounts Payable', subtitle: 'Fabric mills, tailoring workshops & vendor payment schedules' },
+  financial_reports: { title: 'Executive Financial Reports', subtitle: 'Profit & Loss (P&L), gross margins, channel analytics & statements' },
+  dashboard: { title: 'Online Overview', subtitle: 'Store performance and web analytics' },
+  products: { title: 'Online Catalog', subtitle: 'Manage storefront products & variants' },
+  orders: { title: 'Web Orders', subtitle: 'Process and fulfill online customer deliveries' },
+  quotes: { title: 'Wholesale Quotes', subtitle: 'B2B export quote requests' },
 };
 
 const Admin = () => {
@@ -293,6 +300,14 @@ const Admin = () => {
       onRefresh={handleRefresh}
       actions={headerActions}
     >
+      {/* ACCOUNTING & POS SYSTEM */}
+      {activeTab === 'pos_terminal' && <AccountingDashboard initialSubTab="pos" />}
+      {activeTab === 'accounting' && <AccountingDashboard initialSubTab="sales" />}
+      {activeTab === 'inventory_valuation' && <AccountingDashboard initialSubTab="inventory" />}
+      {activeTab === 'customer_khata' && <AccountingDashboard initialSubTab="customers" />}
+      {activeTab === 'suppliers_payables' && <AccountingDashboard initialSubTab="suppliers" />}
+      {activeTab === 'financial_reports' && <AccountingDashboard initialSubTab="reports" />}
+
       {/* DASHBOARD */}
       {activeTab === 'dashboard' && (
         <AdminAnalytics
