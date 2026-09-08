@@ -87,6 +87,7 @@ export type Database = {
         Row: {
           color: string | null
           created_at: string
+          guest_token: string | null
           id: string
           order_id: string
           price: number
@@ -99,6 +100,7 @@ export type Database = {
         Insert: {
           color?: string | null
           created_at?: string
+          guest_token?: string | null
           id?: string
           order_id: string
           price: number
@@ -111,6 +113,7 @@ export type Database = {
         Update: {
           color?: string | null
           created_at?: string
+          guest_token?: string | null
           id?: string
           order_id?: string
           price?: number
@@ -148,6 +151,7 @@ export type Database = {
           delivery_notes: string | null
           emirate: string
           estimated_delivery: string | null
+          guest_token: string | null
           id: string
           order_number: string
           payment_method: string
@@ -170,6 +174,7 @@ export type Database = {
           delivery_notes?: string | null
           emirate: string
           estimated_delivery?: string | null
+          guest_token?: string | null
           id?: string
           order_number?: string
           payment_method: string
@@ -192,6 +197,7 @@ export type Database = {
           delivery_notes?: string | null
           emirate?: string
           estimated_delivery?: string | null
+          guest_token?: string | null
           id?: string
           order_number?: string
           payment_method?: string
