@@ -220,7 +220,7 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
                   <button
                     onClick={() => handleLanguageChange('en')}
                     className={`w-full flex items-center justify-between px-3 py-1.5 text-left hover:bg-stone-800 ${
-                      language === 'en' ? 'text-amber-300 font-semibold' : 'text-stone-200'
+                      language === 'en' ? 'text-primary font-semibold' : 'text-foreground'
                     }`}
                   >
                     <span>English</span>
@@ -229,7 +229,7 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
                   <button
                     onClick={() => handleLanguageChange('ar')}
                     className={`w-full flex items-center justify-between px-3 py-1.5 text-right font-sans hover:bg-stone-800 ${
-                      language === 'ar' ? 'text-amber-300 font-semibold' : 'text-stone-200'
+                      language === 'ar' ? 'text-primary font-semibold' : 'text-foreground'
                     }`}
                   >
                     <span>العربية</span>
@@ -261,7 +261,7 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
 
         {/* Wholesale Banner Indicator if in wholesale flow */}
         {wholesaleState.step !== 'idle' && wholesaleState.step !== 'completed' && (
-          <div className="px-3 py-1.5 bg-amber-500/10 border-b border-amber-500/20 text-[11px] font-medium text-amber-700 dark:text-amber-300 flex items-center justify-between">
+          <div className="px-3 py-1.5 bg-primary/10 border-b border-primary/20 text-[11px] font-medium text-primary flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <Store className="w-3.5 h-3.5" />
               <span>
@@ -275,7 +275,7 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
             </div>
             <button
               onClick={handleResetChat}
-              className="text-[10px] underline hover:text-amber-900 dark:hover:text-amber-100"
+              className="text-[10px] underline hover:text-primary/70"
             >
               Cancel Flow
             </button>
@@ -298,7 +298,7 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
           {isTyping && (
             <div className="flex items-center gap-2 my-2 animate-in fade-in">
               <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
-                <Sparkles className="w-3.5 h-3.5 text-amber-200 animate-spin" />
+                <Sparkles className="w-3.5 h-3.5 text-primary-foreground animate-spin" />
               </div>
               <div className="px-3.5 py-2 rounded-2xl bg-card border border-border/80 rounded-tl-xs shadow-xs">
                 <div className="flex items-center gap-1">
