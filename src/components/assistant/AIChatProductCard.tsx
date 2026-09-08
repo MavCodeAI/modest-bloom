@@ -122,7 +122,7 @@ export const AIChatProductCard: React.FC<AIChatProductCardProps> = ({
       {/* Actions */}
       <div className="p-3 pt-0 grid grid-cols-2 gap-1.5">
         <Link
-          to={`/shop?search=${encodeURIComponent(product.name)}`}
+          to={`/product/${product.id}`}
           onClick={onProductClick}
           className="inline-flex items-center justify-center gap-1 py-1.5 px-2 text-xs font-medium border border-border rounded-lg bg-background hover:bg-muted text-foreground transition-colors"
         >
