@@ -506,36 +506,36 @@ const ProductDetail = () => {
               <Accordion type="single" collapsible defaultValue="fabric" className="w-full">
                 <AccordionItem value="fabric">
                   <AccordionTrigger className="text-sm font-medium">
-                    Fabric, Cut & Craftsmanship
+                    Fabric, Cut & Garment Specifications
                   </AccordionTrigger>
                   <AccordionContent className="text-muted-foreground">
                     <div className="space-y-3 text-sm">
                       <div className="flex items-start gap-2.5">
                         <Layers size={16} className="mt-0.5 text-primary flex-shrink-0" />
                         <div>
-                          <strong className="text-foreground font-medium">Material: </strong>
-                          Grade-A Korean Nida & textured Japanese crepe blend. Breathable, fluid, and anti-static.
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-2.5">
-                        <Shield size={16} className="mt-0.5 text-primary flex-shrink-0" />
-                        <div>
-                          <strong className="text-foreground font-medium">Opacity: </strong>
-                          100% full coverage with zero transparency under indoor and outdoor lighting.
+                          <strong className="text-foreground font-medium">Textile & Composition: </strong>
+                          {product.material || "Grade-A Korean Nida & textured Japanese crepe blend. Breathable, fluid, and anti-static."}
                         </div>
                       </div>
                       <div className="flex items-start gap-2.5">
                         <Scissors size={16} className="mt-0.5 text-primary flex-shrink-0" />
                         <div>
-                          <strong className="text-foreground font-medium">Tailoring: </strong>
-                          Artisan double-turned hems, reinforced french seams, and precision sleeve drape tailored in Dubai.
+                          <strong className="text-foreground font-medium">Cut & Silhouette: </strong>
+                          {product.cut || "Classic tailored modest cut with artisan double-turned hems and reinforced French seams."}
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2.5">
+                        <Shield size={16} className="mt-0.5 text-primary flex-shrink-0" />
+                        <div>
+                          <strong className="text-foreground font-medium">Matching Sheila Scarf: </strong>
+                          {product.includesSheila !== false ? "Included — Coordinating 70x200cm lightweight chiffon sheila scarf with folded edge finish." : "Sheila sold separately for this kaftan style."}
                         </div>
                       </div>
                       <div className="flex items-start gap-2.5">
                         <RotateCcw size={16} className="mt-0.5 text-primary flex-shrink-0" />
                         <div>
-                          <strong className="text-foreground font-medium">Care: </strong>
-                          Gentle machine wash 30°C or dry clean. Low-heat steam iron for a pristine finish.
+                          <strong className="text-foreground font-medium">Garment Care: </strong>
+                          {product.careInstructions || "Gentle machine wash cold (30°C) or dry clean. Low-heat steam iron on reverse."}
                         </div>
                       </div>
                     </div>
