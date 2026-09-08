@@ -36,8 +36,8 @@ const queryClient = new QueryClient();
 
 const GlobalBottomNav = () => {
   const location = useLocation();
-  // Hide bottom nav on admin, auth, and checkout flow to avoid clutter
-  const hideOn = ['/admin', '/auth', '/checkout'];
+  // Hide bottom nav on admin, auth, checkout, and product details for optimal purchase focus
+  const hideOn = ['/admin', '/auth', '/checkout', '/product'];
   if (hideOn.some((p) => location.pathname.startsWith(p))) return null;
   return <BottomNav />;
 };

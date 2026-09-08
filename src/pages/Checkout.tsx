@@ -274,7 +274,7 @@ const Checkout = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             {/* Form */}
-            <div className="lg:col-span-2 order-2 lg:order-1">
+            <div className="lg:col-span-2 order-1 lg:order-1">
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 sm:space-y-8">
                 {/* Contact */}
                 <div className="space-y-4">
@@ -545,8 +545,8 @@ const Checkout = () => {
             </div>
 
             {/* Order Summary */}
-            <div className="order-1 lg:order-2">
-              <div className="bg-card rounded-lg p-4 sm:p-6 lg:sticky lg:top-24">
+            <div className="order-2 lg:order-2">
+              <div className="bg-card rounded-lg p-4 sm:p-6 lg:sticky lg:top-24 border border-border">
                 <h2 className="font-serif text-lg sm:text-xl mb-4 sm:mb-6">Order Summary</h2>
 
                 {/* Items */}
@@ -569,11 +569,11 @@ const Checkout = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs sm:text-sm font-medium truncate">{item.product.name}</p>
-                        <p className="text-[10px] sm:text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                           Size {item.size} × {item.quantity}
                         </p>
                         {colorName && (
-                          <p className="text-[10px] sm:text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                          <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
                             <span
                               className="inline-block w-2.5 h-2.5 rounded-full ring-1 ring-border"
                               style={{ backgroundColor: colorHex || '#ccc' }}
@@ -581,7 +581,7 @@ const Checkout = () => {
                             {colorName}
                           </p>
                         )}
-                        <p className="text-xs sm:text-sm text-primary mt-1">
+                        <p className="text-xs sm:text-sm text-primary mt-1 font-medium">
                           AED {(item.product.price * item.quantity).toLocaleString()}
                         </p>
                       </div>
@@ -606,14 +606,14 @@ const Checkout = () => {
                       <span>AED {codFee}</span>
                     </div>
                   )}
-                  <div className="flex justify-between font-serif text-base sm:text-lg pt-2 sm:pt-3 border-t border-border">
+                  <div className="flex justify-between font-serif text-base sm:text-lg pt-2 sm:pt-3 border-t border-border font-semibold">
                     <span>Total</span>
-                    <span className="text-primary">AED {total.toLocaleString()}</span>
+                    <span className="text-primary font-bold">AED {total.toLocaleString()}</span>
                   </div>
                 </div>
 
                 {shipping === 0 && (
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-3 sm:mt-4 text-center">
+                  <p className="text-xs text-muted-foreground mt-3 sm:mt-4 text-center font-medium">
                     ✓ You qualify for free shipping
                   </p>
                 )}

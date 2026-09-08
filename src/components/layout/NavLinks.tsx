@@ -38,8 +38,8 @@ export function NavLinks({ className }: NavLinksProps) {
     );
 
   return (
-    <nav className={cn('flex items-center', className)}>
-      <Link to="/shop?tag=new_drop" className={cn(linkClass('/shop?tag=new_drop'), 'mr-8')}>
+    <nav className={cn('flex items-center gap-6 lg:gap-8', className)}>
+      <Link to="/shop?tag=new_drop" className={linkClass('/shop?tag=new_drop')}>
         New In
       </Link>
 
@@ -47,13 +47,13 @@ export function NavLinks({ className }: NavLinksProps) {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger className="text-sm font-medium tracking-wide uppercase bg-transparent text-foreground/70 hover:text-primary data-[state=open]:text-primary px-0 h-auto">
-              Shop
+              Shop Collections
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <div className="grid grid-cols-2 gap-6 p-6 w-[560px]">
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground mb-3">
-                    Shop by Style
+                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground mb-3">
+                    Shop by Silhouette & Cut
                   </p>
                   <ul className="space-y-1">
                     {styleLinks.map((link) => (
@@ -69,10 +69,18 @@ export function NavLinks({ className }: NavLinksProps) {
                         </Link>
                       </li>
                     ))}
+                    <li>
+                      <Link
+                        to="/shop"
+                        className="block rounded-md p-2 hover:bg-muted transition-colors group font-semibold text-primary text-xs uppercase tracking-wider mt-2 border-t border-border pt-2"
+                      >
+                        Browse All Abayas →
+                      </Link>
+                    </li>
                   </ul>
                 </div>
                 <div className="border-l border-border pl-6">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground mb-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground mb-3">
                     Shop by Occasion
                   </p>
                   <ul className="space-y-1">
@@ -96,6 +104,31 @@ export function NavLinks({ className }: NavLinksProps) {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
+
+      <Link to="/size-guide" className={linkClass('/size-guide')}>
+        Size Guide
+      </Link>
+
+      <Link 
+        to="/wholesale" 
+        className={cn(
+          "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider transition-all border",
+          location.pathname.startsWith('/wholesale')
+            ? "bg-primary text-primary-foreground border-primary"
+            : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20"
+        )}
+      >
+        <span>Wholesale B2B</span>
+        <span className="w-1.5 h-1.5 rounded-full bg-secondary inline-block animate-pulse" />
+      </Link>
+
+      <Link to="/about" className={linkClass('/about')}>
+        Atelier
+      </Link>
+
+      <Link to="/contact" className={linkClass('/contact')}>
+        Contact
+      </Link>
     </nav>
   );
 }

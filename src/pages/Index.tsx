@@ -35,7 +35,6 @@ const Index = () => {
       </main>
 
       <Footer />
-      <BottomNav />
     </div>
   );
 };

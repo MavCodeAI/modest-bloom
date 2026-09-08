@@ -136,28 +136,34 @@ const FAQ = () => {
       <Navbar />
       
       <main className="pt-16 md:pt-24">
-        <div className="luxury-container py-6 sm:py-8">
-          {/* Header */}
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full mb-4">
-              <HelpCircle className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+        {/* Header */}
+        <section className="py-16 md:py-24 border-b border-border/60 bg-card/40">
+          <div className="luxury-container">
+            <div className="max-w-2xl">
+              <p className="text-primary text-xs font-semibold uppercase tracking-[0.25em] mb-3">
+                Help Center
+              </p>
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground mb-4">
+                Frequently Asked Questions
+              </h1>
+              <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+                Find answers regarding UAE & international shipping, custom atelier measurements, fabric care, and order returns.
+              </p>
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl mb-4">Frequently Asked Questions</h1>
-            <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
-              Find answers to common questions about our modest fashion, shipping, returns, and more.
-            </p>
           </div>
+        </section>
 
+        <div className="luxury-container py-12 sm:py-16">
           {/* Search */}
-          <div className="max-w-2xl mx-auto mb-8 sm:mb-12">
+          <div className="max-w-2xl mb-12">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
                 type="text"
-                placeholder="Search for answers..."
+                placeholder="Search questions (e.g. shipping time, size 56, return policy)..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 h-12 text-sm sm:text-base"
+                className="pl-11 h-12 text-sm bg-card border-border"
               />
             </div>
           </div>

@@ -11,7 +11,7 @@ export function Footer() {
             <img 
               src="/images/logo.png" 
               alt="Modest Way Fashion" 
-              className="h-14 md:h-16 w-auto object-contain"
+              className="h-16 sm:h-20 md:h-24 w-auto object-contain"
             />
             <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
               UAE-born. Culture-inspired. Redefining luxury modest fashion for the modern woman.
@@ -114,10 +114,10 @@ export function Footer() {
             © 2026 Modest Way Fashion. All rights reserved.
           </p>
           <div className="flex space-x-4 sm:space-x-6">
-            <Link to="/privacy" className="text-[10px] sm:text-xs text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="text-[10px] sm:text-xs text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
               Terms of Service
             </Link>
           </div>

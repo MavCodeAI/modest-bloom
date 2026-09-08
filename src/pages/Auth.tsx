@@ -112,7 +112,12 @@ const Auth = () => {
           </Link>
 
           <Card className="border-border/50 shadow-xl">
-            <CardHeader className="text-center pb-2">
+            <CardHeader className="text-center pb-2 flex flex-col items-center">
+              <img
+                src="/images/logo.png"
+                alt="Modest Way Fashion"
+                className="h-16 md:h-20 w-auto object-contain mb-3"
+              />
               <CardTitle className="font-serif text-2xl">Modest Way Fashion</CardTitle>
               <CardDescription>Sign in to your account</CardDescription>
             </CardHeader>

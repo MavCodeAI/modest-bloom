@@ -234,20 +234,46 @@ const Admin = () => {
   };
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-      pending: 'secondary',
-      confirmed: 'default',
-      shipped: 'default',
-      delivered: 'default',
-      processed: 'default',
-      completed: 'default',
-      cancelled: 'destructive',
-    };
-    return (
-      <Badge variant={variants[status] || 'secondary'} className="capitalize">
-        {status}
-      </Badge>
-    );
+    switch (status?.toLowerCase()) {
+      case 'pending':
+        return (
+          <Badge className="bg-amber-500/15 text-amber-900 dark:text-amber-300 border border-amber-500/30 capitalize font-medium">
+            Pending
+          </Badge>
+        );
+      case 'confirmed':
+      case 'processed':
+        return (
+          <Badge className="bg-sky-500/15 text-sky-900 dark:text-sky-300 border border-sky-500/30 capitalize font-medium">
+            {status}
+          </Badge>
+        );
+      case 'shipped':
+        return (
+          <Badge className="bg-indigo-500/15 text-indigo-900 dark:text-indigo-300 border border-indigo-500/30 capitalize font-medium">
+            Shipped
+          </Badge>
+        );
+      case 'delivered':
+      case 'completed':
+        return (
+          <Badge className="bg-emerald-500/15 text-emerald-900 dark:text-emerald-300 border border-emerald-500/30 capitalize font-medium">
+            {status}
+          </Badge>
+        );
+      case 'cancelled':
+        return (
+          <Badge className="bg-rose-500/15 text-rose-900 dark:text-rose-300 border border-rose-500/30 capitalize font-medium">
+            Cancelled
+          </Badge>
+        );
+      default:
+        return (
+          <Badge variant="outline" className="capitalize text-foreground">
+            {status || 'Unknown'}
+          </Badge>
+        );
+    }
   };
 
   const headerActions =

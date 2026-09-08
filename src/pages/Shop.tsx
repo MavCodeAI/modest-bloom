@@ -457,50 +457,79 @@ const Shop = () => {
             <div className="flex-1">
               {/* Active Filters */}
               {activeFilterCount > 0 && (
-                <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
+                <div className="flex flex-wrap items-center gap-2 mb-6 p-3 rounded-lg bg-card/60 border border-border">
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mr-1">
+                    Active Filters:
+                  </span>
                   {filters.category && (
-                    <span className="inline-flex items-center gap-1 bg-card px-3 py-1 rounded-full text-xs sm:text-sm">
+                    <span className="inline-flex items-center gap-1.5 bg-background border border-border px-3 py-1 rounded-full text-xs font-medium text-foreground">
                       {categories?.find(c => c.id === filters.category)?.name}
-                      <button onClick={() => handleFilterChange({ category: undefined })}>
-                        <X size={14} />
+                      <button 
+                        onClick={() => handleFilterChange({ category: undefined })}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label="Remove category filter"
+                      >
+                        <X size={13} />
                       </button>
                     </span>
                   )}
                   {selectedSizes.map(size => (
-                    <span key={size} className="inline-flex items-center gap-1 bg-card px-3 py-1 rounded-full text-xs sm:text-sm">
-                      Size: {size}
-                      <button onClick={() => handleSizeToggle(size)}>
-                        <X size={14} />
+                    <span key={size} className="inline-flex items-center gap-1.5 bg-background border border-border px-3 py-1 rounded-full text-xs font-medium text-foreground">
+                      Size {size}
+                      <button 
+                        onClick={() => handleSizeToggle(size)}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label={`Remove size ${size} filter`}
+                      >
+                        <X size={13} />
                       </button>
                     </span>
                   ))}
                   {selectedColors.map(color => (
-                    <span key={color} className="inline-flex items-center gap-1 bg-card px-3 py-1 rounded-full text-xs sm:text-sm">
+                    <span key={color} className="inline-flex items-center gap-1.5 bg-background border border-border px-3 py-1 rounded-full text-xs font-medium text-foreground">
                       {color}
-                      <button onClick={() => handleColorToggle(color)}>
-                        <X size={14} />
+                      <button 
+                        onClick={() => handleColorToggle(color)}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label={`Remove color ${color} filter`}
+                      >
+                        <X size={13} />
                       </button>
                     </span>
                   ))}
                   {selectedTags.map(tag => (
-                    <span key={tag} className="inline-flex items-center gap-1 bg-card px-3 py-1 rounded-full text-xs sm:text-sm">
+                    <span key={tag} className="inline-flex items-center gap-1.5 bg-background border border-border px-3 py-1 rounded-full text-xs font-medium text-foreground">
                       {tag}
-                      <button onClick={() => handleTagToggle(tag)}>
-                        <X size={14} />
+                      <button 
+                        onClick={() => handleTagToggle(tag)}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label={`Remove tag ${tag} filter`}
+                      >
+                        <X size={13} />
                       </button>
                     </span>
                   ))}
                   {(priceRange[0] > 0 || priceRange[1] < 5000) && (
-                    <span className="inline-flex items-center gap-1 bg-card px-3 py-1 rounded-full text-xs sm:text-sm">
-                      AED {priceRange[0]} - AED {priceRange[1]}
-                      <button onClick={() => {
-                        setPriceRange([0, 5000]);
-                        handleFilterChange({ minPrice: 0, maxPrice: 5000 });
-                      }}>
-                        <X size={14} />
+                    <span className="inline-flex items-center gap-1.5 bg-background border border-border px-3 py-1 rounded-full text-xs font-medium text-foreground">
+                      AED {priceRange[0]} – {priceRange[1]}
+                      <button 
+                        onClick={() => {
+                          setPriceRange([0, 5000]);
+                          handleFilterChange({ minPrice: 0, maxPrice: 5000 });
+                        }}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label="Reset price filter"
+                      >
+                        <X size={13} />
                       </button>
                     </span>
                   )}
+                  <button
+                    onClick={clearAllFilters}
+                    className="text-xs text-primary hover:underline font-semibold ml-auto pl-2 py-1"
+                  >
+                    Clear All
+                  </button>
                 </div>
               )}
 

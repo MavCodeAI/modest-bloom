@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { Mail, Phone, MapPin, MessageSquare, Clock, Send } from 'lucide-react';
-import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaComments, FaClock, FaPaperPlane, FaWhatsapp, FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
-import { MdSend } from 'react-icons/md';
+import { Mail, Phone, MapPin, Clock, Send, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -31,14 +29,13 @@ const Contact = () => {
     setIsSubmitting(true);
 
     // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     toast({
-      title: 'Message Sent!',
-      description: 'We\'ll get back to you within 24 hours.',
+      title: 'Message Received',
+      description: 'Our customer care team in Dubai will respond within 24 hours.',
     });
 
-    // Reset form
     setFormData({
       name: '',
       email: '',
@@ -54,299 +51,214 @@ const Contact = () => {
       <Navbar />
       
       <main className="pt-16 md:pt-24">
-        <div className="luxury-container py-6 sm:py-8">
-          {/* Header */}
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full mb-4">
-              <FaComments className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+        {/* Header */}
+        <section className="py-16 md:py-24 border-b border-border/60 bg-card/40">
+          <div className="luxury-container">
+            <div className="max-w-2xl">
+              <p className="text-primary text-xs font-semibold uppercase tracking-[0.25em] mb-3">
+                Customer Care & Atelier Inquiries
+              </p>
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground mb-4">
+                Contact Modest Way Fashion
+              </h1>
+              <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+                Whether you need advice on abaya sizing, order tracking, custom tailoring specifications, or wholesale partnership inquiries, our Dubai team is here to assist.
+              </p>
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl mb-4">Contact Us</h1>
-            <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
-              We're here to help with your modest fashion needs. Reach out to us for any questions, concerns, or styling advice.
-            </p>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-            {/* Contact Information */}
-            <div className="lg:col-span-1 space-y-6">
-              <div className="bg-card rounded-lg p-6 border border-border">
-                <h2 className="font-serif text-xl mb-6">Get in Touch</h2>
-                <div className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <FaPhoneAlt className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium mb-1">Phone</h3>
-                      <p className="text-muted-foreground text-sm mb-2">
-                        +971 55 602 0293
-                      </p>
-                      <p className="text-muted-foreground text-xs">
-                        Sunday - Thursday: 9 AM - 6 PM
-                      </p>
-                    </div>
+        <section className="py-16 md:py-24">
+          <div className="luxury-container">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+              {/* Contact Information & Channels */}
+              <div className="lg:col-span-5 space-y-6">
+                <div className="p-6 sm:p-8 rounded-xl bg-card border border-border/70 space-y-6">
+                  <div>
+                    <h2 className="font-serif text-xl font-semibold text-foreground mb-1">Direct Channels</h2>
+                    <p className="text-xs text-muted-foreground">Reach our support and atelier staff directly.</p>
                   </div>
 
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <FaEnvelope className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium mb-1">Email</h3>
-                      <p className="text-muted-foreground text-sm mb-2">
-                        modestwayfashion@gmail.com
-                      </p>
-                      <p className="text-muted-foreground text-xs">
-                        We respond within 24 hours
-                      </p>
+                  <div className="space-y-4">
+                    <a 
+                      href="https://wa.me/971556020293" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-4 p-3.5 rounded-lg border border-border/60 hover:bg-background transition-colors"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                        <MessageCircle className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-muted-foreground font-medium">WhatsApp Assistance</p>
+                        <p className="text-sm font-semibold text-foreground">+971 55 602 0293</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Quickest for sizing & order updates</p>
+                      </div>
+                    </a>
+
+                    <a 
+                      href="tel:+971556020293"
+                      className="flex items-start gap-4 p-3.5 rounded-lg border border-border/60 hover:bg-background transition-colors"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                        <Phone className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-muted-foreground font-medium">Phone Support</p>
+                        <p className="text-sm font-semibold text-foreground">+971 55 602 0293</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Sun – Thu: 9:00 AM – 6:00 PM (GST)</p>
+                      </div>
+                    </a>
+
+                    <a 
+                      href="mailto:modestwayfashion@gmail.com"
+                      className="flex items-start gap-4 p-3.5 rounded-lg border border-border/60 hover:bg-background transition-colors"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                        <Mail className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-muted-foreground font-medium">Email Inquiries</p>
+                        <p className="text-sm font-semibold text-foreground truncate">modestwayfashion@gmail.com</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Responses within 24 hours</p>
+                      </div>
+                    </a>
+
+                    <div className="flex items-start gap-4 p-3.5 rounded-lg border border-border/60 bg-background/50">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                        <MapPin className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-muted-foreground font-medium">Atelier Location</p>
+                        <p className="text-sm font-semibold text-foreground">Dubai Design District</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Building 7, Dubai, United Arab Emirates</p>
+                      </div>
                     </div>
                   </div>
+                </div>
 
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <FaMapMarkerAlt className="w-6 h-6 text-primary" />
+                {/* Operating Schedule */}
+                <div className="p-6 rounded-xl bg-card border border-border/70 space-y-3">
+                  <div className="flex items-center gap-2 text-foreground font-medium text-sm">
+                    <Clock className="w-4 h-4 text-primary" />
+                    <span>Atelier & Office Hours</span>
+                  </div>
+                  <div className="space-y-2 text-xs">
+                    <div className="flex justify-between py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Sunday – Thursday</span>
+                      <span className="font-medium text-foreground">9:00 AM – 6:00 PM (GST)</span>
                     </div>
-                    <div>
-                      <h3 className="font-medium mb-1">Visit Us</h3>
-                      <p className="text-muted-foreground text-sm">
-                        Dubai Design District<br />
-                        Building 7, Dubai, UAE
-                      </p>
+                    <div className="flex justify-between py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Friday</span>
+                      <span className="font-medium text-foreground">2:00 PM – 7:00 PM (GST)</span>
+                    </div>
+                    <div className="flex justify-between py-1">
+                      <span className="text-muted-foreground">Saturday</span>
+                      <span className="font-medium text-foreground">Closed for atelier inventory</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-card rounded-lg p-6 border border-border">
-                <h2 className="font-serif text-xl mb-4">Business Hours</h2>
-                <div className="space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Monday - Thursday</span>
-                    <span>9:00 AM - 6:00 PM</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Friday</span>
-                    <span>2:00 PM - 8:00 PM</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Saturday</span>
-                    <span>10:00 AM - 6:00 PM</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Sunday</span>
-                    <span>Closed</span>
-                  </div>
-                </div>
-              </div>
+              {/* Contact Form */}
+              <div className="lg:col-span-7">
+                <div className="p-6 sm:p-8 md:p-10 rounded-xl bg-card border border-border/70">
+                  <h2 className="font-serif text-2xl font-semibold text-foreground mb-2">Send a Direct Inquiry</h2>
+                  <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
+                    Leave your contact details and message below. We will get back to you promptly.
+                  </p>
 
-              <div className="bg-primary/5 rounded-lg p-6">
-                <h2 className="font-serif text-xl mb-4">Quick Responses</h2>
-                <div className="space-y-3 text-sm text-muted-foreground">
-                  <div className="flex items-start gap-2">
-                    <Clock className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Email responses within 24 hours</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Clock className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Phone support during business hours</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Clock className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                    <span>WhatsApp support available</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="name" className="text-xs font-medium uppercase tracking-wider">Full Name *</Label>
+                        <Input
+                          id="name"
+                          name="name"
+                          type="text"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          className="h-11 bg-background border-border"
+                          placeholder="Your name"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="email" className="text-xs font-medium uppercase tracking-wider">Email Address *</Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          className="h-11 bg-background border-border"
+                          placeholder="your@email.com"
+                          required
+                        />
+                      </div>
+                    </div>
 
-            {/* Contact Form */}
-            <div className="lg:col-span-2">
-              <div className="bg-card rounded-lg p-6 sm:p-8 border border-border">
-                <h2 className="font-serif text-xl sm:text-2xl mb-6">Send Us a Message</h2>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="name" className="text-sm">Full Name *</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        type="text"
-                        value={formData.name}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="phone" className="text-xs font-medium uppercase tracking-wider">Phone / WhatsApp</Label>
+                        <Input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          className="h-11 bg-background border-border"
+                          placeholder="+971 50 000 0000"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="subject" className="text-xs font-medium uppercase tracking-wider">Inquiry Topic *</Label>
+                        <Input
+                          id="subject"
+                          name="subject"
+                          type="text"
+                          value={formData.subject}
+                          onChange={handleInputChange}
+                          className="h-11 bg-background border-border"
+                          placeholder="e.g. Sizing query, Wholesale, Order status"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <Label htmlFor="message" className="text-xs font-medium uppercase tracking-wider">Message *</Label>
+                      <Textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
                         onChange={handleInputChange}
-                        className="mt-1 h-11"
-                        placeholder="Your full name"
+                        className="min-h-[140px] bg-background border-border resize-none text-sm"
+                        placeholder="Please write your questions or order notes..."
                         required
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="email" className="text-sm">Email Address *</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="mt-1 h-11"
-                        placeholder="your@email.com"
-                        required
-                      />
-                    </div>
-                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="phone" className="text-sm">Phone Number</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="mt-1 h-11"
-                        placeholder="+971 XX XXX XXXX"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="subject" className="text-sm">Subject *</Label>
-                      <Input
-                        id="subject"
-                        name="subject"
-                        type="text"
-                        value={formData.subject}
-                        onChange={handleInputChange}
-                        className="mt-1 h-11"
-                        placeholder="How can we help?"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="message" className="text-sm">Message *</Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      className="mt-1 min-h-[120px]"
-                      placeholder="Tell us more about your inquiry..."
-                      required
-                    />
-                  </div>
-
-                  <div className="bg-muted rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Popular Topics</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {['Order Status', 'Size Guide', 'Shipping Info', 'Returns', 'Product Info', 'Wholesale'].map((topic) => (
-                        <button
-                          key={topic}
-                          type="button"
-                          onClick={() => setFormData(prev => ({ 
-                            ...prev, 
-                            subject: topic,
-                            message: `I would like to inquire about ${topic}.` 
-                          }))}
-                          className="px-3 py-1 bg-background border border-border rounded-md text-xs hover:bg-accent transition-colors"
-                        >
-                          {topic}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full btn-luxury-primary h-12 text-sm sm:text-base"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      'Sending...'
-                    ) : (
-                      <>
-                        <MdSend className="w-5 h-5 mr-2" />
-                        Send Message
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </div>
-
-              {/* FAQ Preview */}
-              <div className="mt-8 bg-card rounded-lg p-6 border border-border">
-                <h2 className="font-serif text-xl mb-4">Frequently Asked Questions</h2>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-medium mb-2">How do I track my order?</h3>
-                    <p className="text-muted-foreground text-sm">
-                      You'll receive tracking details via email once your order is dispatched. Use the tracking number on our website or the courier's site.
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="font-medium mb-2">What is your return policy?</h3>
-                    <p className="text-muted-foreground text-sm">
-                      We offer 14-day returns for unworn items with original tags. See our Returns page for complete details.
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="font-medium mb-2">Do you offer international shipping?</h3>
-                    <p className="text-muted-foreground text-sm">
-                      Yes, we ship worldwide. Shipping costs and delivery times vary by location.
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <a
-                    href="/faq"
-                    className="inline-flex items-center text-primary hover:text-primary/80 text-sm font-medium"
-                  >
-                    View all FAQs →
-                  </a>
+                    <Button
+                      type="submit"
+                      className="w-full btn-luxury-primary h-12 text-base"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        'Sending Inquiry...'
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4 mr-2" />
+                          Send Message
+                        </>
+                      )}
+                    </Button>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Social Media */}
-          <div className="mt-12 text-center">
-            <h2 className="font-serif text-xl sm:text-2xl mb-6">Connect With Us</h2>
-            <p className="text-muted-foreground text-sm sm:text-base mb-6">
-              Follow us on social media for the latest modest fashion trends and exclusive offers.
-            </p>
-            <div className="flex justify-center space-x-4">
-              <a
-                href="https://www.instagram.com/modest_way_fashion?igsh=OXkzb3k1aWd0ZHl4&utm_source=qr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-12 h-12 bg-card border border-border rounded-full flex items-center justify-center hover:bg-pink-500 hover:text-white transition-colors"
-              >
-                <FaInstagram className="w-5 h-5" />
-              </a>
-              <a
-                href="https://www.facebook.com/share/1C4XdXZDWi/?mibextid=wwXIfr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-12 h-12 bg-card border border-border rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"
-              >
-                <FaFacebook className="w-5 h-5" />
-              </a>
-              <a
-                href="https://www.tiktok.com/@modestwayfashion?_r=1&_t=ZS-93Knz5mBfZY"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-12 h-12 bg-card border border-border rounded-full flex items-center justify-center hover:bg-black hover:text-white transition-colors"
-              >
-                <FaTiktok className="w-5 h-5" />
-              </a>
-              <a
-                href="https://wa.me/971556020293"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-12 h-12 bg-card border border-border rounded-full flex items-center justify-center hover:bg-green-500 hover:text-white transition-colors"
-              >
-                <FaWhatsapp className="w-5 h-5" />
-              </a>
-            </div>
-          </div>
-        </div>
+        </section>
       </main>
 
       <Footer />

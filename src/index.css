@@ -22,15 +22,15 @@
     --primary: 185 65% 35%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Coral Sunset */
-    --secondary: 15 75% 55%;
+    /* Secondary - Coral Sunset (High Contrast WCAG AA) */
+    --secondary: 15 80% 38%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 35 15% 90%;
-    --muted-foreground: 200 15% 45%;
+    --muted-foreground: 200 20% 32%;
 
     /* Accent - Seafoam Green */
-    --accent: 165 50% 40%;
+    --accent: 165 50% 36%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 85% 50%;

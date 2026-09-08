@@ -1,6 +1,21 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Minus, Plus, Check, Truck, RotateCcw, Shield, Heart, ZoomIn } from 'lucide-react';
+import { 
+  ArrowLeft, 
+  Minus, 
+  Plus, 
+  Check, 
+  Truck, 
+  RotateCcw, 
+  Shield, 
+  Heart, 
+  ZoomIn, 
+  MessageCircle, 
+  Ruler, 
+  Sparkles, 
+  Layers,
+  Scissors
+} from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/layout/CartDrawer';
@@ -12,6 +27,7 @@ import { useProductVariants } from '@/hooks/useProductVariants';
 import { useToggleWishlist } from '@/hooks/useWishlist';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Accordion,
   AccordionContent,
@@ -53,11 +69,24 @@ const ProductDetail = () => {
   const [activeImage, setActiveImage] = useState(0);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [userHeightCm, setUserHeightCm] = useState<string>('');
 
   // Fetch per-variant inventory
   const { data: variants } = useProductVariants(id);
 
   const isWishlisted = wishlist.includes(id || '');
+
+  // Recommended size based on height
+  const recommendedSize = useMemo(() => {
+    const h = parseInt(userHeightCm, 10);
+    if (isNaN(h) || h < 140) return null;
+    if (h <= 152) return '50';
+    if (h <= 158) return '52';
+    if (h <= 164) return '54';
+    if (h <= 169) return '56';
+    if (h <= 174) return '58';
+    return '60';
+  }, [userHeightCm]);
 
   const handleToggleWishlist = () => {
     if (!id) return;
@@ -379,7 +408,7 @@ const ProductDetail = () => {
                           selectedSize === size
                             ? "border-primary bg-primary text-primary-foreground"
                             : "border-border hover:border-foreground/50",
-                          outOfStock && "opacity-40 cursor-not-allowed line-through hover:border-border"
+                          outOfStock && "opacity-50 cursor-not-allowed line-through bg-muted/80 border-dashed border-border text-muted-foreground/70"
                         )}
                       >
                         {size}
@@ -415,57 +444,108 @@ const ProductDetail = () => {
                 </div>
               </div>
 
-              {/* Add to Cart & Wishlist */}
-              <div className="flex gap-3">
-                <Button
-                  onClick={handleAddToCart}
-                  className="flex-1 btn-luxury-primary h-12 sm:h-14 text-sm sm:text-base"
+              {/* Add to Cart, WhatsApp & Wishlist */}
+              <div className="space-y-3">
+                <div className="flex gap-3">
+                  <Button
+                    onClick={handleAddToCart}
+                    className="flex-1 btn-luxury-primary h-12 sm:h-14 text-sm sm:text-base shadow-sm"
+                  >
+                    Add to Bag — AED {(product.price * quantity).toLocaleString()}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleToggleWishlist}
+                    className={cn(
+                      "h-12 sm:h-14 px-4 sm:px-6 rounded-lg border-2 transition-all flex items-center justify-center gap-2",
+                      isWishlisted
+                        ? "border-secondary bg-secondary/10 text-secondary"
+                        : "border-border hover:border-foreground/50 text-foreground"
+                    )}
+                    title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                    aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                  >
+                    <Heart className={cn("w-5 h-5", isWishlisted && "fill-secondary text-secondary")} />
+                    <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wider">
+                      {isWishlisted ? "Saved" : "Save"}
+                    </span>
+                  </Button>
+                </div>
+
+                <a
+                  href={`https://wa.me/971556020293?text=${encodeURIComponent(
+                    `Hi Modest Way Fashion Dubai, I'm inquiring about:\n\n*${product.name}*\n• Price: AED ${product.price}\n• Selected Size: ${selectedSize || 'Not selected yet'}\n• Quantity: ${quantity}\n\nCould you please confirm availability and express delivery in the UAE?`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-2.5 h-11 rounded-lg border border-[#25D366]/40 bg-[#25D366]/10 text-[#128C7E] hover:bg-[#25D366]/20 font-medium text-xs sm:text-sm transition-all"
                 >
-                  Add to Bag — AED {(product.price * quantity).toLocaleString()}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleToggleWishlist}
-                  className={cn(
-                    "h-12 sm:h-14 px-4 sm:px-6 rounded-lg border-2 transition-all flex items-center justify-center gap-2",
-                    isWishlisted
-                      ? "border-secondary bg-secondary/10 text-secondary"
-                      : "border-border hover:border-foreground/50 text-foreground"
-                  )}
-                  title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-                  aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-                >
-                  <Heart className={cn("w-5 h-5", isWishlisted && "fill-secondary text-secondary")} />
-                  <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wider">
-                    {isWishlisted ? "Saved" : "Save"}
-                  </span>
-                </Button>
+                  <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                  <span>Order or Inquire via WhatsApp (+971 55 602 0293)</span>
+                </a>
               </div>
 
               {/* Features */}
               <div className="grid grid-cols-3 gap-2 sm:gap-4 py-4 sm:py-6 border-y border-border">
                 <div className="text-center">
                   <Truck className="h-4 w-4 sm:h-5 sm:w-5 mx-auto mb-1 sm:mb-2 text-primary" />
-                  <p className="text-[10px] sm:text-xs text-muted-foreground">Free UAE Delivery</p>
+                  <p className="text-xs text-muted-foreground font-medium">Free UAE Delivery</p>
                 </div>
                 <div className="text-center">
                   <RotateCcw className="h-4 w-4 sm:h-5 sm:w-5 mx-auto mb-1 sm:mb-2 text-primary" />
-                  <p className="text-[10px] sm:text-xs text-muted-foreground">14-Day Returns</p>
+                  <p className="text-xs text-muted-foreground font-medium">14-Day Returns</p>
                 </div>
                 <div className="text-center">
                   <Shield className="h-4 w-4 sm:h-5 sm:w-5 mx-auto mb-1 sm:mb-2 text-primary" />
-                  <p className="text-[10px] sm:text-xs text-muted-foreground">Authentic Product</p>
+                  <p className="text-xs text-muted-foreground font-medium">Authentic Dubai Cut</p>
                 </div>
               </div>
 
               {/* Accordions */}
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="single" collapsible defaultValue="fabric" className="w-full">
+                <AccordionItem value="fabric">
+                  <AccordionTrigger className="text-sm font-medium">
+                    Fabric, Cut & Craftsmanship
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    <div className="space-y-3 text-sm">
+                      <div className="flex items-start gap-2.5">
+                        <Layers size={16} className="mt-0.5 text-primary flex-shrink-0" />
+                        <div>
+                          <strong className="text-foreground font-medium">Material: </strong>
+                          Grade-A Korean Nida & textured Japanese crepe blend. Breathable, fluid, and anti-static.
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2.5">
+                        <Shield size={16} className="mt-0.5 text-primary flex-shrink-0" />
+                        <div>
+                          <strong className="text-foreground font-medium">Opacity: </strong>
+                          100% full coverage with zero transparency under indoor and outdoor lighting.
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2.5">
+                        <Scissors size={16} className="mt-0.5 text-primary flex-shrink-0" />
+                        <div>
+                          <strong className="text-foreground font-medium">Tailoring: </strong>
+                          Artisan double-turned hems, reinforced french seams, and precision sleeve drape tailored in Dubai.
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2.5">
+                        <RotateCcw size={16} className="mt-0.5 text-primary flex-shrink-0" />
+                        <div>
+                          <strong className="text-foreground font-medium">Care: </strong>
+                          Gentle machine wash 30°C or dry clean. Low-heat steam iron for a pristine finish.
+                        </div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
                 <AccordionItem value="description">
                   <AccordionTrigger className="text-sm font-medium">
-                    Description
+                    Design Description
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground text-sm">
+                  <AccordionContent className="text-muted-foreground text-sm leading-relaxed">
                     {product.description}
                   </AccordionContent>
                 </AccordionItem>
@@ -481,11 +561,11 @@ const ProductDetail = () => {
                       </li>
                       <li className="flex items-start gap-2">
                         <Check size={14} className="mt-1 text-primary flex-shrink-0" />
-                        <span>Same-day dispatch for orders placed before 2 PM</span>
+                        <span>Same-day Dubai courier dispatch for orders placed before 2 PM</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Check size={14} className="mt-1 text-primary flex-shrink-0" />
-                        <span>International shipping available to 50+ countries</span>
+                        <span>International courier shipping to GCC, UK, US, and 50+ countries</span>
                       </li>
                     </ul>
                   </AccordionContent>
@@ -498,15 +578,11 @@ const ProductDetail = () => {
                     <ul className="space-y-2 text-sm">
                       <li className="flex items-start gap-2">
                         <Check size={14} className="mt-1 text-primary flex-shrink-0" />
-                        <span>14-day return window for unworn items with tags</span>
+                        <span>14-day hassle-free exchange window for unworn items with tags</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Check size={14} className="mt-1 text-primary flex-shrink-0" />
-                        <span>Free returns for UAE customers</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Check size={14} className="mt-1 text-primary flex-shrink-0" />
-                        <span>Exchange for different size available</span>
+                        <span>Free size exchanges for UAE customers</span>
                       </li>
                     </ul>
                   </AccordionContent>
@@ -517,17 +593,68 @@ const ProductDetail = () => {
         </div>
       </main>
 
-      {/* Size Guide Dialog */}
+      {/* Size Guide & Height Calculator Dialog */}
       <Dialog open={isSizeGuideOpen} onOpenChange={setIsSizeGuideOpen}>
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="font-serif text-2xl">Abaya & Kaftan Size Guide</DialogTitle>
+            <DialogTitle className="font-serif text-2xl">Abaya Size Guide & Height Calculator</DialogTitle>
             <DialogDescription>
-              Abaya sizes in the UAE are measured by length in inches from shoulder to hem. Choose based on your height.
+              Abaya sizes represent length in inches from shoulder to hem. Calculate your size instantly below.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-6 pt-2">
+            {/* Interactive Height Calculator */}
+            <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 space-y-3">
+              <div className="flex items-center gap-2 text-primary font-semibold text-sm">
+                <Ruler className="w-4 h-4" />
+                <span>Instant Height Recommender</span>
+              </div>
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <div className="w-full sm:w-1/2">
+                  <label htmlFor="heightInput" className="text-xs text-muted-foreground block mb-1">
+                    Enter your height in centimeters (e.g. 165)
+                  </label>
+                  <Input
+                    id="heightInput"
+                    type="number"
+                    placeholder="e.g. 165"
+                    value={userHeightCm}
+                    onChange={(e) => setUserHeightCm(e.target.value)}
+                    className="bg-background h-10"
+                    min={140}
+                    max={195}
+                  />
+                </div>
+                <div className="w-full sm:w-1/2 flex items-center justify-between sm:justify-end gap-3 pt-1 sm:pt-4">
+                  {recommendedSize ? (
+                    <div className="text-left sm:text-right">
+                      <p className="text-xs text-muted-foreground">Recommended:</p>
+                      <p className="text-lg font-bold text-primary">Size {recommendedSize}</p>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-muted-foreground italic">Enter height to see size</p>
+                  )}
+                  {recommendedSize && (
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setSelectedSize(recommendedSize);
+                        setIsSizeGuideOpen(false);
+                        toast({
+                          title: `Size ${recommendedSize} Selected`,
+                          description: `Applied recommended size based on your height (${userHeightCm} cm).`,
+                        });
+                      }}
+                      className="btn-luxury-primary h-9 px-4 text-xs font-semibold"
+                    >
+                      Apply Size {recommendedSize}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+
             <div className="overflow-x-auto rounded-lg border border-border">
               <table className="w-full text-sm text-left">
                 <thead className="bg-muted text-xs uppercase text-muted-foreground">
@@ -540,42 +667,42 @@ const ProductDetail = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  <tr>
+                  <tr className={cn(recommendedSize === '50' && "bg-primary/10 font-bold")}>
                     <td className="p-3 font-medium">50</td>
                     <td className="p-3">50" (127 cm)</td>
                     <td className="p-3">4'10" – 5'0" (147-152 cm)</td>
                     <td className="p-3">40" – 42"</td>
                     <td className="p-3">26"</td>
                   </tr>
-                  <tr>
+                  <tr className={cn(recommendedSize === '52' && "bg-primary/10 font-bold")}>
                     <td className="p-3 font-medium">52</td>
                     <td className="p-3">52" (132 cm)</td>
                     <td className="p-3">5'1" – 5'2" (155-158 cm)</td>
                     <td className="p-3">42" – 44"</td>
                     <td className="p-3">27"</td>
                   </tr>
-                  <tr>
+                  <tr className={cn(recommendedSize === '54' && "bg-primary/10 font-bold")}>
                     <td className="p-3 font-medium">54</td>
                     <td className="p-3">54" (137 cm)</td>
                     <td className="p-3">5'3" – 5'4" (160-163 cm)</td>
                     <td className="p-3">44" – 46"</td>
                     <td className="p-3">27.5"</td>
                   </tr>
-                  <tr>
+                  <tr className={cn(recommendedSize === '56' && "bg-primary/10 font-bold")}>
                     <td className="p-3 font-medium">56</td>
                     <td className="p-3">56" (142 cm)</td>
                     <td className="p-3">5'5" – 5'6" (165-168 cm)</td>
                     <td className="p-3">46" – 48"</td>
                     <td className="p-3">28"</td>
                   </tr>
-                  <tr>
+                  <tr className={cn(recommendedSize === '58' && "bg-primary/10 font-bold")}>
                     <td className="p-3 font-medium">58</td>
                     <td className="p-3">58" (147 cm)</td>
                     <td className="p-3">5'7" – 5'8" (170-173 cm)</td>
                     <td className="p-3">48" – 50"</td>
                     <td className="p-3">28.5"</td>
                   </tr>
-                  <tr>
+                  <tr className={cn(recommendedSize === '60' && "bg-primary/10 font-bold")}>
                     <td className="p-3 font-medium">60</td>
                     <td className="p-3">60" (152 cm)</td>
                     <td className="p-3">5'9" – 6'0" (175-183 cm)</td>
@@ -636,6 +763,43 @@ const ProductDetail = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Dedicated High-Conversion Mobile Sticky Bar */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border p-3 shadow-2xl flex items-center justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-serif font-semibold text-foreground truncate">{product.name}</p>
+          <div className="flex items-center gap-2 text-xs">
+            <span className="font-bold text-primary">AED {(product.price * quantity).toLocaleString()}</span>
+            {selectedSize ? (
+              <span className="text-muted-foreground font-medium">· Size {selectedSize}</span>
+            ) : (
+              <span className="text-amber-600 font-medium">· Pick size</span>
+            )}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <a
+            href={`https://wa.me/971556020293?text=${encodeURIComponent(
+              `Hi Modest Way Fashion Dubai, I'm inquiring about:\n\n*${product.name}*\n• Price: AED ${product.price}\n• Size: ${selectedSize || 'Not selected'}\n\nIs this in stock for express delivery?`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-10 h-10 rounded-lg bg-[#25D366]/15 border border-[#25D366]/30 flex items-center justify-center text-[#128C7E] transition-colors"
+            title="Inquire via WhatsApp"
+            aria-label="WhatsApp Inquiry"
+          >
+            <MessageCircle className="w-5 h-5 text-[#25D366]" />
+          </a>
+
+          <Button
+            onClick={handleAddToCart}
+            className="btn-luxury-primary h-10 px-4 text-xs font-semibold"
+          >
+            {selectedSize ? 'Add to Bag' : 'Select Size'}
+          </Button>
+        </div>
+      </div>
 
       <Footer />
     </div>

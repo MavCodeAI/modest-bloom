@@ -51,14 +51,41 @@ export function CartDrawer() {
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-border">
-            <h2 className="font-serif text-xl">Shopping Bag</h2>
-            <button
-              onClick={handleClose}
-              className="p-2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <X size={24} />
-            </button>
+          <div className="p-5 sm:p-6 border-b border-border">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-serif text-xl">Shopping Bag ({cart.reduce((s, i) => s + i.quantity, 0)})</h2>
+              <button
+                onClick={handleClose}
+                className="p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-md"
+                aria-label="Close cart"
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            {/* AOV Free Delivery Progress Meter */}
+            {cart.length > 0 && (
+              <div className="pt-2">
+                <div className="flex items-center justify-between text-xs mb-1.5">
+                  {cartTotal >= 500 ? (
+                    <span className="text-primary font-semibold flex items-center gap-1">
+                      ✓ You've unlocked FREE UAE Express Delivery!
+                    </span>
+                  ) : (
+                    <span className="text-muted-foreground font-medium">
+                      Add <strong className="text-foreground font-semibold">AED {500 - cartTotal}</strong> for Free UAE Delivery
+                    </span>
+                  )}
+                  <span className="text-muted-foreground font-medium">{Math.min(100, Math.round((cartTotal / 500) * 100))}%</span>
+                </div>
+                <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+                  <div 
+                    className="bg-primary h-full transition-all duration-500 rounded-full"
+                    style={{ width: `${Math.min(100, (cartTotal / 500) * 100)}%` }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Cart Items */}
@@ -116,16 +143,18 @@ export function CartDrawer() {
                       <div className="flex items-center gap-3 mt-3">
                         <button
                           onClick={() => updateQuantity(item.product.id, item.size, item.color, -1)}
-                          className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+                          className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-muted hover:border-foreground/60 transition-colors"
+                          aria-label="Decrease quantity"
                         >
                           <Minus size={14} />
                         </button>
-                        <span className="text-sm font-medium w-6 text-center">
+                        <span className="text-sm font-semibold w-6 text-center text-foreground">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() => updateQuantity(item.product.id, item.size, item.color, 1)}
-                          className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+                          className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-muted hover:border-foreground/60 transition-colors"
+                          aria-label="Increase quantity"
                         >
                           <Plus size={14} />
                         </button>
@@ -135,7 +164,8 @@ export function CartDrawer() {
                     {/* Remove Button */}
                     <button
                       onClick={() => removeItem(item.product.id, item.size, item.color)}
-                      className="text-muted-foreground hover:text-destructive transition-colors"
+                      className="p-2 text-muted-foreground hover:text-destructive transition-colors rounded-md"
+                      aria-label="Remove item from bag"
                     >
                       <X size={18} />
                     </button>

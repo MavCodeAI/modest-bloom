@@ -1,38 +1,42 @@
-import { Truck, Globe, Clock, Shield } from 'lucide-react';
+import { Truck, Globe, Scissors, CreditCard } from 'lucide-react';
 
-const features = [
+const assurances = [
   {
     icon: Truck,
-    title: 'Dispatch from Dubai',
-    description: 'Same-day dispatch for UAE orders',
+    title: 'Dubai Dispatch',
+    description: 'Fast fulfillment across the UAE & GCC',
   },
   {
     icon: Globe,
-    title: 'Worldwide Shipping',
-    description: 'Express delivery to 50+ countries',
+    title: 'Worldwide Express',
+    description: 'Tracked delivery via DHL & Aramex',
   },
   {
-    icon: Clock,
-    title: 'Easy Returns',
-    description: '14-day hassle-free returns',
+    icon: Scissors,
+    title: 'Modest Tailoring',
+    description: 'Precise sizing from 50 to 60 length',
   },
   {
-    icon: Shield,
-    title: 'Secure Payment',
-    description: '100% secure checkout',
+    icon: CreditCard,
+    title: 'Flexible Payment',
+    description: 'Cards & Cash on Delivery across UAE',
   },
 ];
 
 export function ExpressStripSection() {
   return (
-    <section className="py-12 border-y border-border">
+    <section className="py-8 sm:py-10 border-y border-border/60 bg-card/40">
       <div className="luxury-container">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {features.map((feature) => (
-            <div key={feature.title} className="text-center">
-              <feature.icon className="h-8 w-8 text-primary mx-auto mb-4" />
-              <h3 className="font-medium text-sm mb-1">{feature.title}</h3>
-              <p className="text-xs text-muted-foreground">{feature.description}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          {assurances.map((item) => (
+            <div key={item.title} className="flex items-start gap-4 p-2">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/15 flex items-center justify-center flex-shrink-0 text-primary">
+                <item.icon className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="font-serif text-sm font-semibold text-foreground mb-0.5">{item.title}</h3>
+                <p className="text-xs text-muted-foreground leading-snug">{item.description}</p>
+              </div>
             </div>
           ))}
         </div>

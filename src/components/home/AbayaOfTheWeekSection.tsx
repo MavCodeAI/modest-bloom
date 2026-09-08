@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Star } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useProducts } from '@/hooks/useProducts';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -61,17 +61,17 @@ export function AbayaOfTheWeekSection() {
               {featuredProduct.name}
             </h2>
             
-            {/* Rating */}
-            <div className="flex items-center gap-2 mb-6">
-              <div className="flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 star-gold fill-current" />
-                ))}
-              </div>
-              <span className="text-sm text-muted-foreground">(127 reviews)</span>
+            {/* Garment Highlights */}
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <span className="text-xs px-3 py-1 rounded-full bg-secondary/15 text-secondary font-medium">
+                Signature Cut
+              </span>
+              <span className="text-xs text-muted-foreground">
+                Available in Sizes 50–60
+              </span>
             </div>
 
-            <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+            <p className="text-muted-foreground text-base sm:text-lg mb-8 leading-relaxed">
               {featuredProduct.description}
             </p>
 
