@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import logo from '@/assets/logo.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { MdShoppingCart, MdFavoriteBorder, MdAccountCircle } from 'react-icons/md';
@@ -26,7 +27,7 @@ export function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center py-1.5 group" aria-label="Modest Way Fashion Dubai">
             <img
-              src="/images/logo.png"
+              src={logo}
               alt="Modest Way Fashion Dubai"
               className="h-16 sm:h-20 md:h-24 lg:h-26 w-auto max-w-[240px] sm:max-w-[320px] md:max-w-[420px] object-contain transition-transform duration-300 group-hover:scale-[1.02]"
             />

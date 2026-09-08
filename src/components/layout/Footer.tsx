@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import logo from '@/assets/logo.png';
 import { Instagram, Facebook, Twitter, Mail, MapPin, Phone, Music } from 'lucide-react';
 
 export function Footer() {
@@ -9,7 +10,7 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1 space-y-4 sm:space-y-6">
             <img 
-              src="/images/logo.png" 
+              src={logo} 
               alt="Modest Way Fashion" 
               className="h-16 sm:h-20 md:h-24 w-auto object-contain"
             />
