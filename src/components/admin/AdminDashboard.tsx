@@ -81,7 +81,13 @@ const StatCard = ({ title, value, change, changeLabel, icon, trend = 'neutral' }
 };
 
 interface RecentOrderProps {
-  order: any;
+  order: {
+    id: string;
+    customer_name: string;
+    order_number: string;
+    total: number;
+    status: string;
+  };
   onView: (id: string) => void;
 }
 
@@ -129,7 +135,10 @@ const RecentOrder = ({ order, onView }: RecentOrderProps) => {
 };
 
 interface TopProductProps {
-  product: any;
+  product: {
+    id?: string;
+    name: string;
+  };
   index: number;
 }
 

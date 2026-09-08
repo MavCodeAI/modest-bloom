@@ -185,7 +185,7 @@ export const useCreateNotification = () => {
 
       const { data, error } = await supabase
         .from('notifications')
-        .insert(insertData as any)
+        .insert(insertData as unknown as TablesInsert<'notifications'>)
         .select()
         .single();
 

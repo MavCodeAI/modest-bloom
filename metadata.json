@@ -1,0 +1,6 @@
+{
+  "name": "Modest Way Fashion UAE",
+  "description": "Discover modest fashion in the UAE with sustainable and elegant clothing options at Modest Way Fashion. Shop our collection of modest wear, hijab fashion, abaya, and sustainable clothing in Dubai and across the United Arab Emirates.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -187,7 +187,7 @@ export const useAdminUser = (userId: string) => {
         is_active: true,
         orders: orders || [],
         wishlist: wishlist || []
-      } as AdminUser & { orders: any[]; wishlist: any[] };
+      } as AdminUser & { orders: unknown[]; wishlist: unknown[] };
     },
     enabled: !!userId,
   });

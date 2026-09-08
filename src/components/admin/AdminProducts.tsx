@@ -436,7 +436,7 @@ export const AdminProducts = ({
                   <label className="text-sm font-medium">Sort By</label>
                   <Select
                     value={filters.sortBy}
-                    onValueChange={(value) => setFilters(prev => ({ ...prev, sortBy: value as any }))}
+                    onValueChange={(value) => setFilters(prev => ({ ...prev, sortBy: value as 'name' | 'price' | 'created_at' }))}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -453,7 +453,7 @@ export const AdminProducts = ({
                   <label className="text-sm font-medium">Sort Order</label>
                   <Select
                     value={filters.sortOrder}
-                    onValueChange={(value) => setFilters(prev => ({ ...prev, sortOrder: value as any }))}
+                    onValueChange={(value) => setFilters(prev => ({ ...prev, sortOrder: value as 'asc' | 'desc' }))}
                   >
                     <SelectTrigger>
                       <SelectValue />
