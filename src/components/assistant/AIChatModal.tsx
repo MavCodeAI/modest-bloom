@@ -169,13 +169,13 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
   const isCurrentRTL = language === 'ar';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-200">
-      {/* Backdrop overlay dismiss */}
-      <div className="absolute inset-0" onClick={onClose} />
+    <div className="fixed inset-0 z-50 flex items-end justify-center md:items-end md:justify-end md:p-6 md:pb-24 bg-black/40 md:bg-transparent md:backdrop-blur-none backdrop-blur-xs animate-in fade-in duration-200 pointer-events-none">
+      {/* Backdrop overlay dismiss (mobile only) */}
+      <div className="absolute inset-0 md:hidden pointer-events-auto" onClick={onClose} />
 
       {/* Main Chat Container */}
       <div
-        className="relative w-full sm:max-w-lg h-[90vh] sm:h-[620px] max-h-[92vh] bg-background border border-border sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden z-10 animate-in slide-in-from-bottom-6 duration-300"
+        className="relative pointer-events-auto w-full md:w-[400px] md:max-w-[calc(100vw-3rem)] h-[90vh] md:h-[600px] max-h-[92vh] md:max-h-[calc(100vh-8rem)] bg-background border border-border rounded-t-2xl md:rounded-2xl shadow-2xl flex flex-col overflow-hidden z-10 animate-in slide-in-from-bottom-6 duration-300"
         role="dialog"
         aria-modal="true"
       >
