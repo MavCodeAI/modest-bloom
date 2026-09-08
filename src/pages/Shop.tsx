@@ -22,6 +22,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { initialProducts } from '@/lib/data';
 import {
   useAdvancedSearch,
   useSearchSuggestions,
@@ -503,6 +504,28 @@ const Shop = () => {
                 </div>
               )}
 
+              {/* Error or Fallback Banner */}
+              {error && (
+                <div className="mb-6 p-4 rounded-lg bg-amber-500/10 border border-amber-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-medium text-amber-900 dark:text-amber-200">
+                      Live database connection limited
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Displaying our curated signature catalog pieces. You can still explore and place orders.
+                    </p>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => window.location.reload()}
+                    className="text-xs shrink-0"
+                  >
+                    Refresh
+                  </Button>
+                </div>
+              )}
+
               {/* Loading State */}
               {isLoading && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -517,10 +540,10 @@ const Shop = () => {
               )}
 
               {/* Products */}
-              {!isLoading && searchResults && (
+              {!isLoading && (searchResults ? searchResults.results.length > 0 : initialProducts.length > 0) && (
                 <>
                   <ProductGrid 
-                    products={searchResults.results.map(result => ({
+                    products={searchResults ? searchResults.results.map(result => ({
                       id: result.id,
                       name: result.name,
                       price: result.price,
@@ -535,12 +558,12 @@ const Shop = () => {
                       isWholesale: result.is_wholesale || false,
                       inStock: result.in_stock !== false,
                       createdAt: result.created_at
-                    }))} 
+                    })) : initialProducts} 
                     columns={3} 
                   />
                   
                   {/* Pagination */}
-                  {searchResults.totalPages > 1 && (
+                  {searchResults && searchResults.totalPages > 1 && (
                     <div className="flex items-center justify-center gap-2 mt-12">
                       <Button
                         variant="outline"

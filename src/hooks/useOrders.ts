@@ -115,8 +115,8 @@ export const useCreateOrder = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
       toast({
-        title: 'آرڈر کنفرم ہو گیا! ✅',
-        description: 'آپ کا آرڈر کامیابی سے مل گیا۔',
+        title: 'Order Confirmed! ✅',
+        description: 'Your order has been received successfully.',
       });
     },
     onError: (error) => {
@@ -148,8 +148,8 @@ export const useUpdateOrderStatus = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
       toast({
-        title: 'سٹیٹس اپڈیٹ',
-        description: 'آرڈر سٹیٹس کامیابی سے اپڈیٹ ہو گیا۔',
+        title: 'Status Updated',
+        description: 'Order status has been updated successfully.',
       });
     },
     onError: (error) => {

@@ -221,8 +221,8 @@ export const useUpdateUserRole = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
       queryClient.invalidateQueries({ queryKey: ['admin-user'] });
       toast({
-        title: 'یوزر رول اپڈیٹ ہو گیا',
-        description: 'یوزر کا رول کامیابی سے اپڈیٹ ہو گیا۔',
+        title: 'User Role Updated',
+        description: 'User role has been successfully updated.',
       });
     },
     onError: (error) => {
@@ -254,8 +254,8 @@ export const useDeactivateUser = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
       queryClient.invalidateQueries({ queryKey: ['admin-user'] });
       toast({
-        title: 'یوزر ڈی ایکٹیویٹ ہو گیا',
-        description: 'یوزر کامیابی سے ڈی ایکٹیویٹ ہو گیا۔',
+        title: 'User Deactivated',
+        description: 'User has been deactivated.',
       });
     },
     onError: (error) => {
@@ -296,8 +296,8 @@ export const useDeleteUser = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
       toast({
-        title: 'یوزر ڈیلیٹ ہو گیا',
-        description: 'یوزر کامیابی سے ڈیلیٹ ہو گیا۔',
+        title: 'User Deleted',
+        description: 'User profile has been deleted.',
       });
     },
     onError: (error) => {
@@ -389,8 +389,8 @@ export const useExportUsers = () => {
     },
     onSuccess: () => {
       toast({
-        title: 'ایکسپورٹ کامیاب',
-        description: 'یوزر ڈیٹا کامیابی سے ایکسپورٹ ہو گیا۔',
+        title: 'Export Successful',
+        description: 'User records have been exported.',
       });
     },
     onError: (error) => {

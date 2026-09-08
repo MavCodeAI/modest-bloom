@@ -650,7 +650,7 @@ const Admin = () => {
                 <div>
                   <Label className="text-base font-semibold">Per-Variant Inventory</Label>
                   <p className="text-xs text-muted-foreground mt-1">
-                    ہر size + color combination کا اپنا stock count set کریں۔
+                    Set specific stock levels for each size and color combination.
                   </p>
                 </div>
                 <VariantInventoryManager

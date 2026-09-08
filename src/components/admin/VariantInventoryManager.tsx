@@ -64,7 +64,7 @@ export const VariantInventoryManager = ({ productId, sizes, colors }: Props) => 
   if (sizes.length === 0 || colors.length === 0) {
     return (
       <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
-        پہلے sizes اور colors add کریں — پھر ہر combination کا stock یہاں ظاہر ہو گا۔
+        Please add sizes and colors first — then each variant combination stock can be managed here.
       </div>
     );
   }

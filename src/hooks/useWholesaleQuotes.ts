@@ -49,8 +49,8 @@ export const useCreateWholesaleQuote = () => {
     },
     onSuccess: () => {
       toast({
-        title: 'درخواست موصول! 📧',
-        description: 'ہم جلد آپ سے رابطہ کریں گے۔',
+        title: 'Quote Request Received! 📧',
+        description: 'Thank you. Our wholesale specialist will contact you shortly.',
       });
     },
     onError: (error) => {
@@ -81,8 +81,8 @@ export const useUpdateQuoteStatus = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['wholesale-quotes'] });
       toast({
-        title: 'سٹیٹس اپڈیٹ',
-        description: 'کوٹ سٹیٹس کامیابی سے اپڈیٹ ہو گیا۔',
+        title: 'Status Updated',
+        description: 'Quote status has been successfully updated.',
       });
     },
     onError: (error) => {

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Minus, Plus, Check, Truck, RotateCcw, Shield } from 'lucide-react';
+import { ArrowLeft, Minus, Plus, Check, Truck, RotateCcw, Shield, Heart, ZoomIn } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/layout/CartDrawer';
@@ -9,6 +9,8 @@ import { useStore } from '@/hooks/useStore';
 import { useSEO } from '@/hooks/useSEO';
 import { useProduct } from '@/hooks/useProducts';
 import { useProductVariants } from '@/hooks/useProductVariants';
+import { useToggleWishlist } from '@/hooks/useWishlist';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import {
   Accordion,
@@ -16,6 +18,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -31,7 +40,9 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { dispatch } = useStore();
+  const { wishlist, dispatch } = useStore();
+  const { user } = useAuth();
+  const toggleWishlistMutation = useToggleWishlist();
   
   // Fetch product from database
   const { data: dbProduct, isLoading, error } = useProduct(id || '');
@@ -40,9 +51,27 @@ const ProductDetail = () => {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   // Fetch per-variant inventory
   const { data: variants } = useProductVariants(id);
+
+  const isWishlisted = wishlist.includes(id || '');
+
+  const handleToggleWishlist = () => {
+    if (!id) return;
+    dispatch({ type: 'TOGGLE_WISHLIST_ITEM', payload: id });
+    if (user) {
+      toggleWishlistMutation.mutate(id);
+    } else {
+      toast({
+        title: isWishlisted ? 'Removed from Wishlist' : 'Added to Wishlist ❤️',
+        description: isWishlisted ? 'Item removed from your saved list.' : 'Item saved to your wishlist.',
+      });
+    }
+  };
+
 
   // Transform database product to match local Product type
   const product = dbProduct ? {
@@ -215,12 +244,19 @@ const ProductDetail = () => {
             {/* Image Gallery */}
             <div className="space-y-3 sm:space-y-4">
               {/* Main Image */}
-              <div className="aspect-editorial rounded-lg overflow-hidden bg-muted">
+              <div 
+                onClick={() => setIsLightboxOpen(true)}
+                className="aspect-editorial rounded-lg overflow-hidden bg-muted relative group cursor-zoom-in"
+              >
                 <img
                   src={images[activeImage]}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
+                <div className="absolute bottom-3 right-3 bg-background/80 backdrop-blur-sm text-foreground px-3 py-1.5 rounded-full text-xs flex items-center gap-1.5 shadow-sm opacity-90 group-hover:opacity-100 transition-opacity">
+                  <ZoomIn size={14} />
+                  <span>Tap to inspect</span>
+                </div>
               </div>
 
               {/* Thumbnails */}
@@ -322,7 +358,11 @@ const ProductDetail = () => {
               <div>
                 <div className="flex items-center justify-between mb-3 sm:mb-4">
                   <span className="text-sm font-medium">Select Size</span>
-                  <button className="text-xs text-primary hover:underline">
+                  <button 
+                    type="button"
+                    onClick={() => setIsSizeGuideOpen(true)}
+                    className="text-xs text-primary hover:underline font-medium cursor-pointer"
+                  >
                     Size Guide
                   </button>
                 </div>
@@ -348,8 +388,8 @@ const ProductDetail = () => {
                   })}
                 </div>
                 {selectedVariantStock !== null && selectedVariantStock > 0 && selectedVariantStock <= 5 && (
-                  <p className="text-xs text-orange-500 mt-2">
-                    صرف {selectedVariantStock} stock میں رہ گئے!
+                  <p className="text-xs text-amber-600 font-medium mt-2">
+                    Only {selectedVariantStock} left in stock!
                   </p>
                 )}
               </div>
@@ -375,13 +415,33 @@ const ProductDetail = () => {
                 </div>
               </div>
 
-              {/* Add to Cart */}
-              <Button
-                onClick={handleAddToCart}
-                className="w-full btn-luxury-primary h-12 sm:h-14 text-sm sm:text-base"
-              >
-                Add to Bag — AED {(product.price * quantity).toLocaleString()}
-              </Button>
+              {/* Add to Cart & Wishlist */}
+              <div className="flex gap-3">
+                <Button
+                  onClick={handleAddToCart}
+                  className="flex-1 btn-luxury-primary h-12 sm:h-14 text-sm sm:text-base"
+                >
+                  Add to Bag — AED {(product.price * quantity).toLocaleString()}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleToggleWishlist}
+                  className={cn(
+                    "h-12 sm:h-14 px-4 sm:px-6 rounded-lg border-2 transition-all flex items-center justify-center gap-2",
+                    isWishlisted
+                      ? "border-secondary bg-secondary/10 text-secondary"
+                      : "border-border hover:border-foreground/50 text-foreground"
+                  )}
+                  title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                  aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                >
+                  <Heart className={cn("w-5 h-5", isWishlisted && "fill-secondary text-secondary")} />
+                  <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wider">
+                    {isWishlisted ? "Saved" : "Save"}
+                  </span>
+                </Button>
+              </div>
 
               {/* Features */}
               <div className="grid grid-cols-3 gap-2 sm:gap-4 py-4 sm:py-6 border-y border-border">
@@ -456,6 +516,126 @@ const ProductDetail = () => {
           </div>
         </div>
       </main>
+
+      {/* Size Guide Dialog */}
+      <Dialog open={isSizeGuideOpen} onOpenChange={setIsSizeGuideOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-2xl">Abaya & Kaftan Size Guide</DialogTitle>
+            <DialogDescription>
+              Abaya sizes in the UAE are measured by length in inches from shoulder to hem. Choose based on your height.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 pt-2">
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <table className="w-full text-sm text-left">
+                <thead className="bg-muted text-xs uppercase text-muted-foreground">
+                  <tr>
+                    <th className="p-3">Abaya Size</th>
+                    <th className="p-3">Length (Inches)</th>
+                    <th className="p-3">Recommended Height</th>
+                    <th className="p-3">Bust (Inches)</th>
+                    <th className="p-3">Sleeve Length</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  <tr>
+                    <td className="p-3 font-medium">50</td>
+                    <td className="p-3">50" (127 cm)</td>
+                    <td className="p-3">4'10" – 5'0" (147-152 cm)</td>
+                    <td className="p-3">40" – 42"</td>
+                    <td className="p-3">26"</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-medium">52</td>
+                    <td className="p-3">52" (132 cm)</td>
+                    <td className="p-3">5'1" – 5'2" (155-158 cm)</td>
+                    <td className="p-3">42" – 44"</td>
+                    <td className="p-3">27"</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-medium">54</td>
+                    <td className="p-3">54" (137 cm)</td>
+                    <td className="p-3">5'3" – 5'4" (160-163 cm)</td>
+                    <td className="p-3">44" – 46"</td>
+                    <td className="p-3">27.5"</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-medium">56</td>
+                    <td className="p-3">56" (142 cm)</td>
+                    <td className="p-3">5'5" – 5'6" (165-168 cm)</td>
+                    <td className="p-3">46" – 48"</td>
+                    <td className="p-3">28"</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-medium">58</td>
+                    <td className="p-3">58" (147 cm)</td>
+                    <td className="p-3">5'7" – 5'8" (170-173 cm)</td>
+                    <td className="p-3">48" – 50"</td>
+                    <td className="p-3">28.5"</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-medium">60</td>
+                    <td className="p-3">60" (152 cm)</td>
+                    <td className="p-3">5'9" – 6'0" (175-183 cm)</td>
+                    <td className="p-3">50" – 52"</td>
+                    <td className="p-3">29"</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="bg-muted/50 p-4 rounded-lg space-y-2 text-xs text-muted-foreground">
+              <p className="font-semibold text-foreground">💡 How to Measure:</p>
+              <ul className="list-disc pl-4 space-y-1">
+                <li><strong>Length:</strong> Measure from the highest point of the shoulder down to your ankle or desired hem length.</li>
+                <li><strong>Heels:</strong> If you plan on wearing heels with this abaya, consider sizing up by one size (+2 inches).</li>
+                <li><strong>Fit:</strong> Modest Way abayas are designed with a relaxed, elegant modest drape.</li>
+              </ul>
+            </div>
+
+            <div className="flex justify-end">
+              <Button onClick={() => setIsSizeGuideOpen(false)} className="btn-luxury-primary">
+                Got it
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Image Lightbox Modal */}
+      <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
+        <DialogContent className="max-w-4xl p-2 sm:p-4 bg-background/95 backdrop-blur-md">
+          <div className="relative flex flex-col items-center justify-center">
+            <div className="relative max-h-[75vh] w-full flex items-center justify-center overflow-hidden rounded-lg">
+              <img
+                src={images[activeImage]}
+                alt={product.name}
+                className="max-h-[75vh] w-auto object-contain rounded-lg shadow-xl"
+              />
+            </div>
+
+            {images.length > 1 && (
+              <div className="flex gap-2 mt-4 overflow-x-auto p-1 max-w-full">
+                {images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setActiveImage(idx)}
+                    className={cn(
+                      "w-14 h-18 rounded overflow-hidden border-2 flex-shrink-0 transition-all",
+                      activeImage === idx ? "border-primary scale-105" : "border-transparent opacity-60 hover:opacity-100"
+                    )}
+                  >
+                    <img src={img} alt="thumbnail" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>

@@ -123,8 +123,8 @@ export const useMarkAllNotificationsAsRead = () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
       queryClient.invalidateQueries({ queryKey: ['unread-notification-count'] });
       toast({
-        title: 'سبھی نوٹیفیکیشن پڑھے گئے',
-        description: 'تمام نوٹیفیکیشنز کو پڑھا ہوا نشان زد کر دیا گیا۔',
+        title: 'All Notifications Read',
+        description: 'All notifications marked as read.',
       });
     },
     onError: (error) => {
@@ -154,8 +154,8 @@ export const useDeleteNotification = () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
       queryClient.invalidateQueries({ queryKey: ['unread-notification-count'] });
       toast({
-        title: 'نوٹیفیکیشن ڈیلیٹ ہو گیا',
-        description: 'نوٹیفیکیشن کامیابی سے ڈیلیٹ ہو گیا۔',
+        title: 'Notification Deleted',
+        description: 'Notification has been removed.',
       });
     },
     onError: (error) => {
@@ -212,33 +212,33 @@ export const useOrderNotificationService = () => {
   ) => {
     const statusMessages: Record<string, { title: string; message: string; type: 'info' | 'success' | 'warning' | 'error' }> = {
       pending: {
-        title: 'آرڈر موصول ہوا',
-        message: `آپ کا آرڈر ${orderNumber} موصول ہو گیا ہے۔`,
+        title: 'Order Received',
+        message: `Your order ${orderNumber} has been received.`,
         type: 'info'
       },
       confirmed: {
-        title: 'آرڈر کنفرم ہو گیا',
-        message: `آپ کا آرڈر ${orderNumber} کنفرم ہو گیا ہے۔`,
+        title: 'Order Confirmed',
+        message: `Your order ${orderNumber} has been confirmed.`,
         type: 'success'
       },
       processing: {
-        title: 'آرڈر پر کارروائی جاری ہے',
-        message: `آپ کا آرڈر ${orderNumber} تیار ہو رہا ہے۔`,
+        title: 'Order Processing',
+        message: `Your order ${orderNumber} is being prepared.`,
         type: 'info'
       },
       shipped: {
-        title: 'آرڈر بھیج دیا گیا',
-        message: `آپ کا آرڈر ${orderNumber} بھیج دیا گیا ہے۔`,
+        title: 'Order Dispatched',
+        message: `Your order ${orderNumber} has been shipped.`,
         type: 'success'
       },
       delivered: {
-        title: 'آرڈر پہنچ گیا',
-        message: `آپ کا آرڈر ${orderNumber} کامیابی سے پہنچ گیا ہے۔`,
+        title: 'Order Delivered',
+        message: `Your order ${orderNumber} has been successfully delivered.`,
         type: 'success'
       },
       cancelled: {
-        title: 'آرڈر منسوخ ہو گیا',
-        message: `آپ کا آرڈر ${orderNumber} منسوخ کر دیا گیا ہے۔`,
+        title: 'Order Cancelled',
+        message: `Your order ${orderNumber} has been cancelled.`,
         type: 'warning'
       }
     };
@@ -254,7 +254,7 @@ export const useOrderNotificationService = () => {
           message: notification.message,
           type: notification.type,
           action_url: `/orders/${orderNumber}`,
-          action_text: 'آرڈر دیکھیں',
+          action_text: 'View Order',
           metadata: {
             order_number: orderNumber,
             old_status: oldStatus,
@@ -286,11 +286,11 @@ export const useStockNotificationService = () => {
       try {
         await createNotification.mutateAsync({
           user_id: admin.user_id,
-          title: 'کم اسٹاک کا الرٹ',
-          message: `پروڈکٹ ${productName} کا اسٹاک کم ہو رہا ہے۔ موجودہ اسٹاک: ${currentStock}`,
+          title: 'Low Stock Alert',
+          message: `Product ${productName} is running low on stock. Current stock: ${currentStock}`,
           type: 'warning',
           action_url: '/admin/inventory',
-          action_text: 'اسٹیک مینج کریں',
+          action_text: 'Manage Stock',
           metadata: {
             product_name: productName,
             current_stock: currentStock

@@ -186,8 +186,8 @@ export const useCreateProduct = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       toast({
-        title: 'پروڈکٹ شامل ہو گئی',
-        description: 'نئی پروڈکٹ کامیابی سے شامل ہو گئی۔',
+        title: 'Product Added',
+        description: 'New product has been added successfully.',
       });
     },
     onError: (error) => {
@@ -219,8 +219,8 @@ export const useUpdateProduct = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       toast({
-        title: 'پروڈکٹ اپڈیٹ ہو گئی',
-        description: 'پروڈکٹ کامیابی سے اپڈیٹ ہو گئی۔',
+        title: 'Product Updated',
+        description: 'Product details have been updated successfully.',
       });
     },
     onError: (error) => {
@@ -249,8 +249,8 @@ export const useDeleteProduct = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       toast({
-        title: 'پروڈکٹ ڈیلیٹ ہو گئی',
-        description: 'پروڈکٹ کامیابی سے ڈیلیٹ ہو گئی۔',
+        title: 'Product Deleted',
+        description: 'Product has been deleted successfully.',
       });
     },
     onError: (error) => {

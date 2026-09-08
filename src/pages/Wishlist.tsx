@@ -49,36 +49,11 @@ export function Wishlist() {
   };
 
   const handleRemoveFromWishlist = (productId: string) => {
-    toggleWishlist.mutate(productId);
+    dispatch({ type: 'TOGGLE_WISHLIST_ITEM', payload: productId });
+    if (user) {
+      toggleWishlist.mutate(productId);
+    }
   };
-
-  // Not logged in state
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-background pb-16 md:pb-0">
-        <Navbar />
-        
-        <main className="pt-16 md:pt-24">
-          <div className="luxury-container py-6 sm:py-8">
-            <div className="text-center py-12 sm:py-16">
-              <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-muted rounded-full mb-4">
-                <LogIn className="w-8 h-8 sm:w-10 sm:h-10 text-muted-foreground" />
-              </div>
-              <h2 className="font-serif text-xl sm:text-2xl mb-2">لاگ ان کریں</h2>
-              <p className="text-muted-foreground text-sm sm:text-base mb-6">
-                اپنی ویش لسٹ دیکھنے کے لیے لاگ ان کریں۔
-              </p>
-              <Button onClick={() => navigate('/auth')} className="btn-luxury-primary">
-                لاگ ان
-              </Button>
-            </div>
-          </div>
-        </main>
-
-        <Footer />
-      </div>
-    );
-  }
 
   // Loading state
   if (isLoading) {
@@ -121,10 +96,31 @@ export function Wishlist() {
       
       <main className="pt-16 md:pt-24">
         <div className="luxury-container py-6 sm:py-8">
-          <div className="flex items-center gap-3 mb-6 sm:mb-8">
-            <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
-            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl">My Wishlist</h1>
+          <div className="flex items-center justify-between gap-3 mb-6 sm:mb-8">
+            <div className="flex items-center gap-3">
+              <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
+              <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl">My Wishlist</h1>
+            </div>
+            {!user && wishlistProducts.length > 0 && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => navigate('/auth')}
+                className="gap-1.5 text-xs sm:text-sm"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                Sign in to Sync
+              </Button>
+            )}
           </div>
+
+          {!user && wishlistProducts.length > 0 && (
+            <div className="mb-6 p-4 rounded-lg bg-muted/60 border border-border flex items-center justify-between gap-4 text-xs sm:text-sm">
+              <p className="text-muted-foreground">
+                Items saved in your guest session. <button onClick={() => navigate('/auth')} className="text-primary underline font-medium">Sign in</button> to sync across your devices.
+              </p>
+            </div>
+          )}
           
           {wishlistProducts.length === 0 ? (
             <div className="text-center py-12 sm:py-16">
@@ -132,12 +128,19 @@ export function Wishlist() {
                 <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-muted-foreground" />
               </div>
               <h2 className="font-serif text-xl sm:text-2xl mb-2">Your wishlist is empty</h2>
-              <p className="text-muted-foreground text-sm sm:text-base mb-6">
-                Add items to your wishlist to see them here.
+              <p className="text-muted-foreground text-sm sm:text-base mb-6 max-w-md mx-auto">
+                Explore our signature abayas and modest couture collections to save your favorite pieces.
               </p>
-              <Button onClick={() => navigate('/shop')} className="btn-luxury-primary">
-                Continue Shopping
-              </Button>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <Button onClick={() => navigate('/shop')} className="btn-luxury-primary">
+                  Explore Collection
+                </Button>
+                {!user && (
+                  <Button variant="outline" onClick={() => navigate('/auth')}>
+                    Sign In
+                  </Button>
+                )}
+              </div>
             </div>
           ) : (
             <>

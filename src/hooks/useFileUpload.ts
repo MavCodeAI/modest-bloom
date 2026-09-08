@@ -77,13 +77,13 @@ export const useFileUpload = (options: UploadOptions = {}) => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['uploaded-files'] });
       toast({
-        title: 'فائل اپ لوڈ ہو گئی',
-        description: `${data.name} کامیابی سے اپ لوڈ ہو گئی۔`,
+        title: 'File Uploaded',
+        description: `${data.name} uploaded successfully.`,
       });
     },
     onError: (error) => {
       toast({
-        title: 'اپ لوڈ میں خرابی',
+        title: 'Upload Failed',
         description: error.message,
         variant: 'destructive',
       });
@@ -102,13 +102,13 @@ export const useMultipleFileUpload = (options: UploadOptions = {}) => {
     },
     onSuccess: (results) => {
       toast({
-        title: 'تمام فائلیں اپ لوڈ ہو گئیں',
-        description: `${results.length} فائلیں کامیابی سے اپ لوڈ ہو گئیں۔`,
+        title: 'Files Uploaded',
+        description: `${results.length} files uploaded successfully.`,
       });
     },
     onError: (error) => {
       toast({
-        title: 'اپ لوڈ میں خرابی',
+        title: 'Upload Failed',
         description: error.message,
         variant: 'destructive',
       });
@@ -131,13 +131,13 @@ export const useDeleteFile = (bucket: string = 'product-images') => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['uploaded-files'] });
       toast({
-        title: 'فائل ڈیلیٹ ہو گئی',
-        description: 'فائل کامیابی سے ڈیلیٹ ہو گئی۔',
+        title: 'File Deleted',
+        description: 'File has been deleted successfully.',
       });
     },
     onError: (error) => {
       toast({
-        title: 'ڈیلیشن میں خرابی',
+        title: 'Delete Failed',
         description: error.message,
         variant: 'destructive',
       });

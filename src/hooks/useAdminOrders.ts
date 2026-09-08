@@ -169,8 +169,8 @@ export const useUpdateOrderStatus = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-order'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
       toast({
-        title: 'آرڈر سٹیٹس اپڈیٹ ہو گیا',
-        description: 'آرڈر سٹیٹس کامیابی سے اپڈیٹ ہو گیا۔',
+        title: 'Order Status Updated',
+        description: 'Order status has been successfully updated.',
       });
     },
     onError: (error) => {
@@ -213,8 +213,8 @@ export const useBulkUpdateOrderStatus = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
       toast({
-        title: 'بلک اپڈیٹ کامیاب',
-        description: `${data.length} آرڈرز کا سٹیٹس اپڈیٹ ہو گیا۔`,
+        title: 'Bulk Update Successful',
+        description: `Status updated for ${data.length} orders.`,
       });
     },
     onError: (error) => {
@@ -244,8 +244,8 @@ export const useDeleteOrder = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
       toast({
-        title: 'آرڈر ڈیلیٹ ہو گیا',
-        description: 'آرڈر کامیابی سے ڈیلیٹ ہو گیا۔',
+        title: 'Order Deleted',
+        description: 'Order has been successfully deleted.',
       });
     },
     onError: (error) => {
@@ -314,8 +314,8 @@ export const useExportOrders = () => {
     },
     onSuccess: () => {
       toast({
-        title: 'ایکسپورٹ کامیاب',
-        description: 'آرڈرز ڈیٹا کامیابی سے ایکسپورٹ ہو گیا۔',
+        title: 'Export Successful',
+        description: 'Orders data has been successfully exported.',
       });
     },
     onError: (error) => {

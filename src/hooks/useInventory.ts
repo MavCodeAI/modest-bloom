@@ -255,8 +255,8 @@ export const useUpdateStock = () => {
       queryClient.invalidateQueries({ queryKey: ['low-stock-alerts'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
       toast({
-        title: 'اسٹاک اپڈیٹ ہو گیا',
-        description: 'پروڈکٹ اسٹاک کامیابی سے اپڈیٹ ہو گیا۔',
+        title: 'Stock Updated',
+        description: 'Product stock has been successfully updated.',
       });
     },
     onError: (error) => {
@@ -341,8 +341,8 @@ export const useBulkUpdateStock = () => {
       queryClient.invalidateQueries({ queryKey: ['low-stock-alerts'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
       toast({
-        title: 'بلک اپڈیٹ کامیاب',
-        description: `${successCount} پروڈکٹس کا اسٹاک اپڈیٹ ہو گیا۔`,
+        title: 'Bulk Update Completed',
+        description: `Stock for ${successCount} products has been successfully updated.`,
       });
     },
     onError: (error) => {

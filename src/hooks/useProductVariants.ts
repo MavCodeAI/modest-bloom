@@ -70,7 +70,7 @@ export const useUpsertVariants = () => {
     },
     onSuccess: (_, vars) => {
       queryClient.invalidateQueries({ queryKey: ['product-variants', vars.productId] });
-      toast({ title: 'انوینٹری اپڈیٹ ہو گئی', description: 'Variants stock saved.' });
+      toast({ title: 'Inventory Updated', description: 'Variant stock levels have been saved.' });
     },
     onError: (error: Error) => {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
