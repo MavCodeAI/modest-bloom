@@ -68,6 +68,7 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (roleError || !roleRow) {
+      console.error('Role check failed', userData.user.id, roleError?.message ?? 'no admin row');
       return json({ error: 'Forbidden' }, 403);
     }
 
