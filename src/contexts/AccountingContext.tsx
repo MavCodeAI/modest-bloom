@@ -16,6 +16,7 @@ import {
   PurchaseItem,
   ReturnItem,
   PaymentMethod,
+  PaymentStatus,
   CustomerType,
   SaleChannel
 } from '@/types/accounting';
@@ -705,7 +706,7 @@ export function AccountingProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    logAudit('CREATE_SALE', 'POS / Sales', newSale.id, `Generated invoice ${invoiceNumber} for AED ${saleData.total} (${saleData.paymentStatus})`, saleData.cashierName);
+    logAudit('CREATE_SALE', 'POS / Sales', newSale.id, `Generated invoice ${invoiceNumber} for AED ${saleData.total} (${newSale.paymentStatus})`, saleData.cashierName);
     toast({
       title: 'Sale Completed',
       description: `Invoice ${invoiceNumber} created for AED ${saleData.total.toLocaleString()}.`,

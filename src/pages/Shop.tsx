@@ -525,7 +525,7 @@ const Shop = () => {
                     </span>
                   )}
                   <button
-                    onClick={clearAllFilters}
+                    onClick={clearFilters}
                     className="text-xs text-primary hover:underline font-semibold ml-auto pl-2 py-1"
                   >
                     Clear All

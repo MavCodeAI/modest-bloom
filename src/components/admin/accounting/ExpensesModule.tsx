@@ -37,7 +37,7 @@ export function ExpensesModule() {
   // Add Expense Modal
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<Expense['category']>('rent_utilities');
+  const [category, setCategory] = useState<Expense['category']>('rent');
   const [amount, setAmount] = useState<number>(0);
   const [paidTo, setPaidTo] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -119,7 +119,7 @@ export function ExpensesModule() {
             <Building2 className="w-4 h-4 text-primary" />
           </div>
           <p className="font-serif text-lg sm:text-xl font-bold text-foreground mt-1">
-            AED {(summary.categoriesMap['rent_utilities'] || 0).toLocaleString()}
+            AED {(summary.categoriesMap['rent'] || 0).toLocaleString()}
           </p>
           <span className="text-[11px] text-muted-foreground">Showroom & warehouse</span>
         </Card>
@@ -167,7 +167,7 @@ export function ExpensesModule() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="rent_utilities">Rent & Utilities</SelectItem>
+                <SelectItem value="rent">Rent & Utilities</SelectItem>
                 <SelectItem value="salaries">Salaries & Payroll</SelectItem>
                 <SelectItem value="tailoring_production">Tailoring & Production</SelectItem>
                 <SelectItem value="marketing">Marketing & Ads</SelectItem>
@@ -279,7 +279,7 @@ export function ExpensesModule() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="rent_utilities">Rent & Utilities</SelectItem>
+                    <SelectItem value="rent">Rent & Utilities</SelectItem>
                     <SelectItem value="salaries">Salaries & Payroll</SelectItem>
                     <SelectItem value="tailoring_production">Tailoring & Production</SelectItem>
                     <SelectItem value="marketing">Marketing & Ads</SelectItem>

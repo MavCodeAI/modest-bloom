@@ -69,9 +69,8 @@ export const useUpdateQuoteStatus = () => {
 
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const pin = import.meta.env.VITE_ADMIN_PIN || '345345';
       const { data, error } = await supabase.functions.invoke('admin-update-status', {
-        body: { table: 'wholesale_quotes', id, status, pin },
+        body: { table: 'wholesale_quotes', id, status },
       });
 
       if (error) throw error;

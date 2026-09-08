@@ -116,6 +116,10 @@ const ProductDetail = () => {
     inStock: dbProduct.in_stock,
     sizes: dbProduct.sizes || fallbackSizes,
     colors: dbProduct.colors || [],
+    material: undefined as string | undefined,
+    cut: undefined as string | undefined,
+    includesSheila: undefined as boolean | undefined,
+    careInstructions: undefined as string | undefined,
   } : null;
 
   // Stock for current size+color combo (if variants exist)

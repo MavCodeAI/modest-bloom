@@ -51,14 +51,14 @@ interface AccountingDashboardProps {
 
 export function AccountingDashboard({ initialSubTab = 'pos' }: AccountingDashboardProps) {
   const [activeTab, setActiveTab] = useState<AccountingTab>(initialSubTab);
-  const { stats, cashRegister } = useAccounting();
+  const { stats, cashRegister, sales, customers } = useAccounting();
 
   const navItems = [
     { id: 'pos', label: 'POS Terminal', icon: Store, badge: 'Live Counter' },
-    { id: 'sales', label: 'Sales Registry', icon: ShoppingCart, count: stats.salesCount },
+    { id: 'sales', label: 'Sales Registry', icon: ShoppingCart, count: sales.length },
     { id: 'purchases', label: 'Purchases & Bills', icon: Receipt },
     { id: 'inventory', label: 'Inventory & Valuation', icon: Boxes, alert: stats.lowStockCount > 0 ? `${stats.lowStockCount} Low` : undefined },
-    { id: 'customers', label: 'Customer Khata', icon: Users, count: stats.customerCount },
+    { id: 'customers', label: 'Customer Khata', icon: Users, count: customers.length },
     { id: 'suppliers', label: 'Suppliers & Vendors', icon: Building2 },
     { id: 'expenses', label: 'Expenses (OPEX)', icon: DollarSign },
     { id: 'cash_register', label: 'Cash Register', icon: Banknote, badge: cashRegister.status === 'open' ? 'Shift Open' : 'Closed' },

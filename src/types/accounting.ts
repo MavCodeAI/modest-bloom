@@ -9,6 +9,7 @@ export type ReturnType = 'sale_return' | 'purchase_return';
 export interface Customer {
   id: string;
   name: string;
+  contactPerson?: string;
   phone: string;
   email?: string;
   companyName?: string;

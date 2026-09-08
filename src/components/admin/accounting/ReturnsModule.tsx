@@ -67,10 +67,10 @@ export function ReturnsModule() {
       productName: item.productName,
       size: item.size,
       quantity: 1, // return 1 pc
-      refundPrice: item.unitPrice,
+      refundUnitPrice: item.unitPrice,
       totalRefund: item.unitPrice,
+      condition: 'good' as const,
       restock: restockItem,
-      reason: returnReason,
     }));
 
     createSaleReturn({
