@@ -10,14 +10,14 @@ export const DEFAULT_AI_CONFIG: AIAssistantConfig = {
   titleBadge: 'Atelier Stylist & Concierge',
   defaultLanguage: 'en',
   welcomeMessages: {
-    en: 'Salam! Welcome to Modest Way Fashion. I am your Atelier AI Stylist. How may I assist you today? I can help you discover luxury abayas, check sizes, find prices under AED 300, or assist with wholesale inquiries.',
+    en: 'Salam! Welcome to Modest Way Fashion. I am your Atelier AI Stylist. How may I assist you today? I can help you discover luxury abayas, check sizes, browse best-value pieces, or assist with wholesale inquiries.',
     ar: 'مرحباً بكم في مودست واي فاشن! أنا مستشاركم ومساعدكم الذكي. يسعدني مساعدتكم في اختيار العبايات الفاخرة، مقاسات العبايات، العروض، أو الاستفسار عن طلبات الجملة.'
   },
   starterQuestions: {
     en: [
       'Show me black Abayas',
       'I need an elegant Abaya for an occasion',
-      'Do you have anything under AED 300?',
+      'What are your best-value abayas?',
       'I want to buy 50 Abayas for wholesale',
       'Do you deliver in Dubai and UAE?',
       'I want to speak to someone on WhatsApp'
@@ -25,7 +25,7 @@ export const DEFAULT_AI_CONFIG: AIAssistantConfig = {
     ar: [
       'أريد مشاهدة العبايات السوداء الفاخرة',
       'أبحث عن عباية أنيقة للمناسبات الخاصة',
-      'هل تتوفر عبايات بأقل من 300 درهم؟',
+      'ما هي العبايات الأنسب سعراً؟',
       'أريد شراء 50 عباية بسعر الجملة',
       'ما هي مدة التوصيل في دبي والإمارات؟',
       'التحدث مع خدمة العملاء عبر واتساب'

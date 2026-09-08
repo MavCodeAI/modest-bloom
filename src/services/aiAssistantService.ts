@@ -227,8 +227,8 @@ export class MockAIAssistantService implements IAIAssistantService {
         products,
         quickReplies:
           lang === 'ar'
-            ? ['دليل المقاسات', 'أقل من 300 درهم', 'واتساب']
-            : ['Size guide', 'Under AED 300', 'Chat on WhatsApp'],
+            ? ['دليل المقاسات', 'الأنسب سعراً', 'واتساب']
+            : ['Size guide', 'Best value pieces', 'Chat on WhatsApp'],
       },
     };
   }
@@ -257,8 +257,8 @@ export class MockAIAssistantService implements IAIAssistantService {
         actionType: 'product_search',
         products,
         quickReplies: lang === 'ar'
-          ? ['دليل المقاسات', 'أقل من 300 درهم', 'محادثة عبر واتساب']
-          : ['How to pick size?', 'Items under AED 300', 'Chat on WhatsApp'],
+          ? ['دليل المقاسات', 'الأنسب سعراً', 'محادثة عبر واتساب']
+          : ['How to pick size?', 'Best value pieces', 'Chat on WhatsApp'],
       },
     };
   }
@@ -293,11 +293,13 @@ export class MockAIAssistantService implements IAIAssistantService {
   }
 
   private async generateBudgetResponse(lang: AssistantLanguage, isRTL: boolean): Promise<AssistantResponse> {
-    const products = await filterCatalog((p) => p.price <= 300);
+    const all = await filterCatalog(() => true, 100);
+    const sorted = [...all].sort((a, b) => a.price - b.price);
+    const products = sorted.slice(0, 4);
 
-    let text = 'Certainly! We have exquisite everyday and open-cut abayas under AED 300 crafted from breathable linens and wrinkle-resistant Korean Nida:';
+    let text = 'Here are our most affordable pieces available right now, sorted by best value:';
     if (lang === 'ar') {
-      text = 'بالتأكيد! لدينا تشكيلة مميزة من العبايات اليومية والعملية بأقل من 300 درهم بجودة أقمشة عالية:';
+      text = 'إليكِ القطع الأنسب سعراً المتوفرة حالياً، مرتبة من الأقل سعراً:';
     }
 
     return {
@@ -555,8 +557,8 @@ export class MockAIAssistantService implements IAIAssistantService {
         isRTL,
         actionType: 'text_response',
         quickReplies: lang === 'ar'
-          ? ['عبايات سوداء', 'عبايات مناسبات', 'أقل من 300 درهم', 'طلبات الجملة', 'واتساب']
-          : ['Black Abayas', 'Occasion Abayas', 'Under AED 300', 'Wholesale Inquiry', 'Chat on WhatsApp'],
+          ? ['عبايات سوداء', 'عبايات مناسبات', 'الأنسب سعراً', 'طلبات الجملة', 'واتساب']
+          : ['Black Abayas', 'Occasion Abayas', 'Best value pieces', 'Wholesale Inquiry', 'Chat on WhatsApp'],
       },
     };
   }
