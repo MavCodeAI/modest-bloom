@@ -1,187 +1,104 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode, useRef } from 'react';
+import React, { createContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AdminAuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (pin: string) => Promise<boolean>;
-  logout: () => void;
-  sessionTimeout: number;
-  resetSessionTimer: () => void;
+  email: string | null;
+  login: (email: string, password: string) => Promise<{ ok: boolean; error?: string }>;
+  logout: () => Promise<void>;
 }
 
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 
-const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '345345'; // Default PIN - in production, this should be stored securely
-const SESSION_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
-
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [sessionTimeout, setSessionTimeout] = useState<NodeJS.Timeout | null>(null);
-  const sessionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [lastActivity, setLastActivity] = useState<number>(Date.now());
+  const [email, setEmail] = useState<string | null>(null);
 
-  const logout = useCallback(() => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('adminAuth');
-    localStorage.removeItem('adminAuthTimestamp');
-    if (sessionTimeoutRef.current) {
-      clearTimeout(sessionTimeoutRef.current);
-      sessionTimeoutRef.current = null;
-    }
-    setSessionTimeout(null);
-    
-    // Log logout securely
-    // TODO: Implement proper logging service
+  // Server-side role check (RLS-protected user_roles table)
+  const checkAdmin = useCallback(async (userId: string) => {
+    const { data, error } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .eq('role', 'admin')
+      .maybeSingle();
+
+    return !error && !!data;
   }, []);
 
-  const clearSession = useCallback(() => {
-    localStorage.removeItem('adminAuth');
-    localStorage.removeItem('adminAuthTimestamp');
-    if (sessionTimeoutRef.current) {
-      clearTimeout(sessionTimeoutRef.current);
-      sessionTimeoutRef.current = null;
-    }
-    setSessionTimeout(null);
-  }, []);
-
-  const startSessionTimer = useCallback(() => {
-    if (sessionTimeoutRef.current) {
-      clearTimeout(sessionTimeoutRef.current);
-    }
-
-    const timeout = setTimeout(() => {
-      logout();
-    }, SESSION_DURATION);
-
-    sessionTimeoutRef.current = timeout;
-    setSessionTimeout(timeout);
-  }, [logout]);
-
-  const resetSessionTimer = useCallback(() => {
-    if (isAuthenticated) {
-      localStorage.setItem('adminAuthTimestamp', Date.now().toString());
-      startSessionTimer();
-    }
-  }, [isAuthenticated, startSessionTimer]);
-
-  // Check for existing session on mount
   useEffect(() => {
-    const storedAuth = localStorage.getItem('adminAuth');
-    const storedTimestamp = localStorage.getItem('adminAuthTimestamp');
-    
-    if (storedAuth === 'true' && storedTimestamp) {
-      const timestamp = parseInt(storedTimestamp);
-      const now = Date.now();
-      
-      // Check if session is still valid (within 30 minutes)
-      if (now - timestamp < SESSION_DURATION) {
-        setIsAuthenticated(true);
-        // Start timer inline to avoid dependency issues
-        const timeout = setTimeout(() => {
-          logout();
-        }, SESSION_DURATION - (now - timestamp));
-        sessionTimeoutRef.current = timeout;
-        setSessionTimeout(timeout);
-      } else {
-        // Session expired, clear it inline
-        localStorage.removeItem('adminAuth');
-        localStorage.removeItem('adminAuthTimestamp');
-      }
-    }
-    
-    setIsLoading(false);
-  }, [logout]);
+    let active = true;
 
-  // Activity monitoring
-  useEffect(() => {
-    const handleActivity = () => {
-      setLastActivity(Date.now());
-      if (isAuthenticated) {
-        localStorage.setItem('adminAuthTimestamp', Date.now().toString());
-        // Reset timer inline to avoid dependency issues
-        if (sessionTimeoutRef.current) {
-          clearTimeout(sessionTimeoutRef.current);
+    const evaluate = async (userId?: string, userEmail?: string | null) => {
+      if (!userId) {
+        if (active) {
+          setIsAuthenticated(false);
+          setEmail(null);
+          setIsLoading(false);
         }
-        const timeout = setTimeout(() => {
-          logout();
-        }, SESSION_DURATION);
-        sessionTimeoutRef.current = timeout;
-        setSessionTimeout(timeout);
+        return;
+      }
+      const admin = await checkAdmin(userId);
+      if (active) {
+        setIsAuthenticated(admin);
+        setEmail(admin ? userEmail ?? null : null);
+        setIsLoading(false);
       }
     };
 
-    // Monitor user activity
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-    events.forEach(event => {
-      document.addEventListener(event, handleActivity, true);
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoading(true);
+      // defer supabase calls out of the callback
+      setTimeout(() => evaluate(session?.user?.id, session?.user?.email), 0);
+    });
+
+    supabase.auth.getSession().then(({ data }) => {
+      evaluate(data.session?.user?.id, data.session?.user?.email);
     });
 
     return () => {
-      events.forEach(event => {
-        document.removeEventListener(event, handleActivity, true);
-      });
+      active = false;
+      sub.subscription.unsubscribe();
     };
-  }, [isAuthenticated, logout]);
+  }, [checkAdmin]);
 
-  // Auto-logout check
-  useEffect(() => {
-    if (!isAuthenticated) return;
+  const login = useCallback(
+    async (loginEmail: string, password: string) => {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: loginEmail.trim(),
+        password,
+      });
 
-    const checkSession = setInterval(() => {
-      const now = Date.now();
-      if (now - lastActivity >= SESSION_DURATION) {
-        logout();
+      if (error || !data.user) {
+        return { ok: false, error: 'Invalid email or password.' };
       }
-    }, 60000); // Check every minute
 
-    return () => clearInterval(checkSession);
-  }, [isAuthenticated, lastActivity, logout]);
-
-
-  const login = async (pin: string): Promise<boolean> => {
-    try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      if (pin === ADMIN_PIN) {
-        setIsAuthenticated(true);
-        localStorage.setItem('adminAuth', 'true');
-        localStorage.setItem('adminAuthTimestamp', Date.now().toString());
-        startSessionTimer();
-        
-        // Log successful login attempt securely
-        // TODO: Implement proper logging service
-        
-        return true;
-      } else {
-        // Log failed login attempt securely
-        // TODO: Implement proper logging service
-        return false;
+      const admin = await checkAdmin(data.user.id);
+      if (!admin) {
+        await supabase.auth.signOut();
+        return { ok: false, error: 'This account does not have admin access.' };
       }
-    } catch (error) {
-      // Log error securely
-      // TODO: Implement proper logging service
-      return false;
-    }
-  };
 
+      setIsAuthenticated(true);
+      setEmail(data.user.email ?? null);
+      return { ok: true };
+    },
+    [checkAdmin]
+  );
 
-  const value: AdminAuthContextType = {
-    isAuthenticated,
-    isLoading,
-    login,
-    logout,
-    sessionTimeout: sessionTimeout ? SESSION_DURATION : 0,
-    resetSessionTimer,
-  };
+  const logout = useCallback(async () => {
+    await supabase.auth.signOut();
+    setIsAuthenticated(false);
+    setEmail(null);
+  }, []);
 
   return (
-    <AdminAuthContext.Provider value={value}>
+    <AdminAuthContext.Provider value={{ isAuthenticated, isLoading, email, login, logout }}>
       {children}
     </AdminAuthContext.Provider>
   );
 }
 
 export { AdminAuthContext };
-
