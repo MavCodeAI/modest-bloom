@@ -31,7 +31,8 @@ const ALLOWED_STATUS = [
   'quoted',
   'accepted',
   'rejected',
-  'completed',
+  'contacted',
+  'approved',
 ];
 
 Deno.serve(async (req) => {
