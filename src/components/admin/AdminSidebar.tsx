@@ -12,7 +12,9 @@ import {
   Building2,
   BarChart3,
   Receipt,
-  Scale
+  Scale,
+  Bot,
+  Sparkles,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -41,7 +43,8 @@ export type AdminTab =
   | 'financial_reports'
   | 'products'
   | 'quotes'
-  | 'orders';
+  | 'orders'
+  | 'ai_assistant';
 
 const accountingItems: Array<{ id: AdminTab; label: string; icon: typeof LayoutDashboard; badge?: string }> = [
   { id: 'pos_terminal', label: 'POS Terminal', icon: Store, badge: 'Live' },
@@ -52,11 +55,12 @@ const accountingItems: Array<{ id: AdminTab; label: string; icon: typeof LayoutD
   { id: 'financial_reports', label: 'Financial Reports & P&L', icon: BarChart3 },
 ];
 
-const storeItems: Array<{ id: AdminTab; label: string; icon: typeof LayoutDashboard }> = [
+const storeItems: Array<{ id: AdminTab; label: string; icon: typeof LayoutDashboard; badge?: string }> = [
   { id: 'dashboard', label: 'Overview Dashboard', icon: LayoutDashboard },
   { id: 'products', label: 'Online Products', icon: Package },
   { id: 'orders', label: 'Web Orders', icon: ShoppingBag },
   { id: 'quotes', label: 'Wholesale Quotes', icon: FileText },
+  { id: 'ai_assistant', label: 'AI Assistant & Concierge', icon: Bot, badge: 'Mock' },
 ];
 
 interface AdminSidebarProps {
@@ -146,6 +150,11 @@ export function AdminSidebar({ active, onChange }: AdminSidebarProps) {
                     >
                       <Icon className="h-4 w-4 shrink-0" />
                       <span className="truncate">{item.label}</span>
+                      {item.badge && !collapsed && (
+                        <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold">
+                          {item.badge}
+                        </span>
+                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );

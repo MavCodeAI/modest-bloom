@@ -10,6 +10,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
 import { BottomNav } from "@/components/layout/BottomNav";
+import { FloatingConcierge } from "@/components/assistant/FloatingConcierge";
 import { useLocation } from "react-router-dom";
 
 // Lazy load components
@@ -91,6 +92,7 @@ const App = () => (
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                   <GlobalBottomNav />
+                  <FloatingConcierge />
                 </Suspense>
               </BrowserRouter>
             </TooltipProvider>

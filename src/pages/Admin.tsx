@@ -55,6 +55,7 @@ import { VariantInventoryManager } from '@/components/admin/VariantInventoryMana
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
 import { AccountingDashboard } from '@/components/admin/accounting/AccountingDashboard';
+import { AIAssistantConfigModule } from '@/components/admin/AIAssistantConfigModule';
 import type { AdminTab } from '@/components/admin/AdminSidebar';
 import { OrderTimeline } from '@/components/order/OrderTimeline';
 
@@ -94,6 +95,7 @@ const TITLES: Record<AdminTab, { title: string; subtitle: string }> = {
   products: { title: 'Online Catalog', subtitle: 'Manage storefront products & variants' },
   orders: { title: 'Web Orders', subtitle: 'Process and fulfill online customer deliveries' },
   quotes: { title: 'Wholesale Quotes', subtitle: 'B2B export quote requests' },
+  ai_assistant: { title: 'AI Assistant & Concierge Config', subtitle: 'Multilingual conversational flows, prompt engineering & WhatsApp handoff' },
 };
 
 const Admin = () => {
@@ -574,6 +576,9 @@ const Admin = () => {
           )}
         </div>
       )}
+
+      {/* AI ASSISTANT CONFIGURATION */}
+      {activeTab === 'ai_assistant' && <AIAssistantConfigModule />}
 
       {/* Product Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
