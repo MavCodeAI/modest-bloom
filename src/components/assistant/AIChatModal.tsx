@@ -179,21 +179,21 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
         aria-modal="true"
       >
         {/* Top Header */}
-        <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-stone-900 via-stone-800 to-stone-900 text-stone-100 border-b border-stone-700/60 flex-shrink-0">
+        <div className="flex items-center justify-between px-4 py-3 bg-primary text-primary-foreground border-b border-primary-foreground/15 flex-shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#8A6D3B] via-[#C5A880] to-[#E5D4B8] flex items-center justify-center shadow-xs">
-              <Sparkles className="w-4 h-4 text-stone-950 stroke-[2.2]" />
+            <div className="w-8 h-8 rounded-full bg-primary-foreground/15 flex items-center justify-center shadow-xs">
+              <Bot className="w-4 h-4 text-primary-foreground stroke-[2.2]" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <h3 className="font-serif font-bold text-sm tracking-wide text-amber-200">
+                <h3 className="font-serif font-bold text-sm tracking-wide text-primary-foreground">
                   Modest Way Concierge
                 </h3>
-                <span className="text-[10px] font-sans px-1.5 py-0.2 bg-amber-400/20 text-amber-300 rounded border border-amber-400/30">
+                <span className="text-[10px] font-sans px-1.5 py-0.2 bg-primary-foreground/15 text-primary-foreground rounded border border-primary-foreground/25">
                   AI Atelier
                 </span>
               </div>
-              <p className="text-[11px] text-stone-300 flex items-center gap-1">
+              <p className="text-[11px] text-primary-foreground/80 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
                 Dubai Showroom • Available 24/7
               </p>
@@ -206,7 +206,7 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
               <button
                 type="button"
                 onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
-                className="flex items-center gap-1 px-2 py-1 text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-amber-200 rounded-lg border border-stone-700 transition-colors"
+                className="flex items-center gap-1 px-2 py-1 text-xs font-medium bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground rounded-lg border border-primary-foreground/20 transition-colors"
                 title="Change Assistant Language"
               >
                 <Globe className="w-3.5 h-3.5" />

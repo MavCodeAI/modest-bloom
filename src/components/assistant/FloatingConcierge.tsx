@@ -27,12 +27,12 @@ export const FloatingConcierge: React.FC = () => {
         <div className="relative group">
           <button
             onClick={() => setIsChatOpen(!isChatOpen)}
-            className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-gradient-to-tr from-[#8A6D3B] via-[#C5A880] to-[#E5D4B8] hover:from-[#735A2F] hover:to-[#D4C3A3] text-stone-900 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 border-2 border-amber-200/60 relative cursor-pointer"
+            className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 border-2 border-primary-foreground/20 relative cursor-pointer"
             aria-label="Open Modest Way AI Assistant"
           >
-            {/* Sparkle badge */}
+            {/* Assistant badge */}
             <div className="relative">
-              <Sparkles className="w-6 h-6 md:w-7 md:h-7 text-stone-950 stroke-[2.2]" />
+              <Bot className="w-6 h-6 md:w-7 md:h-7 text-primary-foreground stroke-[2.2]" />
             </div>
 
             {/* Live pulsating dot indicator */}
@@ -44,7 +44,7 @@ export const FloatingConcierge: React.FC = () => {
 
           {/* Desktop Hover Tooltip */}
           <div className="hidden md:block absolute right-full top-1/2 -translate-y-1/2 mr-3 px-3 py-1.5 bg-foreground text-background text-xs font-serif font-medium rounded-lg whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-            <span className="font-sans font-bold text-amber-300 mr-1">AI</span> Atelier Stylist
+            <span className="font-sans font-bold text-primary mr-1">AI</span> Atelier Stylist
           </div>
         </div>
 
