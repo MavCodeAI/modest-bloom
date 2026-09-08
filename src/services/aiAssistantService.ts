@@ -110,6 +110,8 @@ export class MockAIAssistantService implements IAIAssistantService {
     // 3. Check for Price Inquiries (e.g. Under 300 AED)
     if (
       lower.includes('under 300') ||
+      lower.includes('best-value') ||
+      lower.includes('best value') ||
       lower.includes('under aed 300') ||
       lower.includes('below 300') ||
       lower.includes('cheap') ||
@@ -117,6 +119,7 @@ export class MockAIAssistantService implements IAIAssistantService {
       lower.includes('budget') ||
       lower.includes('price') ||
       lower.includes('أقل من 300') ||
+      lower.includes('الأنسب سعراً') ||
       lower.includes('رخيصة') ||
       lower.includes('ميزانية')
     ) {

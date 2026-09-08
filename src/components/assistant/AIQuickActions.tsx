@@ -15,7 +15,7 @@ export const AIQuickActions: React.FC<AIQuickActionsProps> = ({
     en: [
       { label: 'Show Black Abayas', icon: ShoppingBag, query: 'Show me black Abayas' },
       { label: 'Occasion & Luxury', icon: Sparkles, query: 'I need an elegant Abaya for an occasion' },
-      { label: 'Under AED 300', icon: Tag, query: 'Do you have anything under AED 300?' },
+      { label: 'Best Value', icon: Tag, query: 'What are your best-value abayas?' },
       { label: 'Wholesale (50+ Pcs)', icon: Box, query: 'I want to buy 50 Abayas for wholesale' },
       { label: 'Shipping to UAE/GCC', icon: Truck, query: 'Do you deliver in Dubai and UAE?' },
       { label: 'Chat on WhatsApp', icon: MessageCircle, query: 'I want to speak to someone on WhatsApp' },
@@ -23,7 +23,7 @@ export const AIQuickActions: React.FC<AIQuickActionsProps> = ({
     ar: [
       { label: 'العبايات السوداء', icon: ShoppingBag, query: 'أريد مشاهدة العبايات السوداء الفاخرة' },
       { label: 'عبايات مناسبات وسهرة', icon: Sparkles, query: 'أبحث عن عباية أنيقة للمناسبات الخاصة' },
-      { label: 'أقل من 300 درهم', icon: Tag, query: 'هل تتوفر عبايات بأقل من 300 درهم؟' },
+      { label: 'الأنسب سعراً', icon: Tag, query: 'ما هي العبايات الأنسب سعراً؟' },
       { label: 'طلبات الجملة (50+)', icon: Box, query: 'أريد شراء 50 عباية بسعر الجملة' },
       { label: 'الشحن والتوصيل', icon: Truck, query: 'ما هي مدة التوصيل في دبي والإمارات؟' },
       { label: 'واتساب خدمة العملاء', icon: MessageCircle, query: 'التحدث مع خدمة العملاء عبر واتساب' },
