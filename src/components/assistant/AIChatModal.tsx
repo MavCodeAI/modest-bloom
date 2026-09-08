@@ -50,8 +50,8 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
         isRTL: lang === 'ar',
         quickReplies:
           lang === 'ar'
-            ? ['العبايات السوداء', 'أقل من 300 درهم', 'طلب جملة (50+)', 'واتساب فوري']
-            : ['Show Black Abayas', 'Under AED 300', 'Wholesale Inquiry (50+)', 'Chat on WhatsApp'],
+            ? ['العبايات السوداء', 'الأنسب سعراً', 'طلب جملة (50+)', 'واتساب فوري']
+            : ['Show Black Abayas', 'Best Value Picks', 'Wholesale Inquiry (50+)', 'Chat on WhatsApp'],
       };
       setMessages([starterMessage]);
       setWholesaleState({ step: 'idle' });
