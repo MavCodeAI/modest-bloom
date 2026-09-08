@@ -133,7 +133,7 @@ const Wholesale = () => {
       <Navbar />
       <CartDrawer />
       
-      <main className="pt-16 md:pt-24">
+      <main className="pt-20 sm:pt-24 md:pt-28">
         {/* Editorial Hero Header */}
         <section className="relative py-20 md:py-28 lg:py-32 border-b border-border/60 bg-card/40">
           <div className="luxury-container">

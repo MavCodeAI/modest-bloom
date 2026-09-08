@@ -248,7 +248,7 @@ const ProductDetail = () => {
       <Navbar />
       <CartDrawer />
       
-      <main className="pt-16 md:pt-24">
+      <main className="pt-20 sm:pt-24 md:pt-28">
         <div className="luxury-container py-4 sm:py-6">
           {/* Breadcrumbs */}
           <Breadcrumbs

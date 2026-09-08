@@ -27,7 +27,7 @@ const SearchResults = () => {
       <Navbar />
       <CartDrawer />
 
-      <main className="pt-16 md:pt-24">
+      <main className="pt-20 sm:pt-24 md:pt-28">
         <div className="luxury-container py-8 sm:py-12">
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-center mb-2 sm:mb-4">
             Search Results

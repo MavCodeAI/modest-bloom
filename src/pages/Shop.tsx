@@ -333,7 +333,7 @@ const Shop = () => {
     return (
       <div className="min-h-screen bg-background pb-16 md:pb-0">
         <Navbar />
-        <div className="pt-16 md:pt-24">
+        <div className="pt-20 sm:pt-24 md:pt-28">
           <div className="luxury-container py-16 text-center">
             <p className="text-red-500">Error loading products: {error.message}</p>
           </div>
@@ -348,7 +348,7 @@ const Shop = () => {
       <Navbar />
       <CartDrawer />
       
-      <main className="pt-16 md:pt-24">
+      <main className="pt-20 sm:pt-24 md:pt-28">
         {/* Header */}
         <div className="luxury-container py-8 sm:py-12">
           <div className="max-w-2xl mx-auto relative">

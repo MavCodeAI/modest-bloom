@@ -145,7 +145,7 @@ const Account = () => {
       <Navbar />
       <CartDrawer />
 
-      <main className="pt-16 md:pt-24">
+      <main className="pt-20 sm:pt-24 md:pt-28">
         <div className="luxury-container py-6 sm:py-10">
           <Breadcrumbs items={[{ label: 'My Account' }]} className="mb-4" />
 

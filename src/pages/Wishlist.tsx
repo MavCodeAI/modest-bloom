@@ -94,7 +94,7 @@ export function Wishlist() {
     <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
       
-      <main className="pt-16 md:pt-24">
+      <main className="pt-20 sm:pt-24 md:pt-28">
         <div className="luxury-container py-6 sm:py-8">
           <div className="flex items-center justify-between gap-3 mb-6 sm:mb-8">
             <div className="flex items-center gap-3">

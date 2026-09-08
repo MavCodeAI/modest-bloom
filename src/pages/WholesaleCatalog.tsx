@@ -15,7 +15,7 @@ const WholesaleCatalog = () => {
       <Navbar />
       <CartDrawer />
       
-      <main className="pt-16 md:pt-24">
+      <main className="pt-20 sm:pt-24 md:pt-28">
         {/* Header */}
         <div className="luxury-container py-12">
           <p className="text-primary text-sm font-medium uppercase tracking-[0.2em] mb-3 text-center">

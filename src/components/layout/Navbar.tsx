@@ -22,13 +22,13 @@ export function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/40">
       <div className="luxury-container">
-        <div className="flex items-center justify-between h-16 sm:h-20 md:h-24">
+        <div className="flex items-center justify-between h-20 sm:h-24 md:h-28">
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0 flex items-center py-1">
+          <Link to="/" className="flex-shrink-0 flex items-center py-1.5 group" aria-label="Modest Way Fashion Dubai">
             <img
               src="/images/logo.png"
               alt="Modest Way Fashion Dubai"
-              className="h-12 sm:h-16 md:h-20 w-auto max-w-[200px] sm:max-w-[260px] md:max-w-[320px] object-contain transition-all"
+              className="h-16 sm:h-20 md:h-24 lg:h-26 w-auto max-w-[240px] sm:max-w-[320px] md:max-w-[420px] object-contain transition-transform duration-300 group-hover:scale-[1.02]"
             />
           </Link>
 

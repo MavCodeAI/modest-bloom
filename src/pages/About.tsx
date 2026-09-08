@@ -9,7 +9,7 @@ const About = () => {
     <div className="min-h-screen bg-background pb-16 md:pb-0">
       <Navbar />
       
-      <main className="pt-16 md:pt-24">
+      <main className="pt-20 sm:pt-24 md:pt-28">
         {/* Editorial Header */}
         <section className="py-16 sm:py-20 border-b border-border/60 bg-card/30">
           <div className="luxury-container">

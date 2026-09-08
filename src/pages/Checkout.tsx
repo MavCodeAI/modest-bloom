@@ -259,7 +259,7 @@ const Checkout = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <main className="pt-20 md:pt-24">
+      <main className="pt-20 sm:pt-24 md:pt-28">
         <div className="luxury-container py-6 sm:py-8">
           {/* Back Button */}
           <button
