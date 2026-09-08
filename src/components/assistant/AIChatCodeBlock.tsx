@@ -66,7 +66,7 @@ export const AIChatCodeBlock: React.FC<AIChatCodeBlockProps> = ({
     <div className="my-3 rounded-lg overflow-hidden border border-border/80 bg-[#1e1e1e] text-stone-200 shadow-md font-mono text-xs">
       {/* Code Block Header with Language Badge & Copy Button */}
       <div className="flex items-center justify-between px-3 py-1.5 bg-[#2d2d2d] border-b border-stone-800 text-stone-400 select-none">
-        <span className="text-[11px] font-semibold tracking-wider text-amber-300/90 font-mono">
+        <span className="text-[11px] font-semibold tracking-wider text-primary font-mono">
           {displayLang}
         </span>
 

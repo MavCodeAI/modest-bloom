@@ -87,7 +87,7 @@ export const AIChatProductCard: React.FC<AIChatProductCardProps> = ({
             </span>
           </div>
           {product.originalPrice && (
-            <span className="absolute top-2 right-2 px-1.5 py-0.5 text-[10px] font-bold bg-amber-600 text-white rounded-md shadow-xs">
+            <span className="absolute top-2 right-2 px-1.5 py-0.5 text-[10px] font-bold bg-primary text-primary-foreground rounded-md shadow-xs">
               SAVE AED {product.originalPrice - product.price}
             </span>
           )}

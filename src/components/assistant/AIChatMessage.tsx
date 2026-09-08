@@ -50,7 +50,7 @@ export const AIChatMessageComponent: React.FC<AIChatMessageProps> = ({
             </div>
           ) : (
             <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-serif text-xs font-bold shadow-xs border border-primary/20">
-              <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+              <Sparkles className="w-3.5 h-3.5 text-primary-foreground" />
             </div>
           )}
         </div>
