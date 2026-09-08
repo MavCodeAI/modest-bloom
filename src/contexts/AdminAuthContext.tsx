@@ -48,9 +48,20 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsLoading(true);
-      // defer supabase calls out of the callback
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      // Token refreshes / tab focus must never drop an active admin session
+      if (event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
+        if (session?.user) {
+          setTimeout(() => evaluate(session.user.id, session.user.email), 0);
+        }
+        return;
+      }
+      if (event === 'SIGNED_OUT') {
+        setIsAuthenticated(false);
+        setEmail(null);
+        setIsLoading(false);
+        return;
+      }
       setTimeout(() => evaluate(session?.user?.id, session?.user?.email), 0);
     });
 
@@ -63,6 +74,7 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
       sub.subscription.unsubscribe();
     };
   }, [checkAdmin]);
+
 
   const login = useCallback(
     async (loginEmail: string, password: string) => {

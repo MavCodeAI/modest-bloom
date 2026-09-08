@@ -122,15 +122,9 @@ const Account = () => {
   };
 
   if (authLoading || !user) {
-    return (
-      <div className="min-h-screen bg-background pb-16 md:pb-0">
-        <Navbar />
-        <div className="pt-16 md:pt-24 flex items-center justify-center min-h-[60vh]">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </div>
-      </div>
-    );
+    return null;
   }
+
 
   const initials = (fullName || user.email || 'U')
     .split(' ')
@@ -192,11 +186,8 @@ const Account = () => {
 
             {/* ORDERS TAB */}
             <TabsContent value="orders" className="space-y-4">
-              {ordersLoading ? (
-                <div className="flex items-center justify-center py-16">
-                  <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                </div>
-              ) : !orders || orders.length === 0 ? (
+              {ordersLoading ? null : !orders || orders.length === 0 ? (
+
                 <Card>
                   <CardContent className="py-16 text-center">
                     <ShoppingBag className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
