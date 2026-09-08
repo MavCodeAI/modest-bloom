@@ -89,10 +89,13 @@ export const useCreateOrder = () => {
       order: TablesInsert<'orders'>;
       items: Array<Omit<TablesInsert<'order_items'>, 'order_id'>>;
     }) => {
+      // Private checkout code for guest orders
+      const guestToken = order.user_id ? null : crypto.randomUUID();
+
       // Create order first
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
-        .insert(order)
+        .insert({ ...order, guest_token: guestToken })
         .select()
         .single();
 
@@ -102,6 +105,7 @@ export const useCreateOrder = () => {
       const orderItems = items.map((item) => ({
         ...item,
         order_id: orderData.id,
+        guest_token: guestToken,
       }));
 
       const { error: itemsError } = await supabase

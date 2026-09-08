@@ -136,6 +136,9 @@ const Checkout = () => {
     setIsProcessing(true);
     
     try {
+      // Private checkout code so only this browser session can attach items to a guest order
+      const guestToken = crypto.randomUUID();
+
       // Create order in Supabase
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
@@ -155,6 +158,7 @@ const Checkout = () => {
           total: total,
           status: 'pending',
           user_id: user?.id || null,
+          guest_token: user?.id ? null : guestToken,
         })
         .select()
         .single();
@@ -173,6 +177,7 @@ const Checkout = () => {
         color: item.color || null,
         quantity: item.quantity,
         price: item.product.originalPrice ? item.product.price : item.product.price,
+        guest_token: user?.id ? null : guestToken,
       }));
 
       const { error: itemsError } = await supabase
