@@ -20,14 +20,6 @@ export const AIQuickActions: React.FC<AIQuickActionsProps> = ({
       { label: 'Shipping to UAE/GCC', icon: Truck, query: 'Do you deliver in Dubai and UAE?' },
       { label: 'Chat on WhatsApp', icon: MessageCircle, query: 'I want to speak to someone on WhatsApp' },
     ],
-    ur: [
-      { label: 'بلیک عبایا کلیکشن', icon: ShoppingBag, query: 'مجھے بلیک عبایا چاہیے' },
-      { label: 'تقریباتی عبایا', icon: Sparkles, query: 'کسی خاص تقریب کے لیے خوبصورت عبایا دکھائیں' },
-      { label: '۳۰۰ درہم سے کم', icon: Tag, query: 'کیا ۳۰۰ درہم سے کم میں عبایا ہیں؟' },
-      { label: 'ہول سیل (۵۰+ پیسیز)', icon: Box, query: 'مجھے ۵۰ عبایا ہول سیل میں چاہئیں' },
-      { label: 'ڈیلیوری کی تفصیلات', icon: Truck, query: 'دبئی اور یو اے ای میں ڈیلیوری کی کیا شرائط ہیں؟' },
-      { label: 'واٹس ایپ کسٹمر کیئر', icon: MessageCircle, query: 'کسٹمر کیئر سے واٹس ایپ پر بات کرنی ہے' },
-    ],
     ar: [
       { label: 'العبايات السوداء', icon: ShoppingBag, query: 'أريد مشاهدة العبايات السوداء الفاخرة' },
       { label: 'عبايات مناسبات وسهرة', icon: Sparkles, query: 'أبحث عن عباية أنيقة للمناسبات الخاصة' },
@@ -45,9 +37,7 @@ export const AIQuickActions: React.FC<AIQuickActionsProps> = ({
       <div className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground mb-2 px-1">
         <HelpCircle className="w-3.5 h-3.5 text-primary" />
         <span>
-          {language === 'ur'
-            ? 'فوری سوالات و رہنمائی'
-            : language === 'ar'
+          {language === 'ar'
             ? 'الأسئلة المقترحة والخدمات'
             : 'Quick Concierge Prompts'}
         </span>

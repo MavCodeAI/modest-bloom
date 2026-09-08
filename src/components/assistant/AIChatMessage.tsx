@@ -17,7 +17,7 @@ export const AIChatMessageComponent: React.FC<AIChatMessageProps> = ({
   onProductClick,
 }) => {
   const isUser = message.sender === 'user';
-  const isRTL = message.isRTL || message.language === 'ur' || message.language === 'ar';
+  const isRTL = message.isRTL || message.language === 'ar';
 
   const formatTime = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {

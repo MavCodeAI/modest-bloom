@@ -186,9 +186,6 @@ export const AIAssistantConfigModule: React.FC = () => {
                   <TabsTrigger value="en" className="text-xs px-2.5">
                     English
                   </TabsTrigger>
-                  <TabsTrigger value="ur" className="text-xs px-2.5">
-                    اردو (Urdu)
-                  </TabsTrigger>
                   <TabsTrigger value="ar" className="text-xs px-2.5">
                     العربية (Arabic)
                   </TabsTrigger>
@@ -203,7 +200,7 @@ export const AIAssistantConfigModule: React.FC = () => {
               <Textarea
                 rows={3}
                 className="mt-1 text-xs leading-relaxed"
-                dir={activeLangTab === 'ur' || activeLangTab === 'ar' ? 'rtl' : 'ltr'}
+                dir={activeLangTab === 'ar' ? 'rtl' : 'ltr'}
                 value={config.welcomeMessages[activeLangTab]}
                 onChange={(e) =>
                   setConfig({
@@ -226,7 +223,7 @@ export const AIAssistantConfigModule: React.FC = () => {
                   <Input
                     key={idx}
                     className="text-xs"
-                    dir={activeLangTab === 'ur' || activeLangTab === 'ar' ? 'rtl' : 'ltr'}
+                    dir={activeLangTab === 'ar' ? 'rtl' : 'ltr'}
                     value={q}
                     onChange={(e) => {
                       const updated = [...config.starterQuestions[activeLangTab]];

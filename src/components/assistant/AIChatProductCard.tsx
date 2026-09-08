@@ -22,9 +22,7 @@ export const AIChatProductCard: React.FC<AIChatProductCardProps> = ({
 
   // Pick localized title and description
   const displayName =
-    language === 'ur' && product.nameUrdu
-      ? product.nameUrdu
-      : language === 'ar' && product.nameArabic
+    language === 'ar' && product.nameArabic
       ? product.nameArabic
       : product.name;
 

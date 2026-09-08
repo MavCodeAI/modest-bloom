@@ -46,11 +46,9 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
         text: welcomeText,
         timestamp: new Date(),
         language: lang,
-        isRTL: lang === 'ur' || lang === 'ar',
+        isRTL: lang === 'ar',
         quickReplies:
-          lang === 'ur'
-            ? ['بلیک عبایا کلیکشن', '۳۰۰ درہم سے کم', 'ہول سیل (۵۰+ پیسیز)', 'واٹس ایپ رابطہ']
-            : lang === 'ar'
+          lang === 'ar'
             ? ['العبايات السوداء', 'أقل من 300 درهم', 'طلب جملة (50+)', 'واتساب فوري']
             : ['Show Black Abayas', 'Under AED 300', 'Wholesale Inquiry (50+)', 'Chat on WhatsApp'],
       };
@@ -98,7 +96,7 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
 
     // Detect language if auto-detect matches RTL
     const detectedLang = aiAssistantService.detectLanguage(messageText, language);
-    const isRTL = detectedLang === 'ur' || detectedLang === 'ar';
+    const isRTL = detectedLang === 'ar';
 
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
@@ -135,14 +133,12 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
         id: `err-${Date.now()}`,
         sender: 'assistant',
         text:
-          language === 'ur'
-            ? 'معذرت، میں آپ کے پیغام کو سمجھ نہیں سکا۔ برائے مہربانی دوبارہ کوشش کریں یا واٹس ایپ پر رابطہ کریں۔'
-            : language === 'ar'
+          language === 'ar'
             ? 'عذراً، حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى أو التواصل معنا عبر واتساب.'
             : 'I apologize, I encountered a brief issue processing that. Please feel free to rephrase or speak with our live team on WhatsApp.',
         timestamp: new Date(),
         language,
-        isRTL: language === 'ur' || language === 'ar',
+        isRTL: language === 'ar',
         whatsappHandoff: {
           show: true,
           customText: encodeURIComponent('Hello Modest Way Fashion! I need assistance with an inquiry.'),
@@ -168,9 +164,8 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
 
   if (!isOpen) return null;
 
-  const currentLangLabel =
-    language === 'ur' ? 'اردو' : language === 'ar' ? 'العربية' : 'English';
-  const isCurrentRTL = language === 'ur' || language === 'ar';
+  const currentLangLabel = language === 'ar' ? 'العربية' : 'English';
+  const isCurrentRTL = language === 'ar';
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-200">
@@ -229,15 +224,6 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
                   >
                     <span>English</span>
                     {language === 'en' && <Check className="w-3.5 h-3.5" />}
-                  </button>
-                  <button
-                    onClick={() => handleLanguageChange('ur')}
-                    className={`w-full flex items-center justify-between px-3 py-1.5 text-right font-sans hover:bg-stone-800 ${
-                      language === 'ur' ? 'text-amber-300 font-semibold' : 'text-stone-200'
-                    }`}
-                  >
-                    <span>اردو</span>
-                    {language === 'ur' && <Check className="w-3.5 h-3.5" />}
                   </button>
                   <button
                     onClick={() => handleLanguageChange('ar')}
@@ -343,9 +329,7 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={
-                  language === 'ur'
-                    ? 'یہاں عبایا، قیمت یا ہول سیل کے بارے میں پوچھیں...'
-                    : language === 'ar'
+                  language === 'ar'
                     ? 'اسأل عن العبايات، الأسعار، أو طلبات الجملة...'
                     : 'Ask about abayas, sizes, wholesale or delivery...'
                 }
@@ -366,9 +350,7 @@ export const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => 
 
           <div className="mt-2 flex items-center justify-between text-[10px] text-muted-foreground px-1">
             <span>
-              {language === 'ur'
-                ? 'دبئی کا معروف فیشن ہاؤس • ۲۴/۷ فعال'
-                : language === 'ar'
+              {language === 'ar'
                 ? 'دار أزياء دبي • خدمة فورية'
                 : 'Modest Way Fashion • Dubai Atelier'}
             </span>

@@ -1,7 +1,7 @@
 // Modest Way Fashion - AI Assistant Types & Interfaces
 // Structured for future AI service backend plug-in
 
-export type AssistantLanguage = 'en' | 'ur' | 'ar';
+export type AssistantLanguage = 'en' | 'ar';
 
 export interface MockAssistantProduct {
   id: string;

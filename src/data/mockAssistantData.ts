@@ -11,7 +11,6 @@ export const DEFAULT_AI_CONFIG: AIAssistantConfig = {
   defaultLanguage: 'en',
   welcomeMessages: {
     en: 'Salam! Welcome to Modest Way Fashion. I am your Atelier AI Stylist. How may I assist you today? I can help you discover luxury abayas, check sizes, find prices under AED 300, or assist with wholesale inquiries.',
-    ur: 'السلام علیکم! موڈسٹ وے فیشن میں خوش آمدید۔ میں آپ کا ایٹیلیئر اے آئی اسسٹنٹ ہوں۔ میں آپ کے لیے بلیک و فینسی عبایا کی تلاش، سائز گائیڈ، ۳۰۰ درہم سے کم قیمت عبایا، یا ہول سیل کی معلومات میں مدد کر سکتا ہوں۔',
     ar: 'مرحباً بكم في مودست واي فاشن! أنا مستشاركم ومساعدكم الذكي. يسعدني مساعدتكم في اختيار العبايات الفاخرة، مقاسات العبايات، العروض، أو الاستفسار عن طلبات الجملة.'
   },
   starterQuestions: {
@@ -22,14 +21,6 @@ export const DEFAULT_AI_CONFIG: AIAssistantConfig = {
       'I want to buy 50 Abayas for wholesale',
       'Do you deliver in Dubai and UAE?',
       'I want to speak to someone on WhatsApp'
-    ],
-    ur: [
-      'مجھے بلیک عبایا چاہیے',
-      'کسی خاص تقریب کے لیے خوبصورت عبایا دکھائیں',
-      'کیا ۳۰۰ درہم سے کم میں عبایا ہیں؟',
-      'مجھے ۵۰ عبایا ہول سیل میں چاہئیں',
-      'دبئی اور یو اے ای میں ڈیلیوری کی کیا شرائط ہیں؟',
-      'کسٹمر کیئر سے واٹس ایپ پر بات کرنی ہے'
     ],
     ar: [
       'أريد مشاهدة العبايات السوداء الفاخرة',
