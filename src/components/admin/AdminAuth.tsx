@@ -1,58 +1,25 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAdminAuth } from '@/contexts/useAdminAuth';
 import { Lock, Eye, EyeOff, AlertCircle, Shield, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AdminAuth = () => {
   const { login } = useAdminAuth();
-  const [pin, setPin] = useState(['', '', '', '', '', '']);
-  const [showPin, setShowPin] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const handlePinChange = (index: number, value: string) => {
-    if (value && !/^\d$/.test(value)) return;
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
 
-    const newPin = [...pin];
-    newPin[index] = value;
-    setPin(newPin);
-    setError('');
-
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !pin[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    } else if (e.key === 'Enter') {
-      handleSubmit();
-    }
-  };
-
-  const handlePaste = (e: React.ClipboardEvent) => {
-    e.preventDefault();
-    const pastedData = e.clipboardData.getData('text');
-    const numbers = pastedData.replace(/\D/g, '').slice(0, 6);
-
-    if (numbers.length === 6) {
-      const newPin = numbers.split('');
-      setPin(newPin);
-      setError('');
-      inputRefs.current[5]?.focus();
-    }
-  };
-
-  const handleSubmit = async () => {
-    const pinString = pin.join('');
-
-    if (pinString.length !== 6) {
-      setError('Please enter all 6 digits');
+    if (!email.trim() || !password) {
+      setError('Please enter your email and password.');
       return;
     }
 
@@ -60,37 +27,24 @@ const AdminAuth = () => {
     setError('');
 
     try {
-      const success = await login(pinString);
-      if (!success) {
-        setError('Invalid PIN. Please try again.');
-        setPin(['', '', '', '', '', '']);
-        inputRefs.current[0]?.focus();
+      const result = await login(email, password);
+      if (!result.ok) {
+        setError(result.error || 'Sign in failed.');
+        setPassword('');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const clearPin = () => {
-    setPin(['', '', '', '', '', '']);
-    setError('');
-    inputRefs.current[0]?.focus();
-  };
-
-  useEffect(() => {
-    inputRefs.current[0]?.focus();
-  }, []);
-
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-background via-muted to-background flex items-center justify-center p-4 overflow-hidden">
-      {/* Decorative brand blobs */}
       <div className="pointer-events-none absolute top-1/4 -left-16 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
       <div className="pointer-events-none absolute bottom-1/4 -right-16 w-72 h-72 bg-secondary/10 rounded-full blur-3xl" />
 
       <div className="relative z-10 w-full max-w-md">
-        {/* Brand */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
             <Shield className="h-8 w-8 text-primary" />
@@ -103,73 +57,60 @@ const AdminAuth = () => {
           <CardHeader className="text-center pb-4">
             <CardTitle className="font-serif text-foreground flex items-center justify-center gap-2 text-xl">
               <Lock className="h-5 w-5 text-primary" />
-              Enter 6-Digit PIN
+              Staff Sign In
             </CardTitle>
             <CardDescription className="text-muted-foreground">
-              Enter your admin PIN to access the dashboard
+              Sign in with your admin account to access the dashboard
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6">
-            {/* PIN Input */}
-            <div className="space-y-4">
-              <div className="flex justify-center gap-1.5 sm:gap-2">
-                {pin.map((digit, index) => (
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="admin-email">Email</Label>
+                <Input
+                  id="admin-email"
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="admin-password">Password</Label>
+                <div className="relative">
                   <Input
-                    key={index}
-                    ref={(el) => (inputRefs.current[index] = el)}
-                    type={showPin ? 'text' : 'password'}
-                    inputMode="numeric"
-                    value={digit}
-                    onChange={(e) => handlePinChange(index, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(index, e)}
-                    onPaste={index === 0 ? handlePaste : undefined}
-                    className="w-10 h-12 sm:w-12 sm:h-12 text-center text-lg font-mono bg-background border-input text-foreground focus-visible:ring-primary"
-                    maxLength={1}
+                    id="admin-password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
                     disabled={isLoading}
+                    className="pr-10"
                   />
-                ))}
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
               </div>
 
-              {/* Show PIN Toggle */}
-              <div className="flex justify-center">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowPin(!showPin)}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  {showPin ? (
-                    <>
-                      <EyeOff className="h-4 w-4 mr-2" />
-                      Hide PIN
-                    </>
-                  ) : (
-                    <>
-                      <Eye className="h-4 w-4 mr-2" />
-                      Show PIN
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
+              {error && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
 
-            {/* Error Alert */}
-            {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            {/* Action Buttons */}
-            <div className="space-y-3">
-              <Button
-                onClick={handleSubmit}
-                disabled={isLoading || pin.join('').length !== 6}
-                className="w-full"
-              >
+              <Button type="submit" disabled={isLoading} className="w-full">
                 {isLoading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin mr-2" />
@@ -182,34 +123,16 @@ const AdminAuth = () => {
                   </>
                 )}
               </Button>
+            </form>
 
-              <Button
-                type="button"
-                variant="outline"
-                onClick={clearPin}
-                disabled={isLoading}
-                className="w-full"
-              >
-                Clear
-              </Button>
-            </div>
-
-            {/* Security Notice */}
-            <div className="text-center">
-              <p className="text-xs text-muted-foreground">
-                For security reasons, your session will automatically expire after 30 minutes of inactivity.
-              </p>
-            </div>
+            <p className="text-xs text-muted-foreground text-center mt-5">
+              Access is limited to accounts with the admin role.
+            </p>
           </CardContent>
         </Card>
 
-        {/* Back to Store */}
         <div className="text-center mt-6">
-          <Button
-            variant="ghost"
-            asChild
-            className="text-muted-foreground hover:text-foreground"
-          >
+          <Button variant="ghost" asChild className="text-muted-foreground hover:text-foreground">
             <a href="/" className="inline-flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
               Back to Store
