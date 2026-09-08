@@ -5,10 +5,13 @@ export type AssistantLanguage = 'en' | 'ar';
 
 export interface MockAssistantProduct {
   id: string;
+  slug?: string;
   name: string;
   nameUrdu?: string;
   nameArabic?: string;
   sku: string;
+  colors?: string[];
+  isWholesale?: boolean;
   price: number;
   originalPrice?: number;
   wholesalePrice?: number;
