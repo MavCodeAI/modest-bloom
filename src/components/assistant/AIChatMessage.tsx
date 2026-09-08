@@ -2,6 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { ChatMessage, AssistantLanguage } from '@/types/assistant';
 import { AIChatProductCard } from './AIChatProductCard';
+import { AIChatCodeBlock } from './AIChatCodeBlock';
 import { MessageCircle, Sparkles, User, ExternalLink } from 'lucide-react';
 
 interface AIChatMessageProps {
@@ -73,6 +74,17 @@ export const AIChatMessageComponent: React.FC<AIChatMessageProps> = ({
                   p: ({ children }) => <p className="mb-1.5 last:mb-0 leading-relaxed">{children}</p>,
                   strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
                   em: ({ children }) => <em className="italic text-foreground/90">{children}</em>,
+                  a: ({ href, children }) => (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary underline underline-offset-2 font-medium hover:text-primary/80 inline-flex items-center gap-0.5"
+                    >
+                      {children}
+                      <ExternalLink className="w-3 h-3 inline-block opacity-70" />
+                    </a>
+                  ),
                   ul: ({ children }) => (
                     <ul className={`my-1.5 space-y-1 ${isRTL ? 'mr-3.5 list-disc' : 'ml-3.5 list-disc'}`}>
                       {children}
@@ -84,23 +96,41 @@ export const AIChatMessageComponent: React.FC<AIChatMessageProps> = ({
                     </ol>
                   ),
                   li: ({ children }) => <li className="leading-relaxed marker:text-primary">{children}</li>,
-                  h1: ({ children }) => <h1 className="font-serif font-bold text-base my-1.5">{children}</h1>,
-                  h2: ({ children }) => <h2 className="font-serif font-semibold text-sm my-1">{children}</h2>,
-                  h3: ({ children }) => <h3 className="font-semibold text-xs my-1">{children}</h3>,
+                  h1: ({ children }) => <h1 className="font-serif font-bold text-base my-2 text-foreground">{children}</h1>,
+                  h2: ({ children }) => <h2 className="font-serif font-semibold text-sm my-1.5 text-foreground">{children}</h2>,
+                  h3: ({ children }) => <h3 className="font-semibold text-xs my-1 text-foreground">{children}</h3>,
                   blockquote: ({ children }) => (
                     <blockquote
-                      className={`border-primary/40 bg-muted/30 my-1.5 py-1 px-2.5 rounded-sm italic ${
+                      className={`border-primary/40 bg-muted/30 my-2 py-1 px-2.5 rounded-sm italic ${
                         isRTL ? 'border-r-2 pr-2.5 pl-1.5' : 'border-l-2 pl-2.5 pr-1.5'
                       }`}
                     >
                       {children}
                     </blockquote>
                   ),
-                  code: ({ children }) => (
-                    <code className="px-1 py-0.5 rounded bg-muted text-[11px] font-mono text-primary">
-                      {children}
-                    </code>
-                  ),
+                  hr: () => <hr className="my-2.5 border-border/70" />,
+                  pre: ({ children }) => <div className="my-2">{children}</div>,
+                  code: ({ className, children, ...props }) => {
+                    const match = /language-(\w+)/.exec(className || '');
+                    const codeString = String(children).replace(/\n$/, '');
+                    const isMultiLine = codeString.includes('\n');
+
+                    // If it has a language tag or multiple lines, render full syntax highlighted code block with Copy button
+                    if (match || isMultiLine) {
+                      const lang = match ? match[1] : 'text';
+                      return <AIChatCodeBlock language={lang} code={codeString} />;
+                    }
+
+                    // Single-line inline code
+                    return (
+                      <code
+                        className="px-1.5 py-0.5 rounded bg-muted/90 text-[11px] font-mono font-medium text-primary border border-border/50"
+                        {...props}
+                      >
+                        {children}
+                      </code>
+                    );
+                  },
                 }}
               >
                 {message.text}

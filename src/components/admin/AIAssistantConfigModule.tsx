@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { AIChatCodeBlock } from '@/components/assistant/AIChatCodeBlock';
 import {
   Sparkles,
   Bot,
@@ -416,9 +417,33 @@ export const AIAssistantConfigModule: React.FC = () => {
                         components={{
                           p: ({ children }) => <p className="mb-1 last:mb-0 leading-relaxed">{children}</p>,
                           strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+                          em: ({ children }) => <em className="italic text-foreground/90">{children}</em>,
+                          a: ({ href, children }) => (
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary underline underline-offset-2 font-medium hover:text-primary/80"
+                            >
+                              {children}
+                            </a>
+                          ),
                           ul: ({ children }) => <ul className="my-1 ml-3.5 list-disc space-y-0.5">{children}</ul>,
                           ol: ({ children }) => <ol className="my-1 ml-3.5 list-decimal space-y-0.5">{children}</ol>,
                           li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                          pre: ({ children }) => <div className="my-1.5">{children}</div>,
+                          code: ({ className, children, ...props }) => {
+                            const match = /language-(\w+)/.exec(className || '');
+                            const codeString = String(children).replace(/\n$/, '');
+                            if (match || codeString.includes('\n')) {
+                              return <AIChatCodeBlock language={match ? match[1] : 'text'} code={codeString} />;
+                            }
+                            return (
+                              <code className="px-1 py-0.5 rounded bg-muted text-[10px] font-mono text-primary" {...props}>
+                                {children}
+                              </code>
+                            );
+                          },
                         }}
                       >
                         {msg.text}
