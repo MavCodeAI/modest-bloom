@@ -467,13 +467,21 @@ const Admin = () => {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleUpdateQuoteStatus(quote.id, 'processed')}>
+                              <DropdownMenuItem onClick={() => handleUpdateQuoteStatus(quote.id, 'contacted')}>
                                 <Check className="h-4 w-4 mr-2" />
-                                Mark Processed
+                                Mark Contacted
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleUpdateQuoteStatus(quote.id, 'completed')}>
+                              <DropdownMenuItem onClick={() => handleUpdateQuoteStatus(quote.id, 'quoted')}>
                                 <Check className="h-4 w-4 mr-2" />
-                                Mark Completed
+                                Mark Quoted
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleUpdateQuoteStatus(quote.id, 'approved')}>
+                                <Check className="h-4 w-4 mr-2" />
+                                Mark Approved
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleUpdateQuoteStatus(quote.id, 'rejected')}>
+                                <Check className="h-4 w-4 mr-2" />
+                                Mark Rejected
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
