@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import {
   Sparkles,
   Bot,
@@ -402,13 +403,27 @@ export const AIAssistantConfigModule: React.FC = () => {
                   }`}
                 >
                   <div
-                    className={`max-w-[85%] text-xs p-2.5 rounded-xl whitespace-pre-line leading-relaxed ${
+                    className={`max-w-[85%] text-xs p-2.5 rounded-xl leading-relaxed ${
                       msg.sender === 'user'
-                        ? 'bg-primary text-primary-foreground'
+                        ? 'bg-primary text-primary-foreground whitespace-pre-line'
                         : 'bg-card border border-border text-foreground'
                     }`}
                   >
-                    {msg.text}
+                    {msg.sender === 'user' ? (
+                      msg.text
+                    ) : (
+                      <ReactMarkdown
+                        components={{
+                          p: ({ children }) => <p className="mb-1 last:mb-0 leading-relaxed">{children}</p>,
+                          strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+                          ul: ({ children }) => <ul className="my-1 ml-3.5 list-disc space-y-0.5">{children}</ul>,
+                          ol: ({ children }) => <ol className="my-1 ml-3.5 list-decimal space-y-0.5">{children}</ol>,
+                          li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                        }}
+                      >
+                        {msg.text}
+                      </ReactMarkdown>
+                    )}
                   </div>
                 </div>
               ))}

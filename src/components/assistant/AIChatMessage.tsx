@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import { ChatMessage, AssistantLanguage } from '@/types/assistant';
 import { AIChatProductCard } from './AIChatProductCard';
 import { MessageCircle, Sparkles, User, ExternalLink } from 'lucide-react';
@@ -62,10 +63,50 @@ export const AIChatMessageComponent: React.FC<AIChatMessageProps> = ({
               : 'bg-card border border-border/80 text-foreground rounded-tl-xs'
           } ${isRTL ? 'font-sans text-right' : 'text-left'}`}
         >
-          {/* Main message text */}
-          <div className="whitespace-pre-line break-words space-y-1">
-            {message.text}
-          </div>
+          {/* Main message text with rich Markdown parsing */}
+          {isUser ? (
+            <div className="whitespace-pre-line break-words">{message.text}</div>
+          ) : (
+            <div className="break-words space-y-1.5 text-xs sm:text-sm leading-relaxed">
+              <ReactMarkdown
+                components={{
+                  p: ({ children }) => <p className="mb-1.5 last:mb-0 leading-relaxed">{children}</p>,
+                  strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+                  em: ({ children }) => <em className="italic text-foreground/90">{children}</em>,
+                  ul: ({ children }) => (
+                    <ul className={`my-1.5 space-y-1 ${isRTL ? 'mr-3.5 list-disc' : 'ml-3.5 list-disc'}`}>
+                      {children}
+                    </ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className={`my-1.5 space-y-1 ${isRTL ? 'mr-3.5 list-decimal' : 'ml-3.5 list-decimal'}`}>
+                      {children}
+                    </ol>
+                  ),
+                  li: ({ children }) => <li className="leading-relaxed marker:text-primary">{children}</li>,
+                  h1: ({ children }) => <h1 className="font-serif font-bold text-base my-1.5">{children}</h1>,
+                  h2: ({ children }) => <h2 className="font-serif font-semibold text-sm my-1">{children}</h2>,
+                  h3: ({ children }) => <h3 className="font-semibold text-xs my-1">{children}</h3>,
+                  blockquote: ({ children }) => (
+                    <blockquote
+                      className={`border-primary/40 bg-muted/30 my-1.5 py-1 px-2.5 rounded-sm italic ${
+                        isRTL ? 'border-r-2 pr-2.5 pl-1.5' : 'border-l-2 pl-2.5 pr-1.5'
+                      }`}
+                    >
+                      {children}
+                    </blockquote>
+                  ),
+                  code: ({ children }) => (
+                    <code className="px-1 py-0.5 rounded bg-muted text-[11px] font-mono text-primary">
+                      {children}
+                    </code>
+                  ),
+                }}
+              >
+                {message.text}
+              </ReactMarkdown>
+            </div>
+          )}
 
           {/* WhatsApp Handoff Box if requested */}
           {message.whatsappHandoff?.show && (
