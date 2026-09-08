@@ -30,6 +30,8 @@ const WholesaleCatalog = lazy(() => import("./pages/WholesaleCatalog"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Auth = lazy(() => import("./pages/Auth"));
 const SearchResults = lazy(() => import("./pages/SearchResults"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Terms = lazy(() => import("./pages/Terms"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Account = lazy(() => import("./pages/Account"));
 
@@ -84,6 +86,8 @@ const App = () => (
                       } 
                     />
                     <Route path="/search" element={<SearchResults />} />
+                    <Route path="/privacy" element={<Privacy />} />
+                    <Route path="/terms" element={<Terms />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                   <GlobalBottomNav />
