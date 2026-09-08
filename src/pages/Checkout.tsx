@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { createGuestCheckoutClient } from '@/integrations/supabase/guestClient';
 import { useAuth } from '@/contexts/AuthContext';
 
 const checkoutSchema = z.object({
@@ -140,7 +141,9 @@ const Checkout = () => {
       const guestToken = crypto.randomUUID();
 
       // Create order in Supabase
-      const { data: orderData, error: orderError } = await supabase
+      const db = user?.id ? supabase : createGuestCheckoutClient(guestToken);
+
+      const { data: orderData, error: orderError } = await db
         .from('orders')
         .insert({
           customer_name: `${data.firstName} ${data.lastName}`,
@@ -180,7 +183,7 @@ const Checkout = () => {
         guest_token: user?.id ? null : guestToken,
       }));
 
-      const { error: itemsError } = await supabase
+      const { error: itemsError } = await db
         .from('order_items')
         .insert(orderItems);
 
